@@ -31,7 +31,6 @@ jobs:
       RAILS_ENV: test
       NAME: redmine_oauth
     steps:
-      - name: Install dependencies
       - name: Clone Redmine
         # Get the latest stable Redmine
         run: svn export https://svn.redmine.org/redmine/branches/5.0-stable/ /opt/redmine
