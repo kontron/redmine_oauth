@@ -1,6 +1,6 @@
 ## Redmine OAuth plugin
 
-![GitHub Action](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=master)
+![GitHub Action](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
 This plugin is used to authenticate in Redmine through OAuth.
