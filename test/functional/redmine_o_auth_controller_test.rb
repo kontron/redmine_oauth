@@ -22,8 +22,9 @@
 # Load the normal Rails helper
 require File.expand_path('../../../../../test/test_helper', __FILE__)
 
-class RedmineOAuthControllerTest < Redmine::IntegrationTest
+class RedmineOAuthControllerTest < Redmine::ControllerTest
   include Redmine::I18n
+  tests RedmineOauthController
 
   def setup
     User.current = nil
