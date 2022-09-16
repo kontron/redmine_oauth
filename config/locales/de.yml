@@ -1,0 +1,37 @@
+# encoding: utf-8
+# frozen_string_literal: true
+#
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+de:
+  oauth_login_via: "Continue with <b>%{oauth}</b>"
+  oauth_login_with: Login with OAuth
+  oauth_no_verified_email: Keine verifizierte E-Mail zur Verfügung gestellt. Überprüfen Sie Ihre OAuth-Anbieter-Einstellung.
+  oauth_invalid_provider: Ungültiger OAuth-Anbieter
+  oauth_none: Keiner
+  oauth_provider: Anbieter
+  oauth_provider_info: OAuth-Anbieter
+  oauth_site: Seite
+  oauth_site_info: URI des OAuth-Anbieter
+  oauth_client_id: Client-ID
+  oauth_client_id_info: Anwendungs-ID (Client)
+  oauth_client_secret: Geheime Zeichenfolge
+  oauth_client_secret_info: Anwendungskennwort
+  oauth_tenant_id: Mandant-ID
+  oauth_tenant_id_info: Verzeichnis-ID (Mandant)

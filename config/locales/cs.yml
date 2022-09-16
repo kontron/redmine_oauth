@@ -1,0 +1,37 @@
+# encoding: utf-8
+# frozen_string_literal: true
+#
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+cs:
+  oauth_login_via: "Pokračujte s <b>%{oauth}</b>"
+  oauth_login_with: Přihlášení pomocí OAuth
+  oauth_no_verified_email:  Není k dispozici žádný ověřený e-mail. Zkontrolujte nastavení u poskytovatele OAuth.
+  oauth_invalid_provider: Neplatný poskytovatel OAuth
+  oauth_none: Žádný
+  oauth_provider: Poskytovatel
+  oauth_provider_info: Poskytovatel OAuth
+  oauth_site: Stránka
+  oauth_site_info: Ověřovací URL poskytovatele OAuth
+  oauth_client_id: ID klienta
+  oauth_client_id_info: ID aplikace (klienta)
+  oauth_client_secret: Tajný kód
+  oauth_client_secret_info: Heslo aplikace
+  oauth_tenant_id: ID tenanta
+  oauth_tenant_id_info: ID adresáře (tenanta)

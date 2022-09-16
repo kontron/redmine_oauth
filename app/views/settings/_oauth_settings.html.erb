@@ -1,0 +1,76 @@
+<%#
+# encoding: utf-8
+# frozen_string_literal: true
+#
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+%>
+
+<%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
+
+<p>
+  <label><%= l(:oauth_provider) %></label>
+  <%= select_tag 'settings[oauth_name]', options_for_select([
+      %w(Azure\ AD Azure\ AD),
+      ['', 'none']
+    ], @settings['oauth_name']), onchange: 'oauth_settings_visiblity()' %>
+  <em class="info"><%= l(:oauth_provider_info) %></em>
+</p>
+<div id="oauth_options" class="<%= (@settings['oauth_name'] == 'none') ? 'oauth-hidden' : '' %>">
+    <p>
+      <label><%= l(:oauth_site) %></label>
+      <%= text_field_tag 'settings[site]', @settings['site'], size: 40 %>
+      <em class="info"><%= l(:oauth_site_info) %></em>
+    </p>
+    <p>
+      <label><%= l(:oauth_client_id) %></label>
+      <%= text_field_tag 'settings[client_id]', @settings['client_id'], size: 40 %>
+      <em class="info"><%= l(:oauth_client_id_info) %></em>
+    </p>
+    <p>
+      <label><%= l(:oauth_client_secret) %></label>
+      <%= text_field_tag 'settings[client_secret]', @settings['client_secret'], size: 40 %>
+      <em class="info"><%= l(:oauth_client_secret_info) %></em>
+    </p>
+    <p>
+      <label><%= l(:oauth_tenant_id) %></label>
+      <%= text_field_tag 'settings[tenant_id]', @settings['tenant_id'], size: 40 %>
+      <em class="info"><%= l(:oauth_tenant_id_info) %></em>
+    </p>
+</div>
+
+<%= javascript_tag do %>
+  function oauth_settings_visiblity()
+  {
+    $("input#settings_site").val("");
+    $("input#settings_client_id").val("");
+    $("input#settings_client_secret").val("");
+    $("input#settings_tenant_id").val("");
+    let oauth_name = $("#settings_oauth_name option:selected").val();
+    switch(oauth_name) {
+       case 'none':
+           $("div#oauth_options").hide();
+           break;
+       case 'Azure AD':
+           $("div#oauth_options").show();
+           break;
+       default:
+           break;
+    }
+  }
+<% end %>
