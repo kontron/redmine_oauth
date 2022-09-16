@@ -11,19 +11,27 @@ Supported OAuth providers:
 
 ### Installation:
 
-Choose folder /plugins, make command
+1. Enter the plugins folder 
+2. Clone the repository
+3. Set user permissions
+4. Install required gems
+5. Restart the application
 
-```
+E.g. Linux + Apache web server
+
+```shell 
 cd plugins
 git clone https://github.com/kontron/redmine_oauth.git
+chown -R www-data:www-data redmine_oauth
+cd ..
 bundle install
+systemctl restart apache2
 ```
-Then restart the application/web server.
 
 ### Registration
 
 Register your Redmine instance as an application by your OAuth provider. Follow the instructions given on their web 
-sites.
+sites. As the redirect URI add https://yourdomain/oauth2callback.
 
 ### Configuration
 
