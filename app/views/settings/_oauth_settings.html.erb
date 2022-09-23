@@ -27,6 +27,7 @@
   <label><%= l(:oauth_provider) %></label>
   <%= select_tag 'settings[oauth_name]', options_for_select([
       %w(Azure\ AD Azure\ AD),
+      %w(Okta),
       ['', 'none']
     ], @settings['oauth_name']), onchange: 'oauth_settings_visiblity()' %>
   <em class="info"><%= l(:oauth_provider_info) %></em>
@@ -68,6 +69,10 @@
            break;
        case 'Azure AD':
            $("div#oauth_options").show();
+           break;
+       case 'Okta':
+           $("div#oauth_options").show();
+           $("input#settings_tenant_id").val("default");
            break;
        default:
            break;

@@ -29,6 +29,9 @@ class RedmineOauthController < AccountController
     case Setting.plugin_redmine_oauth['oauth_name']
     when 'Azure AD'
       redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, scope: 'user:email')
+    when 'Okta'
+      # @todo: validate CSRF token later down. 
+      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: generate_csrf_token, scope: 'openid profile email')
     else
       flash['error'] = l(:oauth_invalid_provider)
       redirect_to signin_path
@@ -46,6 +49,12 @@ class RedmineOauthController < AccountController
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
       email = user_info['unique_name']
+    when 'Okta'
+      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
+      userinfo_response = token.get('/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/userinfo', :headers => { 'Accept' => 'application/json' })
+      user_info = JSON.parse(userinfo_response.body)
+      user_info['login'] = user_info['preferred_username']
+      email = user_info['email']
     else
       raise Exception.new(l(:oauth_invalid_provider))
     end
@@ -118,6 +127,13 @@ class RedmineOauthController < AccountController
                   site: site,
                   authorize_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/authorize',
                   token_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/token')
+              when 'Okta'
+                OAuth2::Client.new(
+                  Setting.plugin_redmine_oauth['client_id'],
+                  Setting.plugin_redmine_oauth['client_secret'],
+                  site: site,
+                  authorize_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/authorize',
+                  token_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/token')
               else
                 raise Exception.new(l(:oauth_invalid_provider))
               end
