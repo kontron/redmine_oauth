@@ -31,7 +31,8 @@ class RedmineOauthController < AccountController
       redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, scope: 'user:email')
     when 'Okta'
       # @todo: validate CSRF token later down. 
-      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: generate_csrf_token, scope: 'openid profile email')
+      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: generate_csrf_token,
+        scope: 'openid profile email')
     else
       flash['error'] = l(:oauth_invalid_provider)
       redirect_to signin_path
@@ -51,7 +52,8 @@ class RedmineOauthController < AccountController
       email = user_info['unique_name']
     when 'Okta'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
-      userinfo_response = token.get('/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/userinfo', :headers => { 'Accept' => 'application/json' })
+      userinfo_response = token.get('/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/userinfo',
+        headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
