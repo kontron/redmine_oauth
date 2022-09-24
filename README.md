@@ -7,7 +7,8 @@ This plugin is used to authenticate in Redmine through OAuth.
 Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
 Supported OAuth providers:
-* Azure AD
+* Azure AD (https://azure.microsoft.com)
+* Otka (https://www.okta.com/)
 
 ### Installation:
 
