@@ -46,7 +46,7 @@
           <%= select_tag 'settings[button_icon]', options_for_select(icons, @settings['button_icon']),
                 onchange: "oauth_set_icon();"  %>
           <%= button_tag(name: 'login-oauth', id: 'login-oauth-button', title: l(:oauth_login_with),
-                style: "background: #{Setting.plugin_redmine_oauth['button_color']}") do %>
+                style: "background: #{Setting.plugin_redmine_oauth['button_color']}", disabled: true) do %>
             <i id="button_icon" class="<%= @settings['button_icon'] %>"></i>
             <%= l(:oauth_login_via, oauth: @settings['oauth_name']).html_safe %>
           <% end %>
