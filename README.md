@@ -1,6 +1,6 @@
-## Redmine OAuth plugin 1.0.1 devel
+## Redmine OAuth plugin 1.0.1
 
-[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=devel)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
+[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=master)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
 This plugin is used to authenticate in Redmine through OAuth.
@@ -36,7 +36,7 @@ sites. As the redirect URI add https://yourdomain/oauth2callback.
 
 ### Configuration
 
-Open Administration -> Plugins in your Redmine and configure the plugin. All the listed settings are mandatory.
+Open _Administration -> Plugins_ in your Redmine and configure the plugin.
 
  E.g.:
 
