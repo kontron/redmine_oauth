@@ -24,14 +24,18 @@ require 'jwt'
 
 class RedmineOauthController < AccountController
 
+  before_action :verify_csrf_token, only: [:oauth_callback]
+
   def oauth
     session['back_url'] = params['back_url']
+    oauth_csrf_token = generate_csrf_token
+    session[:oauth_csrf_token] = oauth_csrf_token
     case Setting.plugin_redmine_oauth['oauth_name']
     when 'Azure AD'
-      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, scope: 'user:email')
+      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: oauth_csrf_token,
+        scope: 'user:email')
     when 'Okta'
-      # @todo: validate CSRF token later down. 
-      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: generate_csrf_token,
+      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: oauth_csrf_token,
         scope: 'openid profile email')
     else
       flash['error'] = l(:oauth_invalid_provider)
@@ -122,23 +126,29 @@ class RedmineOauthController < AccountController
     site = Setting.plugin_redmine_oauth['site']&.chomp('/')
     raise(Exception.new(l(:oauth_invalid_provider))) unless site
     @client = case Setting.plugin_redmine_oauth['oauth_name']
-              when 'Azure AD'
-                OAuth2::Client.new(
-                  Setting.plugin_redmine_oauth['client_id'],
-                  Setting.plugin_redmine_oauth['client_secret'],
-                  site: site,
-                  authorize_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/authorize',
-                  token_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/token')
-              when 'Okta'
-                OAuth2::Client.new(
-                  Setting.plugin_redmine_oauth['client_id'],
-                  Setting.plugin_redmine_oauth['client_secret'],
-                  site: site,
-                  authorize_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/authorize',
-                  token_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/token')
-              else
-                raise Exception.new(l(:oauth_invalid_provider))
-              end
+      when 'Azure AD'
+        OAuth2::Client.new(
+          Setting.plugin_redmine_oauth['client_id'],
+          Setting.plugin_redmine_oauth['client_secret'],
+          site: site,
+          authorize_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/authorize',
+          token_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/token')
+      when 'Okta'
+        OAuth2::Client.new(
+          Setting.plugin_redmine_oauth['client_id'],
+          Setting.plugin_redmine_oauth['client_secret'],
+          site: site,
+          authorize_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/authorize',
+          token_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/token')
+      else
+        raise Exception.new(l(:oauth_invalid_provider))
+      end
+  end
+
+  def verify_csrf_token
+    if params[:state].blank? || (params[:state] != session[:oauth_csrf_token])
+      render_error status: 422, message: l(:error_invalid_authenticity_token)
+    end
   end
 
 end
