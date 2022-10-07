@@ -24,9 +24,10 @@
 button#login-oauth-submit {
   margin:auto;
   display:block;
-  height: 48px;
-  background: coral url('../images/oauth_logo.png') no-repeat 3% 50%;
-  padding-left:42px;
+}
+
+input#button_color {
+  padding: 0px;
 }
 
 .oauth-hidden {

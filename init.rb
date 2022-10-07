@@ -27,7 +27,7 @@ Redmine::Plugin.register :redmine_oauth do
   author 'Karel Pičman'
   description 'Redmine OAuth plugin'
   version '1.0.1 devel'
-  url 'https://github.com/kontron'
+  url 'https://github.com/kontron/redmine_oauth'
   author_url 'https://github.com/kontron/redmine_oauth/graphs/contributors'
 
   settings default: {
@@ -35,6 +35,8 @@ Redmine::Plugin.register :redmine_oauth do
     site:'',
     client_id: '',
     client_secret: '',
-    tenant_id: ''
+    tenant_id: '',
+    button_color: '#ffbe6f',
+    button_icon: 'fas fa-address-card',
   }, partial: 'settings/oauth_settings'
 end

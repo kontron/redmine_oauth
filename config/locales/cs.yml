@@ -35,3 +35,4 @@ cs:
   oauth_client_secret_info: Heslo aplikace
   oauth_tenant_id: ID tenanta
   oauth_tenant_id_info: ID adresáře (tenanta)
+  oauth_button_info: Barva a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth
