@@ -38,4 +38,9 @@ class RedmineOAuthControllerTest < Redmine::ControllerTest
     end
   end
 
+  def test_oauth_callback_csrf
+    get :oauth_callback
+    assert_response 422
+  end
+
 end
