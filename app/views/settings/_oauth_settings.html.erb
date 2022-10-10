@@ -34,7 +34,7 @@
 </p>
 <div id="oauth_options" class="<%= (@settings['oauth_name'] == 'none') ? 'oauth-hidden' : '' %>">
     <p>
-        <label>Button icon</label>
+        <label><%= l(:oauth_login_button) %></label>
         <span>
           <input type="color" id="button_color" name="settings[button_color]" value="<%= @settings['button_color'] %>"
             onChange="oauth_set_color();">

@@ -36,3 +36,4 @@ cs:
   oauth_tenant_id: ID tenanta
   oauth_tenant_id_info: ID adresáře (tenanta)
   oauth_button_info: Barva a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth
+  oauth_login_button: Přihlašovací tlačítko

@@ -20,8 +20,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 de:
-  oauth_login_via: "Continue with <b>%{oauth}</b>"
-  oauth_login_with: Login with OAuth
+  oauth_login_via: "Weiter mit <b>%{oauth}</b>"
+  oauth_login_with: Anmelden mit with OAuth
   oauth_no_verified_email: Keine verifizierte E-Mail zur Verfügung gestellt. Überprüfen Sie Ihre OAuth-Anbieter-Einstellung.
   oauth_invalid_provider: Ungültiger OAuth-Anbieter
   oauth_none: Keiner
@@ -36,3 +36,4 @@ de:
   oauth_tenant_id: Mandant-ID
   oauth_tenant_id_info: Verzeichnis-ID (Mandant)
   oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons
+  oauth_login_button: Anmeldebutton

@@ -36,3 +36,4 @@ en:
   oauth_tenant_id: Tenant ID
   oauth_tenant_id_info: Directory (tenant) ID
   oauth_button_info: Colour and icon (Awesome font class) of the OAuth login button
+  oauth_login_button: Login button
