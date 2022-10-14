@@ -80,12 +80,18 @@ class RedmineOauthController < AccountController
   def try_to_login(email, info)
     params['back_url'] = session['back_url']
     session.delete(:back_url)
-    user = User.joins(:email_addresses).where(email_addresses: { address: email, is_default: true })
-     .first_or_initialize
-    if user.new_record?
-      # Self-registration off
-      redirect_to(home_url) && return unless Setting.self_registration?
-      # Create on the fly
+    user = User.joins(:email_addresses).where(email_addresses: { address: email, is_default: true }).first
+    if user # Existing user
+      if user.registered? # Registered
+        account_pending user
+      elsif user.active? # Active
+        handle_active_user user
+      else  # Locked
+        handle_inactive_user user
+      end
+    elsif Setting.self_registration?  # Create on the fly
+      user = User.new
+      user.mail = email
       firstname, lastname = info['name'].split(' ') if info['name'].present?
       firstname ||= info['given_name']
       lastname ||= info['family_name']
@@ -111,13 +117,8 @@ class RedmineOauthController < AccountController
           onthefly_creation_failed user
         end
       end
-    else
-      # Existing record
-      if user.active?
-        successful_authentication user
-      else
-        account_pending user
-      end
+    else  # Invalid credentials
+      invalid_credentials
     end
   end
 
