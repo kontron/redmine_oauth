@@ -33,3 +33,7 @@ input#button_color {
 .oauth-hidden {
   display: none;
 }
+
+button#login-oauth-submit:hover {
+  background: #dddddd !important;
+}
