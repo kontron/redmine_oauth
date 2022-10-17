@@ -24,7 +24,7 @@ module RedmineOauth
   class Hooks < Redmine::Hook::ViewListener
 
     def view_account_login_bottom(context = {})
-      oauth = Setting.plugin_redmine_oauth['oauth_name']
+      oauth = Setting.plugin_redmine_oauth[:oauth_name]
       if oauth.present? && (oauth != 'none')
         context[:controller].send(:render_to_string, {
           partial: 'hooks/view_account_login_bottom',

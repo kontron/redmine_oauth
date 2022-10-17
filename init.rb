@@ -32,7 +32,7 @@ Redmine::Plugin.register :redmine_oauth do
 
   settings default: {
     oauth_name: 'none',
-    site:'',
+    site: '',
     client_id: '',
     client_secret: '',
     tenant_id: '',

@@ -30,7 +30,7 @@ class RedmineOauthController < AccountController
     session['back_url'] = params['back_url']
     oauth_csrf_token = generate_csrf_token
     session[:oauth_csrf_token] = oauth_csrf_token
-    case Setting.plugin_redmine_oauth['oauth_name']
+    case Setting.plugin_redmine_oauth[:oauth_name]
     when 'Azure AD'
       redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: oauth_csrf_token,
         scope: 'user:email')
@@ -49,14 +49,14 @@ class RedmineOauthController < AccountController
 
   def oauth_callback
     raise Exception.new(l(:notice_access_denied)) if params['error']
-    case Setting.plugin_redmine_oauth['oauth_name']
+    case Setting.plugin_redmine_oauth[:oauth_name]
     when 'Azure AD'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
       email = user_info['unique_name']
     when 'Okta'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
-      userinfo_response = token.get('/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/userinfo',
+      userinfo_response = token.get('/oauth2/' + Setting.plugin_redmine_oauth[:tenant_id] + '/v1/userinfo',
         headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['preferred_username']
@@ -124,23 +124,23 @@ class RedmineOauthController < AccountController
 
   def oauth_client
     return @client if @client
-    site = Setting.plugin_redmine_oauth['site']&.chomp('/')
+    site = Setting.plugin_redmine_oauth[:site]&.chomp('/')
     raise(Exception.new(l(:oauth_invalid_provider))) unless site
-    @client = case Setting.plugin_redmine_oauth['oauth_name']
+    @client = case Setting.plugin_redmine_oauth[:oauth_name]
       when 'Azure AD'
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth['client_id'],
-          Setting.plugin_redmine_oauth['client_secret'],
+          Setting.plugin_redmine_oauth[:client_id],
+          Setting.plugin_redmine_oauth[:client_secret],
           site: site,
-          authorize_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/authorize',
-          token_url: '/' + Setting.plugin_redmine_oauth['tenant_id'] + '/oauth2/token')
+          authorize_url: '/' + Setting.plugin_redmine_oauth[:tenant_id] + '/oauth2/authorize',
+          token_url: '/' + Setting.plugin_redmine_oauth[:tenant_id] + '/oauth2/token')
       when 'Okta'
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth['client_id'],
-          Setting.plugin_redmine_oauth['client_secret'],
+          Setting.plugin_redmine_oauth[:client_id],
+          Setting.plugin_redmine_oauth[:client_secret],
           site: site,
-          authorize_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/authorize',
-          token_url: '/oauth2/' + Setting.plugin_redmine_oauth['tenant_id'] + '/v1/token')
+          authorize_url: '/oauth2/' + Setting.plugin_redmine_oauth[:tenant_id] + '/v1/authorize',
+          token_url: '/oauth2/' + Setting.plugin_redmine_oauth[:tenant_id] + '/v1/token')
       else
         raise Exception.new(l(:oauth_invalid_provider))
       end

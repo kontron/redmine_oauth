@@ -37,7 +37,11 @@ function oauth_settings_visiblity()
     $("input#settings_client_id").val("");
     $("input#settings_client_secret").val("");
     $("input#settings_tenant_id").val("");
+    let button = $("button#login-oauth-button");
     let oauth_name = $("#settings_oauth_name option:selected").val();
+    let html = button.html();
+    html = html.replace(/<b>.*<\/b>/, "<b>" + oauth_name + "</b>");
+    button.html(html);
     switch(oauth_name) {
         case 'none':
             $("div#oauth_options").hide();
