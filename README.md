@@ -50,7 +50,7 @@ Open _Administration -> Plugins_ in your Redmine and configure the plugin.
 
 **Tenant ID** xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
 
-### Uninstalation
+### Uninstallation
 
 ```
 cd plugins

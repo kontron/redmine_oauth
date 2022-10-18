@@ -31,27 +31,30 @@ function oauth_set_icon()
     icon.addClass($("select#settings_button_icon option:selected").text());
 }
 
-function oauth_settings_visiblity()
+function oauth_settings_visibility()
 {
-    $("input#settings_site").val("");
-    $("input#settings_client_id").val("");
-    $("input#settings_client_secret").val("");
-    $("input#settings_tenant_id").val("");
+    let div_oauth_options = $("div#oauth_options");
+    let tenant_id = $("input#settings_tenant_id");
     let button = $("button#login-oauth-button");
     let oauth_name = $("#settings_oauth_name option:selected").val();
     let html = button.html();
+    $("input#settings_site").val("");
+    $("input#settings_client_id").val("");
+    $("input#settings_client_secret").val("");
     html = html.replace(/<b>.*<\/b>/, "<b>" + oauth_name + "</b>");
     button.html(html);
     switch(oauth_name) {
         case 'none':
-            $("div#oauth_options").hide();
+            div_oauth_options.hide();
+            tenant_id.val("");
             break;
         case 'Azure AD':
-            $("div#oauth_options").show();
+            div_oauth_options.show();
+            tenant_id.val("");
             break;
         case 'Okta':
-            $("div#oauth_options").show();
-            $("input#settings_tenant_id").val("default");
+            div_oauth_options.show();
+            tenant_id.val("default");
             break;
         default:
             break;

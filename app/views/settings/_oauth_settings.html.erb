@@ -28,13 +28,13 @@
   <%= select_tag 'settings[oauth_name]', options_for_select([
       %w(Azure\ AD Azure\ AD),
       %w(Okta Okta),
-      ['', 'none']
-    ], @settings[:oauth_name]), onchange: 'oauth_settings_visiblity()' %>
+      ["&nbsp;".html_safe, 'none']
+    ], @settings[:oauth_name]), onchange: 'oauth_settings_visibility()' %>
   <em class="info"><%= l(:oauth_provider_info) %></em>
 </p>
 <div id="oauth_options" class="<%= (@settings[:oauth_name] == 'none') ? 'oauth-hidden' : '' %>">
     <p>
-        <label><%= l(:oauth_login_button) %></label>
+        <label for="button_color"><%= l(:oauth_login_button) %></label>
         <span>
           <input type="color" id="button_color" name="settings[button_color]" value="<%= @settings[:button_color] %>"
             onChange="oauth_set_color();">

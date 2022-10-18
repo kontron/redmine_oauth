@@ -27,7 +27,7 @@ button#login-oauth-submit {
 }
 
 input#button_color {
-  padding: 0px;
+  padding: 0;
 }
 
 .oauth-hidden {
