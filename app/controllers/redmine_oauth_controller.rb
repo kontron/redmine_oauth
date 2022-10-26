@@ -86,6 +86,7 @@ class RedmineOauthController < AccountController
         account_pending user
       elsif user.active? # Active
         handle_active_user user
+        user.update_last_login_on!
       else  # Locked
         handle_inactive_user user
       end
