@@ -7,7 +7,7 @@ Changelog for Redmine OAuth
 1.0.4 *2022-10-26*
 ------------------
 
-    Users' last conection timestamp
+    Users' last connection timestamp
 
 1.0.3 *2022-10-18*
 ------------------

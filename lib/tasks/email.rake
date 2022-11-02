@@ -19,8 +19,29 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-source 'https://rubygems.org'
+namespace :redmine_oauth do
+  namespace :email do
 
-gem 'oauth2'
-gem 'jwt'
-gem 'gmail_xoauth'
+desc <<-END_DESC
+  Read emails from an IMAP server.
+END_DESC
+
+    task receive_imap: :environment do
+      imap_options = {
+        host: ENV['host'],
+        port: ENV['port'],
+        ssl: ENV['ssl'],
+        starttls: ENV['starttls'],
+        username: ENV['username'],
+        password: ENV['access_token'],
+        folder: ENV['folder'],
+        move_on_success: ENV['move_on_success'],
+        move_on_failure: ENV['move_on_failure']
+      }
+      Mailer.with_synched_deliveries do
+        Redmine::IMAP.check imap_options, MailHandler.extract_options_from_env(ENV)
+      end
+    end
+
+  end
+end
