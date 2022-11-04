@@ -19,27 +19,35 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# https://stackoverflow.com/questions/74178121/ruby-imap-accessing-office-365-with-oauth-2-0
-
-require 'gmail_xoauth'
 require 'net/imap'
 
 module RedmineOauth
   module IMAP
+
     class << self
       def check(imap_options={}, options={})
         host = imap_options[:host] || 'outlook.office365.com'
         port = imap_options[:port] || '993'
-        ssl = !imap_options[:ssl].nil?
+        scope = imap_options[:scope] || 'https://outlook.office365.com/.default'
+        grant_type = imap_options[:grant_type] || 'client_credentials'
+        ssl = imap_options[:ssl].present? || true
         starttls = !imap_options[:starttls].nil?
         folder = imap_options[:folder] || 'INBOX'
-
+        client = OAuth2::Client.new(
+          Setting.plugin_redmine_oauth[:client_id],
+          Setting.plugin_redmine_oauth[:client_secret],
+          site: Setting.plugin_redmine_oauth[:site]&.chomp('/'),
+          token_url: '/' + Setting.plugin_redmine_oauth[:tenant_id] + '/oauth2/v2.0/token')
+        params =  {
+          scope: scope,
+          grant_type: grant_type
+        }
+        access_token = client.get_token(params)
         imap = Net::IMAP.new(host, port, ssl)
         if starttls
           imap.starttls
         end
-        #imap.login(imap_options[:username], imap_options[:password]) unless imap_options[:username].nil?
-        imap.authenticate('XOAUTH2',imap_options[:username], imap_options[:access_token])
+        imap.authenticate('XOAUTH2',imap_options[:username], access_token.token)
         imap.select folder
         imap.uid_search(['NOT', 'SEEN']).each do |uid|
           msg = imap.uid_fetch(uid,'RFC822')[0].attr['RFC822']

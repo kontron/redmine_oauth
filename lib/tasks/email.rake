@@ -23,7 +23,22 @@ namespace :redmine_oauth do
   namespace :email do
 
 desc <<-END_DESC
-  Read emails from an IMAP server.
+  Read emails from an IMAP server and process them into Redmine.
+
+  Available options:
+    * host - IMAP server ['outlook.office365.com']
+    * port - Port [993]
+    * scope - Scope ['https://outlook.office365.com/.default']
+    * grant_type - Grant type ['client_credentials']
+    * ssl - use SSL [Yes]
+    * starttls - Start TLS [No]
+    * username - Login     
+    * folder - Mail folder to scan ['INBOX']
+    * move_on_success - Where to move successfully processed messages
+    * move_on_failure - Where to move unsuccessfully processed messages
+
+  Example:
+    rake redmine_oauth:email:receive_imap username='notifications@example.com' RAILS_ENV="production"
 END_DESC
 
     task receive_imap: :environment do
@@ -39,7 +54,11 @@ END_DESC
         move_on_failure: ENV['move_on_failure']
       }
       Mailer.with_synched_deliveries do
-        Redmine::IMAP.check imap_options, MailHandler.extract_options_from_env(ENV)
+        begin
+          RedmineOauth::IMAP.check imap_options, MailHandler.extract_options_from_env(ENV)
+        rescue Exception => e
+          STDERR.puts e.message
+        end
       end
     end
 

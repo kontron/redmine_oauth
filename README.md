@@ -29,6 +29,21 @@ bundle install
 systemctl restart apache2
 ```
 
+**There is a conflict with *net-imap* gem!**
+
+```
+[!] There was an error parsing `Gemfile`: You cannot specify the same gem twice with different version requirements.
+You specified: net-imap (~> 0.2.2) and net-imap (~> 0.3.1). Bundler cannot continue.
+```
+
+This gem supports XOAUTH from v0.3.1. So, it is necessary to comment out
+corresponding line in Redmine's Gemfile and then run `bundle install` again.
+
+```
+-- gem 'net-imap', '~> 0.2.2'
+++ #gem 'net-imap', '~> 0.2.2'
+```
+
 ### Registration
 
 Register your Redmine instance as an application by your OAuth provider. Follow the instructions given on their web 
@@ -49,6 +64,31 @@ Open _Administration -> Plugins_ in your Redmine and configure the plugin.
 **Client secret** xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 **Tenant ID** xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
+
+### Tasks
+
+## Receive IMAP
+Read emails from an IMAP server and process them into Redmine.
+
+Available options:
+* host - IMAP server [outlook.office365.com]
+* port - Port [993]
+* ssl - use SSL [Yes]
+* starttls - Start TLS [No]
+* username - Login     
+* folder - Mail folder to scan [INBOX]
+* move_on_success - Where to move successfully processed messages
+* move_on_failure - Where to move unsuccessfully processed messages
+
+Example:
+
+```rake redmine_oauth:email:receive_imap username='notifications@example.com' RAILS_ENV="production"```
+
+**Prior accessing IMAP via OAuth, it is necessary to grant flow to authenticate IMAP connections.**
+
+Here is a procedure how to do that in Azure:
+
+https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth#authenticate-connection-requests
 
 ### Uninstallation
 
