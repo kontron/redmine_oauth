@@ -35,5 +35,5 @@ de:
   oauth_client_secret_info: Anwendungskennwort
   oauth_tenant_id: Mandant-ID
   oauth_tenant_id_info: Verzeichnis-ID (Mandant)
-  oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons
+  oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons (Leer für keinen Button)
   oauth_login_button: Anmeldebutton

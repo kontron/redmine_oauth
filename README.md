@@ -73,6 +73,8 @@ Read emails from an IMAP server and process them into Redmine.
 Available options:
 * host - IMAP server [outlook.office365.com]
 * port - Port [993]
+* scope - Scope ['https://outlook.office365.com/.default']
+* grant_type - Grant type ['client_credentials']
 * ssl - use SSL [Yes]
 * starttls - Start TLS [No]
 * username - Login     
@@ -88,7 +90,7 @@ Example:
 
 Here is a procedure how to do that in Azure:
 
-https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth#authenticate-connection-requests
+https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth#use-client-credentials-grant-flow-to-authenticate-imap-and-pop-connections
 
 ### Uninstallation
 

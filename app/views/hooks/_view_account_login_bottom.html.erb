@@ -21,12 +21,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 %>
 
-<%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
-
-<%= form_tag(oauth_path(back_url: back_url), method: :get) do %>
-  <%= button_tag(name: 'login-oauth', tabindex: 6, id: 'login-oauth-submit', title: l(:oauth_login_with),
-        style: "background: #{Setting.plugin_redmine_oauth[:button_color]}") do %>
-    <i id="button_icon" class="<%= Setting.plugin_redmine_oauth[:button_icon] %>"></i>
-    <%= l(:oauth_login_via, oauth: Setting.plugin_redmine_oauth[:oauth_name]).html_safe %>
+<% if Setting.plugin_redmine_oauth[:button_icon] != 'none' %>
+  <%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
+  <%= form_tag(oauth_path(back_url: back_url), method: :get) do %>
+    <%= button_tag(name: 'login-oauth', tabindex: 6, id: 'login-oauth-submit', title: l(:oauth_login_with),
+          style: "background: #{Setting.plugin_redmine_oauth[:button_color]}") do %>
+      <i id="button_icon" class="<%= Setting.plugin_redmine_oauth[:button_icon] %>"></i>
+      <%= l(:oauth_login_via, oauth: Setting.plugin_redmine_oauth[:oauth_name]).html_safe %>
+    <% end %>
   <% end %>
 <% end %>

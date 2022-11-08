@@ -35,5 +35,5 @@ en:
   oauth_client_secret_info: Application password
   oauth_tenant_id: Tenant ID
   oauth_tenant_id_info: Directory (tenant) ID
-  oauth_button_info: Colour and icon (Awesome font class) of the OAuth login button
+  oauth_button_info: Colour and icon (Awesome font class) of the OAuth login button (Empty for no button)
   oauth_login_button: Login button

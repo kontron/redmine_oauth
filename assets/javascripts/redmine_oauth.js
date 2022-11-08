@@ -26,9 +26,18 @@ function oauth_set_color()
 
 function oauth_set_icon()
 {
+    let icon_class = $("select#settings_button_icon option:selected").val();
+    let login_button = $("#login-oauth-button");
+    if(icon_class == 'none'){
+        login_button.hide();
+        return;
+    }
+    else{
+        login_button.show();
+    }
     let icon = $("i#button_icon");
     icon.removeClass();
-    icon.addClass($("select#settings_button_icon option:selected").text());
+    icon.addClass(icon_class);
 }
 
 function oauth_settings_visibility()
