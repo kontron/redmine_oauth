@@ -1,10 +1,10 @@
 Changelog for Redmine OAuth
 ==========================
 
-1.0.5 *2022-11-08*
+2.0.0 *2022-11-08*
 ------------------
 
-    Receive IMAP rake task over OAuth
+    Receive IMAP over OAuth rake task
 
 1.0.4 *2022-10-26*
 ------------------
