@@ -32,8 +32,10 @@ jobs:
       NAME: redmine_oauth
     steps:
       - name: Clone Redmine
-        # Get the latest stable Redmine
-        run: svn export https://svn.redmine.org/redmine/branches/5.0-stable/ /opt/redmine
+        # Get the latest stable Redmine and fix the conflict in gems
+        run: |
+          svn export https://svn.redmine.org/redmine/branches/5.0-stable/ /opt/redmine
+          sed -i "s/gem 'net-imap'/#gem 'net-imap'/" /opt/redmine/Gemfile
       - name: Checkout code
         uses: actions/checkout@v3        
       - name: Link the plugin
