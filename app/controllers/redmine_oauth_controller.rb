@@ -119,7 +119,9 @@ class RedmineOauthController < AccountController
         end
       end
     else  # Invalid credentials
+      params[:username] = email
       invalid_credentials
+      raise Exception.new(l(:notice_account_invalid_credentials))
     end
   end
 
