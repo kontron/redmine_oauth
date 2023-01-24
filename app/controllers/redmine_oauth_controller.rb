@@ -80,7 +80,7 @@ class RedmineOauthController < AccountController
   def try_to_login(email, info)
     params['back_url'] = session['back_url']
     session.delete(:back_url)
-    user = User.joins(:email_addresses).where(email_addresses: { address: email, is_default: true }).first
+    user = User.joins(:email_addresses).where(email_addresses: { address: email }).first
     if user # Existing user
       if user.registered? # Registered
         account_pending user

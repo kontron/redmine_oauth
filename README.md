@@ -3,7 +3,12 @@
 [![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=devel)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
-This plugin is used to authenticate in Redmine through OAuth.
+This plugin is used to authenticate in Redmine through an OAuth provider.
+
+The user is identified by the email registered by the OAuth provider. The email must correspond with an email registered 
+in Redmine. If such an email is not found, the user is ofered with registration to Redmine depending on the Redmine's 
+setting **Self-registration**.
+
 Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
 Supported OAuth providers:
