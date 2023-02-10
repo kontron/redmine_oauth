@@ -27,7 +27,7 @@ class RedmineOauthController < AccountController
   before_action :verify_csrf_token, only: [:oauth_callback]
 
   def oauth
-    session['back_url'] = params['back_url']
+    session[:back_url] = params[:back_url]
     oauth_csrf_token = generate_csrf_token
     session[:oauth_csrf_token] = oauth_csrf_token
     case Setting.plugin_redmine_oauth[:oauth_name]
@@ -78,8 +78,8 @@ class RedmineOauthController < AccountController
   private
 
   def try_to_login(email, info)
-    params['back_url'] = session['back_url']
-    session.delete(:back_url)
+    params['back_url'] = session[:back_url]
+    session.delete :back_url
     user = User.joins(:email_addresses).where(email_addresses: { address: email }).first
     if user # Existing user
       if user.registered? # Registered
@@ -153,6 +153,7 @@ class RedmineOauthController < AccountController
     if params[:state].blank? || (params[:state] != session[:oauth_csrf_token])
       render_error status: 422, message: l(:error_invalid_authenticity_token)
     end
+    session.delete :oauth_csrf_token
   end
 
 end

@@ -24,6 +24,7 @@
 <% if Setting.plugin_redmine_oauth[:button_icon] != 'none' %>
   <%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
   <%= form_tag(oauth_path(back_url: back_url), method: :get) do %>
+    <%= back_url_hidden_field_tag %>
     <%= button_tag(name: 'login-oauth', tabindex: 6, id: 'login-oauth-submit', title: l(:oauth_login_with),
           style: "background: #{Setting.plugin_redmine_oauth[:button_color]}") do %>
       <i id="button_icon" class="<%= Setting.plugin_redmine_oauth[:button_icon] %>"></i>
