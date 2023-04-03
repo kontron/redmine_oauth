@@ -2,6 +2,11 @@ AllCops:
   TargetRubyVersion: 2.7
   TargetRailsVersion: 6.1
 
+  NewCops: enable
+
+  Exclude:
+    - '**/vendor/**/*'
+
 # Enable extensions
 require:
   - rubocop-performance
