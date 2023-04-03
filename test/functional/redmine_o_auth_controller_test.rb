@@ -21,10 +21,15 @@
 # Load the normal Rails helper
 require File.expand_path('../../../../test/test_helper', __dir__)
 
+puts File.expand_path('../../../../test/test_helper', __dir__)
+puts File.expand_path('../../../../../test/test_helper', __FILE__)
+
 # OAuth controller
 class RedmineOAuthControllerTest < Redmine::ControllerTest
   include Redmine::I18n
   tests RedmineOauthController
+
+  fixtures :users
 
   def setup
     User.current = nil
