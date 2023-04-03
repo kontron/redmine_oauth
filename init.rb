@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 #
 # Redmine plugin OAuth
@@ -20,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 require 'redmine'
-require File.dirname(__FILE__) + '/lib/redmine_oauth/hooks'
+require "#{File.dirname(__FILE__)}/lib/redmine_oauth/hooks"
 
 Redmine::Plugin.register :redmine_oauth do
   name 'Redmine OAuth plugin'
@@ -37,6 +36,6 @@ Redmine::Plugin.register :redmine_oauth do
     client_secret: '',
     tenant_id: '',
     button_color: '#ffbe6f',
-    button_icon: 'fas fa-address-card',
+    button_icon: 'fas fa-address-card'
   }, partial: 'settings/oauth_settings'
 end
