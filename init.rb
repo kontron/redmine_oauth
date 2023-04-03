@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 require 'redmine'
-require "#{File.dirname(__FILE__)}/lib/redmine_oauth/hooks"
+require File.expand_path('lib/redmine_oauth/hooks', __dir__)
 
 Redmine::Plugin.register :redmine_oauth do
   name 'Redmine OAuth plugin'
