@@ -18,11 +18,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# Load the normal Rails helper
-require File.expand_path('../../../../test/test_helper', __dir__)
-
 puts File.expand_path('../../../../test/test_helper', __dir__)
 puts File.expand_path('../../../../../test/test_helper', __FILE__)
+
+# Load the normal Rails helper
+require File.expand_path('../../../../test/test_helper', __dir__)
 
 # OAuth controller
 class RedmineOAuthControllerTest < Redmine::ControllerTest
