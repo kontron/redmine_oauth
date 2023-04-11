@@ -54,7 +54,7 @@ namespace :redmine_oauth do
       Mailer.with_synched_deliveries do
         RedmineOauth::IMAP.check imap_options, MailHandler.extract_options_from_env(ENV)
       rescue StandardError => e
-        $stderr.warn e.message
+        warn e.message
       end
     end
   end
