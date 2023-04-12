@@ -34,6 +34,9 @@ class RedmineOauthController < AccountController
     when 'Azure AD'
       redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: oauth_csrf_token,
         scope: 'user:email')
+    when 'GitLab'
+      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: oauth_csrf_token,
+        scope: 'read_user api read_api openid profile email')
     when 'Okta'
       redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: oauth_csrf_token,
         scope: 'openid profile email')
@@ -54,6 +57,13 @@ class RedmineOauthController < AccountController
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
       email = user_info['unique_name']
+    when 'GitLab'
+      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
+      userinfo_response = token.get('/api/v4/user',
+        headers: { 'Accept' => 'application/json' })
+      user_info = JSON.parse(userinfo_response.body)
+      user_info['login'] = user_info['username']
+      email = user_info['email']
     when 'Okta'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       userinfo_response = token.get('/oauth2/' + Setting.plugin_redmine_oauth[:tenant_id] + '/v1/userinfo',
@@ -137,6 +147,13 @@ class RedmineOauthController < AccountController
           site: site,
           authorize_url: '/' + Setting.plugin_redmine_oauth[:tenant_id] + '/oauth2/authorize',
           token_url: '/' + Setting.plugin_redmine_oauth[:tenant_id] + '/oauth2/token')
+        when 'GitLab'
+          OAuth2::Client.new(
+            Setting.plugin_redmine_oauth[:client_id],
+            Setting.plugin_redmine_oauth[:client_secret],
+            site: site,
+            authorize_url: '/oauth/authorize',
+            token_url: '/oauth/token')
       when 'Okta'
         OAuth2::Client.new(
           Setting.plugin_redmine_oauth[:client_id],
