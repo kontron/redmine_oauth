@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 #
 # Redmine plugin OAuth
@@ -20,11 +19,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 # Load the normal Rails helper
-require File.expand_path('../../../../../test/test_helper', __FILE__)
+require Rails.root.join('test/test_helper')
 
+# OAuth controller
 class RedmineOAuthControllerTest < Redmine::ControllerTest
   include Redmine::I18n
   tests RedmineOauthController
+
+  fixtures :users
 
   def setup
     User.current = nil
@@ -42,5 +44,4 @@ class RedmineOAuthControllerTest < Redmine::ControllerTest
     get :oauth_callback
     assert_response 422
   end
-
 end

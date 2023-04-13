@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 #
 # Redmine plugin OAuth
@@ -21,6 +20,6 @@
 
 source 'https://rubygems.org'
 
-gem 'oauth2'
 gem 'jwt'
 gem 'net-imap', '~> 0.3.1'
+gem 'oauth2'

@@ -68,4 +68,9 @@ jobs:
         # Run the tests
         run: |
           cd /opt/redmine          
-          bundle exec rake redmine:plugins:test:functionals                
+          bundle exec rake redmine:plugins:test:functionals                    
+      - name: Rubocop
+        # Run the Rubocop tests
+        run: |
+          cd /opt/redmine                    
+          bundle exec rubocop -c plugins/redmine_oauth/.rubocop.yml plugins/redmine_oauth/          

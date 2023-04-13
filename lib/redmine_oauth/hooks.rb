@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 #
 # Redmine plugin OAuth
@@ -20,25 +19,25 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module RedmineOauth
-
+  # View hooks
   class Hooks < Redmine::Hook::ViewListener
-
     def view_account_login_bottom(context = {})
       oauth = Setting.plugin_redmine_oauth[:oauth_name]
-      if oauth.present? && (oauth != 'none')
-        context[:controller].send(:render_to_string, {
-          partial: 'hooks/view_account_login_bottom',
-          locals: context })
-      end
+      return unless oauth.present? && (oauth != 'none')
+
+      context[:controller].send(
+        :render_to_string, { partial: 'hooks/view_account_login_bottom', locals: context }
+      )
     end
 
-    def view_layouts_base_html_head(context={})
-      return unless /^(AccountController|SettingsController|RedmineOauthController)/.match?(context[:controller].class.name)
+    def view_layouts_base_html_head(context = {})
+      return unless /^(AccountController|SettingsController|RedmineOauthController)/.match?(
+        context[:controller].class.name
+      )
+
       "\n".html_safe + stylesheet_link_tag('redmine_oauth.css', plugin: :redmine_oauth) +
         "\n".html_safe + stylesheet_link_tag('../vendor/fontawesome/all.min.css', plugin: :redmine_oauth) +
         "\n".html_safe + javascript_include_tag('redmine_oauth.js', plugin: :redmine_oauth)
     end
-
   end
-
 end

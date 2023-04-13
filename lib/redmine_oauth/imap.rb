@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 #
 # Redmine plugin OAuth
@@ -22,10 +21,10 @@
 require 'net/imap'
 
 module RedmineOauth
+  # IMAP
   module IMAP
-
     class << self
-      def check(imap_options={}, options={})
+      def check(imap_options = {}, options = {})
         host = imap_options[:host] || 'outlook.office365.com'
         port = imap_options[:port] || '993'
         scope = imap_options[:scope] || 'https://outlook.office365.com/.default'
@@ -37,30 +36,27 @@ module RedmineOauth
           Setting.plugin_redmine_oauth[:client_id],
           Setting.plugin_redmine_oauth[:client_secret],
           site: Setting.plugin_redmine_oauth[:site]&.chomp('/'),
-          token_url: '/' + Setting.plugin_redmine_oauth[:tenant_id] + '/oauth2/v2.0/token')
-        params =  {
+          token_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/v2.0/token"
+        )
+        params = {
           scope: scope,
           grant_type: grant_type
         }
         access_token = client.get_token(params)
         imap = Net::IMAP.new(host, port, ssl)
-        if starttls
-          imap.starttls
-        end
-        imap.authenticate('XOAUTH2',imap_options[:username], access_token.token)
+        imap.starttls if starttls
+        imap.authenticate('XOAUTH2', imap_options[:username], access_token.token)
         imap.select folder
-        imap.uid_search(['NOT', 'SEEN']).each do |uid|
-          msg = imap.uid_fetch(uid,'RFC822')[0].attr['RFC822']
-          Rails.logger.debug "Receiving message #{uid}"
+        imap.uid_search(%w[NOT SEEN]).each do |uid|
+          msg = imap.uid_fetch(uid, 'RFC822')[0].attr['RFC822']
+          Rails.logger.debug { "Receiving message #{uid}" }
           if MailHandler.safe_receive(msg, options)
-            Rails.logger.debug "Message #{uid} successfully received"
-            if imap_options[:move_on_success]
-              imap.uid_copy uid, imap_options[:move_on_success]
-            end
-            imap.uid_store(uid, '+FLAGS', [:Seen, :Deleted])
+            Rails.logger.debug { "Message #{uid} successfully received" }
+            imap.uid_copy(uid, imap_options[:move_on_success]) if imap_options[:move_on_success]
+            imap.uid_store uid, '+FLAGS', %i[Seen Deleted]
           else
-            Rails.logger.debug "Message #{uid} can not be processed"
-            imap.uid_store(uid, '+FLAGS', [:Seen])
+            Rails.logger.debug { "Message #{uid} can not be processed" }
+            imap.uid_store uid, '+FLAGS', %i[Seen]
             if imap_options[:move_on_failure]
               imap.uid_copy uid, imap_options[:move_on_failure]
               imap.uid_store uid, '+FLAGS', [:Deleted]
@@ -71,7 +67,6 @@ module RedmineOauth
         imap.logout
         imap.disconnect
       end
-
     end
   end
 end

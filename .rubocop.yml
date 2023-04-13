@@ -1,8 +1,6 @@
-# frozen_string_literal: true
+# Redmine plugin for OAuth
 #
-# Redmine plugin OAuth
-#
-# Karel Pičman <karel.picman@kontron.com>
+# Copyright © 2011-22 Karel Pičman <karel.picman@kontron.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,25 +15,41 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# Rubocop configuration
 
-require 'redmine'
-require File.expand_path('lib/redmine_oauth/hooks', __dir__)
+AllCops:
+  TargetRubyVersion: 2.7
+  TargetRailsVersion: 6.1
 
-Redmine::Plugin.register :redmine_oauth do
-  name 'Redmine OAuth plugin'
-  author 'Karel Pičman'
-  description 'Redmine OAuth plugin'
-  version '2.0.3 devel'
-  url 'https://github.com/kontron/redmine_oauth'
-  author_url 'https://github.com/kontron/redmine_oauth/graphs/contributors'
+  NewCops: enable
 
-  settings default: {
-    oauth_name: 'none',
-    site: '',
-    client_id: '',
-    client_secret: '',
-    tenant_id: '',
-    button_color: '#ffbe6f',
-    button_icon: 'fas fa-address-card'
-  }, partial: 'settings/oauth_settings'
-end
+  Exclude:
+    - '**/vendor/**/*'
+
+# Enable extensions
+require:
+  - rubocop-performance
+  - rubocop-rails
+
+# Rules for OAuth
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
