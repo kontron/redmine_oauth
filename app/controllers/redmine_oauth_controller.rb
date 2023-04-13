@@ -31,14 +31,17 @@ class RedmineOauthController < AccountController
     session[:oauth_csrf_token] = oauth_csrf_token
     case Setting.plugin_redmine_oauth[:oauth_name]
     when 'Azure AD'
-       redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'user:email'
       )
     when 'GitLab'
-      redirect_to oauth_client.auth_code.authorize_url(redirect_uri: oauth_callback_url, state: oauth_csrf_token,
-        scope: 'read_user api read_api openid profile email')
+      redirect_to oauth_client.auth_code.authorize_url(
+        redirect_uri: oauth_callback_url,
+        state: oauth_csrf_token,
+        scope: 'read_user api read_api openid profile email'
+      )
     when 'Okta'
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
@@ -65,8 +68,7 @@ class RedmineOauthController < AccountController
       email = user_info['unique_name']
     when 'GitLab'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
-      userinfo_response = token.get('/api/v4/user',
-        headers: { 'Accept' => 'application/json' })
+      userinfo_response = token.get('/api/v4/user', headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['username']
       email = user_info['email']
@@ -156,13 +158,15 @@ class RedmineOauthController < AccountController
           site: site,
           authorize_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/authorize",
           token_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/token"
+        )
       when 'GitLab'
         OAuth2::Client.new(
           Setting.plugin_redmine_oauth[:client_id],
           Setting.plugin_redmine_oauth[:client_secret],
           site: site,
           authorize_url: '/oauth/authorize',
-          token_url: '/oauth/token')
+          token_url: '/oauth/token'
+        )
       when 'Okta'
         OAuth2::Client.new(
           Setting.plugin_redmine_oauth[:client_id],

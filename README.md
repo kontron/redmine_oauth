@@ -13,7 +13,8 @@ Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
 Supported OAuth providers:
 * Azure AD (https://azure.microsoft.com)
-* Otka (https://www.okta.com/)
+* Otka (https://www.okta.com)
+* GitLab (https://about.gitlab.com)
 
 ### Installation:
 
