@@ -33,9 +33,6 @@ require:
   - rubocop-rails
 
 # Rules for OAuth
-Layout/EmptyLineAfterMagicComment:
-  Enabled: false
-
 Metrics/BlockLength:
   Enabled: false
 

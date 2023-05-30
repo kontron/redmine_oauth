@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 # Redmine plugin OAuth
 #
 # Karel Pičman <karel.picman@kontron.com>
