@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.0.3 *????-??-??*
+2.1.0 *2023-06-02*
 ------------------
+
+    GitLab OAuth provider
+
+* New: #12 - Add support for GitLab OAuth provider
 
 2.0.2 *2023-02-10*
 ------------------
