@@ -74,7 +74,7 @@
       <%= text_field_tag 'settings[client_secret]', @settings[:client_secret], size: 40 %>
       <em class="info"><%= l(:oauth_client_secret_info) %></em>
     </p>
-    <p>
+    <p id="oauth_options_tenant">
       <label><%= l(:oauth_tenant_id) %></label>
       <%= text_field_tag 'settings[tenant_id]', @settings[:tenant_id], size: 40 %>
       <em class="info"><%= l(:oauth_tenant_id_info) %></em>
