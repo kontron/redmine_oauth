@@ -40,7 +40,7 @@ class RedmineOauthController < AccountController
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
-        scope: 'read_user api read_api openid profile email'
+        scope: 'read_user'
       )
     when 'Okta'
       redirect_to oauth_client.auth_code.authorize_url(
