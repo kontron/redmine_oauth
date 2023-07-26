@@ -108,7 +108,7 @@ class RedmineOauthController < AccountController
       else # Locked
         handle_inactive_user user
       end
-    elsif # Create on the fly
+    else # Create on the fly
       user = User.new
       user.mail = email
       firstname, lastname = info['name'].split if info['name'].present?
