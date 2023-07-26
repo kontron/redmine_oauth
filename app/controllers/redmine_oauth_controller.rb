@@ -108,7 +108,7 @@ class RedmineOauthController < AccountController
       else # Locked
         handle_inactive_user user
       end
-    elsif Setting.self_registration? # Create on the fly
+    elsif # Create on the fly
       user = User.new
       user.mail = email
       firstname, lastname = info['name'].split if info['name'].present?
@@ -127,7 +127,7 @@ class RedmineOauthController < AccountController
         register_by_email_activation(user) do
           onthefly_creation_failed user
         end
-      when '3'
+      when '3', '0'
         register_automatically(user) do
           onthefly_creation_failed user
         end
