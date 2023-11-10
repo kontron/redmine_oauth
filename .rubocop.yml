@@ -52,4 +52,4 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 
 Style/HashSyntax:
-  Enabled: false
+  EnforcedShorthandSyntax: either
