@@ -35,21 +35,6 @@ bundle install
 systemctl restart apache2
 ```
 
-**There is a conflict with *net-imap* gem!**
-
-```
-[!] There was an error parsing `Gemfile`: You cannot specify the same gem twice with different version requirements.
-You specified: net-imap (~> 0.2.2) and net-imap (~> 0.3.1). Bundler cannot continue.
-```
-
-This gem supports XOAUTH from v0.3.1. So, it is necessary to comment out
-corresponding line in Redmine's Gemfile and then run `bundle install` again.
-
-```
--- gem 'net-imap', '~> 0.2.2'
-++ #gem 'net-imap', '~> 0.2.2'
-```
-
 ### Registration
 
 Register your Redmine instance as an application by your OAuth provider. Follow the instructions given on their web 

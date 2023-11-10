@@ -4,6 +4,8 @@ Changelog for Redmine OAuth
 2.1.2 *????-??-??*
 ------------------
 
+    Redmine 5.1.x required (no more conflict with net-imap gem)
+
 2.1.1 *2023-06-02*
 ------------------
 

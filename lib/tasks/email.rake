@@ -41,15 +41,17 @@ namespace :redmine_oauth do
 
     task receive_imap: :environment do
       imap_options = {
-        host: ENV['host'],
-        port: ENV['port'],
-        ssl: ENV['ssl'],
-        starttls: ENV['starttls'],
-        username: ENV['username'],
-        password: ENV['access_token'],
-        folder: ENV['folder'],
-        move_on_success: ENV['move_on_success'],
-        move_on_failure: ENV['move_on_failure']
+        host: ENV.fetch('host', 'outlook.office365.com'),
+        port: ENV.fetch('port', '993'),
+        scope: ENV.fetch('scope', 'https://outlook.office365.com/.default'),
+        grant_type: ENV.fetch('grant_type', 'client_credentials'),
+        ssl: ENV.fetch('ssl', nil),
+        starttls: ENV.fetch('starttls', nil),
+        username: ENV.fetch('username', nil),
+        password: ENV.fetch('access_token', nil),
+        folder: ENV.fetch('folder', 'INBOX'),
+        move_on_success: ENV.fetch('move_on_success', nil),
+        move_on_failure: ENV.fetch('move_on_failure', nil)
       }
       Mailer.with_synched_deliveries do
         RedmineOauth::IMAP.check imap_options, MailHandler.extract_options_from_env(ENV)

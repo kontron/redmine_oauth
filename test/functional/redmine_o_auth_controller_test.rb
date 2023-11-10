@@ -22,26 +22,21 @@
 require Rails.root.join('test/test_helper')
 
 # OAuth controller
-class RedmineOAuthControllerTest < Redmine::ControllerTest
+class RedmineOAuthControllerTest < ActionDispatch::IntegrationTest
   include Redmine::I18n
-  tests RedmineOauthController
 
   fixtures :users
 
-  def setup
-    User.current = nil
-  end
-
   def test_oauth
     with_settings plugin_redmine_oauth: { 'oauth_name' => '' } do
-      get :oauth
+      get '/oauth'
       assert_redirected_to signin_path
       assert_equal l(:oauth_invalid_provider), flash[:error]
     end
   end
 
   def test_oauth_callback_csrf
-    get :oauth_callback
+    get '/oauth2callback'
     assert_response 422
   end
 end
