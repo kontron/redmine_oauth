@@ -19,7 +19,7 @@
 # Rubocop configuration
 
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.1
   TargetRailsVersion: 6.1
 
   NewCops: enable
@@ -49,4 +49,7 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Style/HashSyntax:
   Enabled: false
