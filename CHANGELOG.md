@@ -9,7 +9,7 @@ Changelog for Redmine OAuth
 2.1.1 *2023-06-02*
 ------------------
 
-    GiLab enhancement
+    GitLab enhancement
 
 2.1.0 *2023-06-02*
 ------------------
