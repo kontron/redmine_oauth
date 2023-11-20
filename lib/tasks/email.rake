@@ -45,10 +45,9 @@ namespace :redmine_oauth do
         port: ENV.fetch('port', '993'),
         scope: ENV.fetch('scope', 'https://outlook.office365.com/.default'),
         grant_type: ENV.fetch('grant_type', 'client_credentials'),
-        ssl: ENV.fetch('ssl', nil),
-        starttls: ENV.fetch('starttls', nil),
-        username: ENV.fetch('username', nil),
-        password: ENV.fetch('access_token', nil),
+        ssl: ENV.fetch('ssl', true),
+        starttls: ENV.fetch('starttls', false),
+        username: ENV.fetch('username', ''),
         folder: ENV.fetch('folder', 'INBOX'),
         move_on_success: ENV.fetch('move_on_success', nil),
         move_on_failure: ENV.fetch('move_on_failure', nil)
