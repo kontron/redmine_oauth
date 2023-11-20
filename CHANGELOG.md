@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.1.3 *????-??-??*
+2.1.3 *2023-11-20*
 ------------------
+
+    IMAP authentication fix
+
+* Bug: #20 - connection closed
 
 2.1.2 *2023-11-15*
 ------------------
