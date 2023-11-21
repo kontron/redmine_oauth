@@ -22,7 +22,7 @@
 
 <% if Setting.plugin_redmine_oauth[:button_icon] != 'none' %>
   <%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
-  <%= form_tag(oauth_path(back_url: back_url), method: :get) do %>
+  <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
     <%= back_url_hidden_field_tag %>
     <%= button_tag(name: 'login-oauth', tabindex: 6, id: 'login-oauth-submit', title: l(:oauth_login_with),
           style: "background: #{Setting.plugin_redmine_oauth[:button_color]}") do %>
@@ -30,4 +30,24 @@
       <%= l(:oauth_login_via, oauth: Setting.plugin_redmine_oauth[:oauth_name]).html_safe %>
     <% end %>
   <% end %>
+<% end %>
+
+<%= javascript_tag do %>
+  $('#autologin').change(function() {
+    let oauth_login_form = $("#oauth-login")
+    if(oauth_login_form && this.checked) {
+      $('<input>', {
+        type: 'hidden',
+        id: 'autologin',
+        name: 'autologin',
+        value: '1'
+      }).appendTo(oauth_login_form);
+    }
+    else{
+        let hidden_tag = $('input:hidden[name="autologin"]');
+        if(hidden_tag){
+          hidden_tag.remove();
+        }
+    }
+  });
 <% end %>
