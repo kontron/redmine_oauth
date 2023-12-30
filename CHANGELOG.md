@@ -5,6 +5,7 @@ Changelog for Redmine OAuth
 ------------------
     
     Autologin
+    Google OAuth provider
 
 2.1.3 *2023-11-20*
 ------------------

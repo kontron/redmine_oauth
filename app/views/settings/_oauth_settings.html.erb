@@ -27,6 +27,7 @@
   <%= select_tag 'settings[oauth_name]', options_for_select([
       %w(Azure\ AD Azure\ AD),
       %w(GitLab GitLab),
+      %w(Google Google),
       %w(Okta Okta),
       ["&nbsp;".html_safe, 'none']
     ], @settings[:oauth_name]), onchange: 'oauth_settings_visibility()' %>

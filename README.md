@@ -13,8 +13,9 @@ Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
 Supported OAuth providers:
 * Azure AD (https://azure.microsoft.com)
-* Otka (https://www.okta.com)
 * GitLab (https://about.gitlab.com)
+* Google (https://google.com)
+* Otka (https://www.okta.com)
 
 ### Installation:
 
@@ -55,6 +56,15 @@ Open _Administration -> Plugins_ in your Redmine and configure the plugin.
 **Client secret** xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 **Tenant ID** xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
+
+---
+**Provider**  Google
+
+**Site**  https://accounts.google.com
+
+**Client ID** xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+**Client secret** xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Tasks
 
