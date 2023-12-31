@@ -93,7 +93,7 @@ class RedmineOauthController < AccountController
     when 'Keycloak'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
-      user_info['login'] = user_info['username']
+      user_info['login'] = user_info['preferred_username']
       email = user_info['email']
     when 'Okta'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
