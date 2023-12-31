@@ -47,7 +47,13 @@ class RedmineOauthController < AccountController
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
-        scope: 'openid:profile:email'
+        scope: 'openid profile email'
+      )
+    when 'Keycloak'
+      redirect_to oauth_client.auth_code.authorize_url(
+        redirect_uri: oauth_callback_url,
+        state: oauth_csrf_token,
+        scope: 'openid email'
       )
     when 'Okta'
       redirect_to oauth_client.auth_code.authorize_url(
@@ -80,6 +86,11 @@ class RedmineOauthController < AccountController
       user_info['login'] = user_info['username']
       email = user_info['email']
     when 'Google'
+      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
+      user_info = JWT.decode(token.token, nil, false).first
+      user_info['login'] = user_info['username']
+      email = user_info['email']
+    when 'Keycloak'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
       user_info['login'] = user_info['username']
@@ -188,6 +199,14 @@ class RedmineOauthController < AccountController
           site: site,
           authorize_url: '/o/oauth2/v2/auth',
           token_url: '/o/oauth2/v2/auth'
+        )
+      when 'Keycloak'
+        OAuth2::Client.new(
+          Setting.plugin_redmine_oauth[:client_id],
+          Setting.plugin_redmine_oauth[:client_secret],
+          site: site,
+          authorize_url: "/auth/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/auth",
+          token_url: "/auth/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/auth"
         )
       when 'Okta'
         OAuth2::Client.new(

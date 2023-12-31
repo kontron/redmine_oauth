@@ -15,6 +15,7 @@ Supported OAuth providers:
 * Azure AD (https://azure.microsoft.com)
 * GitLab (https://about.gitlab.com)
 * Google (https://google.com)
+* Keycloak (https://www.keycloak.org)
 * Otka (https://www.okta.com)
 
 ### Installation:
