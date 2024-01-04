@@ -56,7 +56,7 @@ Open _Administration -> Plugins_ in your Redmine and configure the plugin.
 
 **Client secret** xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-**Tenant ID** xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
+**Tenant ID / Realm** xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
 
 ---
 **Provider**  Google

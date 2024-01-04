@@ -205,8 +205,8 @@ class RedmineOauthController < AccountController
           Setting.plugin_redmine_oauth[:client_id],
           Setting.plugin_redmine_oauth[:client_secret],
           site: site,
-          authorize_url: "/auth/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/auth",
-          token_url: "/auth/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/auth"
+          authorize_url: "/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/auth",
+          token_url: "/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/token"
         )
       when 'Okta'
         OAuth2::Client.new(
