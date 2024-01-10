@@ -88,7 +88,7 @@ class RedmineOauthController < AccountController
     when 'Google'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       Rails.logger.debug ">>> code: #{params['code']}"
-      userinfo_response = token.get('/oauth2/userinfo', headers: { 'Accept' => 'application/json' })
+      userinfo_response = token.get('/oauth2/v2/userinfo', headers: { 'Accept' => 'application/json' })
       Rails.logger.debug ">>> response: #{userinfo_response.body}"
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['name']
