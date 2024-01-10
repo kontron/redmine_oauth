@@ -87,9 +87,14 @@ class RedmineOauthController < AccountController
       email = user_info['email']
     when 'Google'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
-      user_info = JWT.decode(token.token, nil, false).first
-      user_info['login'] = user_info['username']
+      Rails.logger.debug ">>> code: #{params['code']}"
+      userinfo_response = token.get('/oauth2/userinfo', headers: { 'Accept' => 'application/json' })
+      Rails.logger.debug ">>> response: #{userinfo_response.body}"
+      user_info = JSON.parse(userinfo_response.body)
+      user_info['login'] = user_info['name']
+      Rails.logger.debug ">>> login: #{user_info['name']}"
       email = user_info['email']
+      Rails.logger.debug ">>> eail: #{user_info['email']}"
     when 'Keycloak'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
@@ -190,14 +195,14 @@ class RedmineOauthController < AccountController
           Setting.plugin_redmine_oauth[:client_secret],
           site: site,
           authorize_url: '/oauth/authorize',
-          token_url: '/oauth/token'
+          token_url: 'https://oauth2.googleapis.com/token'
         )
       when 'Google'
         OAuth2::Client.new(
           Setting.plugin_redmine_oauth[:client_id],
           Setting.plugin_redmine_oauth[:client_secret],
           site: site,
-          authorize_url: '/o/oauth2/v2/auth',
+          authorize_url: '/o/oauth2/auth',
           token_url: '/o/oauth2/v2/token'
         )
       when 'Keycloak'
