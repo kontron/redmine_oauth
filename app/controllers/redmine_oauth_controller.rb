@@ -200,7 +200,7 @@ class RedmineOauthController < AccountController
           Setting.plugin_redmine_oauth[:client_secret],
           site: site,
           authorize_url: '/o/oauth2/auth',
-          token_url: '/o/oauth2/token'
+          token_url: 'https://oauth2.googleapis.com/token'
         )
       when 'Keycloak'
         OAuth2::Client.new(
