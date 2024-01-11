@@ -86,16 +86,18 @@ class RedmineOauthController < AccountController
       user_info['login'] = user_info['username']
       email = user_info['email']
     when 'Google'
-      Rails.logger.debug ">>> code: #{params['code']}"
+      Rails.logger.info ">>> code: #{params['code']}"
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
-      Rails.logger.debug ">>> token: #{token}"
+      Rails.logger.info ">>> token: #{token}"
+      user_info = JWT.decode(token.token, nil, false).first
+      Rails.logger.info ">>> user_info: #{user_info}"
       userinfo_response = token.get('/oauth2/v2/userinfo', headers: { 'Accept' => 'application/json' })
-      Rails.logger.debug ">>> response: #{userinfo_response.body}"
-      user_info = JSON.parse(userinfo_response.body)
+      Rails.logger.info ">>> response: #{userinfo_response&.body}"
+      user_info = JSON.parse(userinfo_response&.body)
       user_info['login'] = user_info['name']
-      Rails.logger.debug ">>> login: #{user_info['name']}"
+      Rails.logger.info ">>> login: #{user_info['name']}"
       email = user_info['email']
-      Rails.logger.debug ">>> eail: #{user_info['email']}"
+      Rails.logger.info ">>> eail: #{user_info['email']}"
     when 'Keycloak'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
