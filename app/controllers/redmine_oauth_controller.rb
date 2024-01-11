@@ -47,7 +47,7 @@ class RedmineOauthController < AccountController
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
-        scope: 'openid profile email'
+        scope: 'profile email'
       )
     when 'Keycloak'
       redirect_to oauth_client.auth_code.authorize_url(
@@ -86,18 +86,10 @@ class RedmineOauthController < AccountController
       user_info['login'] = user_info['username']
       email = user_info['email']
     when 'Google'
-      Rails.logger.info ">>> code: #{params['code']}"
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
-      Rails.logger.info ">>> token: #{token}"
-      user_info = JWT.decode(token.token, nil, false).first
-      Rails.logger.info ">>> user_info: #{user_info}"
-      userinfo_response = token.get('/oauth2/v2/userinfo', headers: { 'Accept' => 'application/json' })
-      Rails.logger.info ">>> response: #{userinfo_response&.body}"
-      user_info = JSON.parse(userinfo_response&.body)
+      user_info = JWT.decode(token.to_hash['id_token'], nil, false).first
       user_info['login'] = user_info['name']
-      Rails.logger.info ">>> login: #{user_info['name']}"
       email = user_info['email']
-      Rails.logger.info ">>> eail: #{user_info['email']}"
     when 'Keycloak'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
