@@ -89,7 +89,7 @@ class RedmineOauthController < AccountController
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       userinfo_response = token.get('https://openidconnect.googleapis.com/v1/userinfo', headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
-      user_info['login'] = user_info['name']
+      user_info['login'] = user_info['email']
       email = user_info['email']
     when 'Keycloak'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
