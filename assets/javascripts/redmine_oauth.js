@@ -62,14 +62,23 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_tenant').show();
             tenant_id.val("");
             break;
+        case 'GitLab':
+            div_oauth_options.show();
+            div_oauth_options.find('#oauth_options_tenant').hide();
+            break;
+        case 'Google':
+            div_oauth_options.show();
+            div_oauth_options.find('#oauth_options_tenant').hide();
+            break;
+        case 'Keycloak':
+            div_oauth_options.show();
+            div_oauth_options.find('#oauth_options_tenant').show();
+            tenant_id.val("");
+            break;
         case 'Okta':
             div_oauth_options.show();
             div_oauth_options.find('#oauth_options_tenant').show();
             tenant_id.val("default");
-            break;
-        case 'GitLab':
-            div_oauth_options.show();
-            div_oauth_options.find('#oauth_options_tenant').hide();
             break;
         default:
             break;

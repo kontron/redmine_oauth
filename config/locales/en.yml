@@ -32,7 +32,7 @@ en:
   oauth_client_id_info: Application (client) ID
   oauth_client_secret: Client secret
   oauth_client_secret_info: Application password
-  oauth_tenant_id: Tenant ID
+  oauth_tenant_id: Tenant ID / Realm
   oauth_tenant_id_info: Directory (tenant) ID
   oauth_button_info: Colour and icon (Awesome font class) of the OAuth login button (Empty for no button)
   oauth_login_button: Login button

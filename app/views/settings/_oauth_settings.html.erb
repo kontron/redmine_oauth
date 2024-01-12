@@ -27,6 +27,8 @@
   <%= select_tag 'settings[oauth_name]', options_for_select([
       %w(Azure\ AD Azure\ AD),
       %w(GitLab GitLab),
+      %w(Google Google),
+      %w(Keycloak Keycloak),
       %w(Okta Okta),
       ["&nbsp;".html_safe, 'none']
     ], @settings[:oauth_name]), onchange: 'oauth_settings_visibility()' %>
@@ -74,7 +76,11 @@
       <%= text_field_tag 'settings[client_secret]', @settings[:client_secret], size: 40 %>
       <em class="info"><%= l(:oauth_client_secret_info) %></em>
     </p>
-    <p id="oauth_options_tenant">
+    <% if %w(GitLab Google).include?(@settings[:oauth_name]) %>
+      <p id="oauth_options_tenant" style="display: none">
+    <% else %>
+      <p id="oauth_options_tenant">
+    <% end %>
       <label><%= l(:oauth_tenant_id) %></label>
       <%= text_field_tag 'settings[tenant_id]', @settings[:tenant_id], size: 40 %>
       <em class="info"><%= l(:oauth_tenant_id_info) %></em>
