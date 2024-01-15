@@ -1,13 +1,19 @@
 Changelog for Redmine OAuth
 ==========================
 
+2.1.5 *2024-01-15*
+------------------
+
+    French localisation
+
+* New: #23 - [Locales] Add french translation 
+
 2.1.4 *2024-01-12*
 ------------------
     
     Autologin
     Google OAuth provider
     Keycloak OAuth provider
-
 
 * New: #22 - About feature requests and providers enhancement
 * New: #21 - Autologin enhancement

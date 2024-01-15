@@ -1,0 +1,38 @@
+# frozen_string_literal: true
+
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+fr:
+  oauth_login_via: "Continuer avec <b>%{oauth}</b>"
+  oauth_login_with: Se connecter avec OAuth
+  oauth_no_verified_email: Aucun email vérifié n'a été fourni, vérifiez vos réglages sur le site de votre fournisseur Oauth.
+  oauth_invalid_provider: Fournisseur OAuth invalide
+  oauth_none: Aucun
+  oauth_provider: Fournisseur
+  oauth_provider_info: Fournisseur OAuth
+  oauth_site: Site
+  oauth_site_info: URL d'authentification du fournisseur OAuth
+  oauth_client_id: ID client
+  oauth_client_id_info: ID d'application
+  oauth_client_secret: Secret client
+  oauth_client_secret_info: Mot de passe d'application
+  oauth_tenant_id: ID de Tenant / Realm
+  oauth_tenant_id_info: ID de répertoire (tenant)
+  oauth_button_info: Couleur et icône (classe Font Awesome) du bouton de connexion via OAuth (Laissez vite pour masquer le bouton)
+  oauth_login_button: Bouton de connexion
