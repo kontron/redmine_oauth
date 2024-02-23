@@ -61,7 +61,7 @@ class RedmineOauthController < AccountController
         state: oauth_csrf_token,
         scope: 'openid profile email'
       )
-    when 'Custom' 
+    when 'Custom'
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
@@ -124,7 +124,7 @@ class RedmineOauthController < AccountController
         user_info = JSON.parse(userinfo_response.body)
       end
       user_info['login'] = user_info[Setting.plugin_redmine_oauth[:custom_uid_field]]
-      email = user_info[Setting.plugin_redmine_oauth[:custom_email_field]]  
+      email = user_info[Setting.plugin_redmine_oauth[:custom_email_field]]
     else
       raise StandardError, l(:oauth_invalid_provider)
     end
@@ -244,7 +244,7 @@ class RedmineOauthController < AccountController
           site: site,
           authorize_url: Setting.plugin_redmine_oauth[:custom_auth_endpoint],
           token_url: Setting.plugin_redmine_oauth[:custom_token_endpoint]
-        )  
+        )
       else
         raise StandardError, l(:oauth_invalid_provider)
       end
