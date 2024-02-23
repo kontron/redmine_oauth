@@ -30,6 +30,7 @@
       %w(Google Google),
       %w(Keycloak Keycloak),
       %w(Okta Okta),
+      %w(Custom),
       ["&nbsp;".html_safe, 'none']
     ], @settings[:oauth_name]), onchange: 'oauth_settings_visibility()' %>
   <em class="info"><%= l(:oauth_provider_info) %></em>
@@ -56,12 +57,16 @@
           <%= button_tag(name: 'login-oauth', id: 'login-oauth-button', title: l(:oauth_login_with), style: style,
                 disabled: true) do %>
             <i id="button_icon" class="<%= @settings[:button_icon] %>"></i>
-            <%= l(:oauth_login_via, oauth: @settings[:oauth_name]).html_safe %>
+            <%= l(:oauth_login_via, oauth: !@settings[:custom_name].nil? && !@settings[:custom_name].empty? ? @settings[:custom_name] : @settings[:oauth_name]).html_safe %>
           <% end %>
         </span>
         <em class="info"><%= l(:oauth_button_info) %></em>
     </p>
-    <p>
+    <% if %w(Custom).include?(@settings[:oauth_name]) %>
+      <p id="oauth_options_site" style="display: none">
+    <% else %>
+      <p id="oauth_options_site">
+    <% end %>
       <label><%= l(:oauth_site) %></label>
       <%= text_field_tag 'settings[site]', @settings[:site], size: 40 %>
       <em class="info"><%= l(:oauth_site_info) %></em>
@@ -76,7 +81,7 @@
       <%= text_field_tag 'settings[client_secret]', @settings[:client_secret], size: 40 %>
       <em class="info"><%= l(:oauth_client_secret_info) %></em>
     </p>
-    <% if %w(GitLab Google).include?(@settings[:oauth_name]) %>
+    <% if %w(GitLab Google Custom).include?(@settings[:oauth_name]) %>
       <p id="oauth_options_tenant" style="display: none">
     <% else %>
       <p id="oauth_options_tenant">
@@ -85,4 +90,46 @@
       <%= text_field_tag 'settings[tenant_id]', @settings[:tenant_id], size: 40 %>
       <em class="info"><%= l(:oauth_tenant_id_info) %></em>
     </p>
+    <% if %w(Custom).include?(@settings[:oauth_name]) %>
+      <div id="oauth_options_custom">
+    <% else %>
+      <div id="oauth_options_custom" style="display: none">
+    <% end %>
+      <p>
+        <label><%= l(:oauth_custom_name) %></label>
+        <input type="text" id="settings_custom_name" name="settings[custom_name]" value="<%= @settings[:custom_name] %>" 
+          onChange="oauth_set_btn_title();">
+       <em class="info"><%= l(:oauth_custom_name_info) %></em>
+      </p>
+      <p>
+        <label><%= l(:oauth_custom_auth_endpoint) %></label>
+        <%= text_field_tag 'settings[custom_auth_endpoint]', @settings[:custom_auth_endpoint], size: 80 %>
+       <em class="info"><%= l(:oauth_custom_auth_endpoint_info) %></em>
+      </p>
+      <p>
+        <label><%= l(:oauth_custom_token_endpoint) %></label>
+        <%= text_field_tag 'settings[custom_token_endpoint]', @settings[:custom_token_endpoint], size: 80 %>
+        <em class="info"><%= l(:oauth_custom_token_endpoint_info) %></em>
+      </p>
+      <p>
+        <label><%= l(:oauth_custom_profile_endpoint) %></label>
+        <%= text_field_tag 'settings[custom_profile_endpoint]', @settings[:custom_profile_endpoint], size: 80 %>
+        <em class="info"><%= l(:oauth_custom_profile_endpoint_info) %></em>
+      </p>
+      <p>
+        <label><%= l(:oauth_custom_scope) %></label>
+        <%= text_field_tag 'settings[custom_scope]', @settings[:custom_scope], size: 40 %>
+        <em class="info"><%= l(:oauth_custom_scope_info) %></em>
+      </p>
+      <p>
+        <label><%= l(:oauth_custom_uid_field) %></label>
+        <%= text_field_tag 'settings[custom_uid_field]', @settings[:custom_uid_field], size: 40 %>
+        <em class="info"><%= l(:oauth_custom_uid_field_info) %></em>
+      </p>
+      <p>
+        <label><%= l(:oauth_custom_email_field) %></label>
+        <%= text_field_tag 'settings[custom_email_field]', @settings[:custom_email_field], size: 40 %>
+        <em class="info"><%= l(:oauth_custom_email_field_info) %></em>
+      </p>
+    </div>
 </div>
