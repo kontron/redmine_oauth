@@ -36,17 +36,17 @@ cs:
   oauth_tenant_id_info: ID adresáře (tenanta)
   oauth_button_info: Barva a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth (prázdné pro žádné tlačítko)
   oauth_login_button: Přihlašovací tlačítko
-  oauth_custom_name: Provider name
-  oauth_custom_name_info: Title to be shown on the OAuth login button
-  oauth_custom_auth_endpoint: Auth endpoint
-  oauth_custom_auth_endpoint_info: Application Auth endpoint
-  oauth_custom_token_endpoint: Token endpoint
-  oauth_custom_token_endpoint_info: Application Token endpoint
-  oauth_custom_profile_endpoint: Profile endpoint
-  oauth_custom_profile_endpoint_info: Application Profile endpoint
+  oauth_custom_name: Název poskytovatele
+  oauth_custom_name_info: Titulek zobrazený na přihlašovacím tlačítku OAuth
+  oauth_custom_auth_endpoint: Autorizační endpoint
+  oauth_custom_auth_endpoint_info: Autorizační endpoint aplikace
+  oauth_custom_token_endpoint: Endpoint tokenu
+  oauth_custom_token_endpoint_info: Endpoint tokenu aplikace
+  oauth_custom_profile_endpoint: Endpoint profilu
+  oauth_custom_profile_endpoint_info: Endpoint profilu aplikace
   oauth_custom_scope: OAuth scope
-  oauth_custom_scope_info: OAuth scope (default - 'openid profile email')
-  oauth_custom_uid_field: UID field
-  oauth_custom_uid_field_info: UID field (default - preferred_username)
-  oauth_custom_email_field: Email field
-  oauth_custom_email_field_info: Email field (default - email)
+  oauth_custom_scope_info: OAuth scope (výchozí - 'openid profile email')
+  oauth_custom_uid_field: UID
+  oauth_custom_uid_field_info: Pole UID (výchozí - preferred_username)
+  oauth_custom_email_field: E-mail
+  oauth_custom_email_field_info: Pole e-mail (výchozí - email)
