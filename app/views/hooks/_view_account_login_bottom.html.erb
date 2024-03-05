@@ -27,7 +27,7 @@
     <%= button_tag(name: 'login-oauth', tabindex: 6, id: 'login-oauth-submit', title: l(:oauth_login_with),
           style: "background: #{Setting.plugin_redmine_oauth[:button_color]}") do %>
       <i id="button_icon" class="<%= Setting.plugin_redmine_oauth[:button_icon] %>"></i>
-      <%= l(:oauth_login_via, oauth: Setting.plugin_redmine_oauth[:custom_name].strip.empty? ? Setting.plugin_redmine_oauth[:oauth_name] : Setting.plugin_redmine_oauth[:custom_name]).html_safe %>
+      <%= l(:oauth_login_via, oauth: Setting.plugin_redmine_oauth[:custom_name].blank? ? Setting.plugin_redmine_oauth[:oauth_name] : Setting.plugin_redmine_oauth[:custom_name]).html_safe %>
     <% end %>
   <% end %>
 <% end %>
