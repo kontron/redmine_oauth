@@ -1,6 +1,13 @@
 Changelog for Redmine OAuth
 ==========================
 
+2.2.0 *2024-03-05*
+------------------
+
+    Custom OIDC provider
+
+* New: #24 - Custom OIDC provider
+
 2.1.5 *2024-01-15*
 ------------------
 

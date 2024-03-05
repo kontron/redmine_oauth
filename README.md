@@ -1,4 +1,4 @@
-## Redmine OAuth plugin 2.1.5
+## Redmine OAuth plugin 2.2.0
 
 [![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
@@ -13,6 +13,7 @@ Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
 Supported OAuth providers:
 * Azure AD (https://azure.microsoft.com)
+* Custom (OpenID Connect - OIDC)
 * GitLab (https://about.gitlab.com)
 * Google (https://google.com)
 * Keycloak (https://www.keycloak.org)

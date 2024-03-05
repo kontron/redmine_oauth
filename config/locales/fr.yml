@@ -36,3 +36,17 @@ fr:
   oauth_tenant_id_info: ID de répertoire (tenant)
   oauth_button_info: Couleur et icône (classe Font Awesome) du bouton de connexion via OAuth (Laissez vite pour masquer le bouton)
   oauth_login_button: Bouton de connexion
+  oauth_custom_name: Provider name
+  oauth_custom_name_info: Title to be shown on the OAuth login button
+  oauth_custom_auth_endpoint: Auth endpoint
+  oauth_custom_auth_endpoint_info: Application Auth endpoint
+  oauth_custom_token_endpoint: Token endpoint
+  oauth_custom_token_endpoint_info: Application Token endpoint
+  oauth_custom_profile_endpoint: Profile endpoint
+  oauth_custom_profile_endpoint_info: Application Profile endpoint
+  oauth_custom_scope: OAuth scope
+  oauth_custom_scope_info: OAuth scope (default - 'openid profile email')
+  oauth_custom_uid_field: UID field
+  oauth_custom_uid_field_info: UID field (default - preferred_username)
+  oauth_custom_email_field: Email field
+  oauth_custom_email_field_info: Email field (default - email)

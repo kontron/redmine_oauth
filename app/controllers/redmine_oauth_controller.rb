@@ -61,6 +61,12 @@ class RedmineOauthController < AccountController
         state: oauth_csrf_token,
         scope: 'openid profile email'
       )
+    when 'Custom'
+      redirect_to oauth_client.auth_code.authorize_url(
+        redirect_uri: oauth_callback_url,
+        state: oauth_csrf_token,
+        scope: Setting.plugin_redmine_oauth[:custom_scope]
+      )
     else
       flash['error'] = l(:oauth_invalid_provider)
       redirect_to signin_path
@@ -106,6 +112,19 @@ class RedmineOauthController < AccountController
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
+    when 'Custom'
+      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
+      if Setting.plugin_redmine_oauth[:custom_profile_endpoint].strip.empty?
+        user_info = JWT.decode(token.token, nil, false).first
+      else
+        userinfo_response = token.get(
+          Setting.plugin_redmine_oauth[:custom_profile_endpoint],
+          headers: { 'Accept' => 'application/json' }
+        )
+        user_info = JSON.parse(userinfo_response.body)
+      end
+      user_info['login'] = user_info[Setting.plugin_redmine_oauth[:custom_uid_field]]
+      email = user_info[Setting.plugin_redmine_oauth[:custom_email_field]]
     else
       raise StandardError, l(:oauth_invalid_provider)
     end
@@ -217,6 +236,14 @@ class RedmineOauthController < AccountController
           site: site,
           authorize_url: "/oauth2/#{Setting.plugin_redmine_oauth[:tenant_id]}/v1/authorize",
           token_url: "/oauth2/#{Setting.plugin_redmine_oauth[:tenant_id]}/v1/token"
+        )
+      when 'Custom'
+        OAuth2::Client.new(
+          Setting.plugin_redmine_oauth[:client_id],
+          Setting.plugin_redmine_oauth[:client_secret],
+          site: site,
+          authorize_url: Setting.plugin_redmine_oauth[:custom_auth_endpoint],
+          token_url: Setting.plugin_redmine_oauth[:custom_token_endpoint]
         )
       else
         raise StandardError, l(:oauth_invalid_provider)
