@@ -47,6 +47,6 @@ de:
   oauth_custom_scope: OAuth scope
   oauth_custom_scope_info: OAuth scope (default - 'openid profile email')
   oauth_custom_uid_field: UID field
-  oauth_custom_uid_field_info: UID field (default - sub)
+  oauth_custom_uid_field_info: UID field (default - preferred_username)
   oauth_custom_email_field: Email field
   oauth_custom_email_field_info: Email field (default - email)

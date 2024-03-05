@@ -37,6 +37,13 @@ Redmine::Plugin.register :redmine_oauth do
     client_id: '',
     client_secret: '',
     tenant_id: '',
+    custom_name: '',
+    custom_auth_endpoint: '',
+    custom_token_endpoint: '',
+    custom_profile_endpoint: '',
+    custom_scope: 'openid profile email',
+    custom_uid_field: 'preferred_username',
+    custom_email_field: 'email',
     button_color: '#ffbe6f',
     button_icon: 'fas fa-address-card'
   }, partial: 'settings/oauth_settings'
