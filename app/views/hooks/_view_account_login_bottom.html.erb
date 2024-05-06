@@ -33,6 +33,7 @@
 <% end %>
 
 <%= javascript_tag do %>
+  <%# Autologin option %>
   $('#autologin').change(function() {
     let oauth_login_form = $("#oauth-login")
     if(oauth_login_form && this.checked) {
@@ -50,4 +51,8 @@
         }
     }
   });
+  <%# Hidden login form %>
+  <% if Setting.plugin_redmine_oauth[:hide_login_form] %>
+    $('div#login-form').hide();
+  <% end %>
 <% end %>

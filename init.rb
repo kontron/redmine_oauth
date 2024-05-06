@@ -45,6 +45,7 @@ Redmine::Plugin.register :redmine_oauth do
     custom_uid_field: 'preferred_username',
     custom_email_field: 'email',
     button_color: '#ffbe6f',
-    button_icon: 'fas fa-address-card'
+    button_icon: 'fas fa-address-card',
+    hide_login_form: nil
   }, partial: 'settings/oauth_settings'
 end

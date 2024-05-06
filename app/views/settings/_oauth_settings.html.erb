@@ -90,6 +90,11 @@
       <%= text_field_tag 'settings[tenant_id]', @settings[:tenant_id], size: 40 %>
       <em class="info"><%= l(:oauth_tenant_id_info) %></em>
     </p>
+    <p>
+      <label><%= l(:oauth_hide_login_form) %></label>
+      <%= check_box_tag 'settings[hide_login_form]', true, @settings[:hide_login_form] %>
+      <em class="info"> <%= l(:label_default)%>: <%= l(:general_text_No)%></em>
+    </p>
     <% if %w(Custom).include?(@settings[:oauth_name]) %>
       <div id="oauth_options_custom">
     <% else %>
