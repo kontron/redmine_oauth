@@ -22,6 +22,12 @@
 
 <% if Setting.plugin_redmine_oauth[:button_icon] != 'none' %>
   <%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
+  <% if Setting.plugin_redmine_oauth[:hide_login_form] %>
+    <%= javascript_include_tag('redmine_oauth.js', plugin: :redmine_oauth) %>
+    <fieldset id= "oauth-fieldset-login-form" class="oauth_collapsible oauth_collapsed">
+      <legend class="oauth_legend" onclick="oauth_toggle_fieldset(this)"><%= l(:button_login) %></legend>
+    </fieldset>
+  <% end %>
   <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
     <%= back_url_hidden_field_tag %>
     <%= button_tag(name: 'login-oauth', tabindex: 6, id: 'login-oauth-submit', title: l(:oauth_login_with),
@@ -53,6 +59,8 @@
   });
   <%# Hidden login form %>
   <% if Setting.plugin_redmine_oauth[:hide_login_form] %>
-    $('div#login-form').hide();
+    let login_form = $('div#login-form');
+    login_form.appendTo('#oauth-fieldset-login-form');
+    login_form.toggle();
   <% end %>
 <% end %>

@@ -29,10 +29,37 @@ input#button_color {
   padding: 0;
 }
 
-.oauth-hidden {
+.oauth_hidden {
   display: none;
 }
 
 button#login-oauth-submit:hover {
   background: #dddddd !important;
+}
+
+fieldset.oauth_collapsible {
+  border-width: 2px 0 0 0;
+  border-color: #FDBF3B;
+  width: 340px;
+  margin: auto;
+}
+
+fieldset.oauth_collapsed>legend::before {
+  content: "\a0\25ba\a0";
+  color: #FDBF3B;
+  position: relative;
+  bottom: 2px;
+}
+
+fieldset.oauth_expanded>legend::before {
+  content: "\a0\25bc\a0";
+  color: #FDBF3B;
+}
+
+fieldset.oauth_collapsible > legend {
+  cursor: pointer;
+}
+
+legend.oauth_legend {
+  font-weight: bolder;
 }

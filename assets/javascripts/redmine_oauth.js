@@ -116,3 +116,11 @@ function oauth_settings_visibility()
             break;
     }
 }
+
+function oauth_toggle_fieldset(el)
+{
+    let fieldset = el.parentNode;
+    fieldset.classList.toggle('oauth_expanded');
+    fieldset.classList.toggle('oauth_collapsed');
+    $('div#login-form').toggle();
+}
