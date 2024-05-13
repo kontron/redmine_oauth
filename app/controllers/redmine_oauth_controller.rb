@@ -151,6 +151,10 @@ class RedmineOauthController < AccountController
       elsif user.active? # Active
         handle_active_user user
         user.update_last_login_on!
+        # Disable 2FA initialization request
+        session.delete(:must_activate_twofa)
+        # Disable password change request
+        session.delete(:pwd)
       else # Locked
         handle_inactive_user user
       end
