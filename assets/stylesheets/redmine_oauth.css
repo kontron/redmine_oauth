@@ -45,10 +45,10 @@ fieldset.oauth_collapsible {
 }
 
 fieldset.oauth_collapsed>legend::before {
-  content: "\a0\25ba\a0";
+  content: "\a0\25bc\a0";
   color: #FDBF3B;
-  position: relative;
-  bottom: 2px;
+  display: inline-block;
+  transform: rotate(-90deg);
 }
 
 fieldset.oauth_expanded>legend::before {
