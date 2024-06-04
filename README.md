@@ -47,26 +47,29 @@ sites. As the redirect URI add https://yourdomain/oauth2callback.
 
 Open _Administration -> Plugins_ in your Redmine and configure the plugin.
 
- E.g.:
+Examples:
 
-**Provider**  Azure AD
+#### Provider  Azure AD
 
-**Site**  https://login.microsoftonline.com
+* Site: https://login.microsoftonline.com
+* Client ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+* Client secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+* Tenant ID / Realm xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
 
-**Client ID** xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+#### Provider Google
 
-**Client secret** xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+* Site: https://accounts.google.com
+* Client ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+* Client secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-**Tenant ID / Realm** xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
+#### Provider Keycloak
 
----
-**Provider**  Google
+Create a new OIDC Client in your Keycloak Realm. Activate `Client authentication`.
 
-**Site**  https://accounts.google.com
-
-**Client ID** xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-
-**Client secret** xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+* Site: https://keycloak.example.com (without any paths)
+* Client-ID: keycloak.example.com (do not include `https://` or other special characters in the Client ID)
+* Secret: Copy the client secret from Keycloak
+* Tenant ID: the name of your Keycloak realm
 
 ### Tasks
 
