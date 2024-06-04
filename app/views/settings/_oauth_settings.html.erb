@@ -35,7 +35,7 @@
     ], @settings[:oauth_name]), onchange: 'oauth_settings_visibility()' %>
   <em class="info"><%= l(:oauth_provider_info) %></em>
 </p>
-<div id="oauth_options" class="<%= (@settings[:oauth_name] == 'none') ? 'oauth-hidden' : '' %>">
+<div id="oauth_options" class="<%= (@settings[:oauth_name] == 'none') ? 'oauth_hidden' : '' %>">
     <p>
         <label for="button_color"><%= l(:oauth_login_button) %></label>
         <span>
@@ -90,11 +90,13 @@
       <%= text_field_tag 'settings[tenant_id]', @settings[:tenant_id], size: 40 %>
       <em class="info"><%= l(:oauth_tenant_id_info) %></em>
     </p>
-    <% if %w(Custom).include?(@settings[:oauth_name]) %>
-      <div id="oauth_options_custom">
-    <% else %>
-      <div id="oauth_options_custom" style="display: none">
-    <% end %>
+    <p>
+      <label><%= l(:oauth_hide_login_form) %></label>
+      <%= check_box_tag 'settings[hide_login_form]', true, @settings[:hide_login_form] %>
+      <em class="info"> <%= l(:label_default)%>: <%= l(:general_text_No)%></em>
+    </p>
+    <% style = %w(Custom).exclude?(@settings[:oauth_name]) ? 'display: none' : 'display: block' %>
+    <div id="oauth_options_custom" style="<%= style %>">
       <p>
         <label><%= l(:oauth_custom_name) %></label>
         <input type="text" id="settings_custom_name" name="settings[custom_name]" value="<%= @settings[:custom_name] %>" 

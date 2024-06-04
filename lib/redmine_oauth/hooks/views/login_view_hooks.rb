@@ -1,4 +1,3 @@
-/*
 # frozen_string_literal: true
 
 # Redmine plugin OAuth
@@ -18,48 +17,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
 
-button#login-oauth-submit {
-  margin:auto;
-  display:block;
-}
+module RedmineOauth
+  module Hooks
+    module Views
+      # Login view hooks
+      class LoginViewHooks < Redmine::Hook::ViewListener
+        def view_account_login_bottom(context = {})
+          oauth = Setting.plugin_redmine_oauth[:oauth_name]
+          return unless oauth.present? && (oauth != 'none')
 
-input#button_color {
-  padding: 0;
-}
-
-.oauth_hidden {
-  display: none;
-}
-
-button#login-oauth-submit:hover {
-  background: #dddddd !important;
-}
-
-fieldset.oauth_collapsible {
-  border-width: 2px 0 0 0;
-  border-color: #FDBF3B;
-  width: 340px;
-  margin: auto;
-}
-
-fieldset.oauth_collapsed>legend::before {
-  content: "\a0\25bc\a0";
-  color: #FDBF3B;
-  display: inline-block;
-  transform: rotate(-90deg);
-}
-
-fieldset.oauth_expanded>legend::before {
-  content: "\a0\25bc\a0";
-  color: #FDBF3B;
-}
-
-fieldset.oauth_collapsible > legend {
-  cursor: pointer;
-}
-
-legend.oauth_legend {
-  font-weight: bolder;
-}
+          context[:controller].send(
+            :render_to_string, { partial: 'hooks/view_account_login_bottom', locals: context }
+          )
+        end
+      end
+    end
+  end
+end

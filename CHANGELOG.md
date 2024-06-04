@@ -1,6 +1,16 @@
 Changelog for Redmine OAuth
 ==========================
 
+2.2.1 *2024-06-04*
+------------------
+
+    An option to hide the login form
+    Do not require a password change or 2FA initialization if OAuth is being used
+
+* New: #31 - Enhance Keycloak documentation
+* New: #30 - Incentive to use this plugin (tighten password rules / co-usage of oauth2 login)
+* New: #28 - Is it possible to hide the normal login/password prompt through config when a instance just needs OAuth login
+
 2.2.0 *2024-03-05*
 ------------------
 

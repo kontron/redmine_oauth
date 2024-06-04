@@ -19,13 +19,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 require 'redmine'
-require File.expand_path('lib/redmine_oauth/hooks', __dir__)
+require File.expand_path('lib/redmine_oauth/hooks/views/base_view_hooks', __dir__)
+require File.expand_path('lib/redmine_oauth/hooks/views/login_view_hooks', __dir__)
 
 Redmine::Plugin.register :redmine_oauth do
   name 'Redmine OAuth plugin'
   author 'Karel Pičman'
   description 'Redmine OAuth plugin'
-  version '2.2.0'
+  version '2.2.1'
   url 'https://github.com/kontron/redmine_oauth'
   author_url 'https://github.com/kontron/redmine_oauth/graphs/contributors'
 
@@ -45,6 +46,7 @@ Redmine::Plugin.register :redmine_oauth do
     custom_uid_field: 'preferred_username',
     custom_email_field: 'email',
     button_color: '#ffbe6f',
-    button_icon: 'fas fa-address-card'
+    button_icon: 'fas fa-address-card',
+    hide_login_form: nil
   }, partial: 'settings/oauth_settings'
 end
