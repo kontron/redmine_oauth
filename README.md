@@ -5,9 +5,8 @@
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
 
-The user is identified by the email registered by the OAuth provider. The email must correspond with an email registered 
-in Redmine. If such an email is not found, the user is ofered with registration to Redmine depending on the Redmine's 
-setting **Self-registration**.
+The user is identified by the email registered with the OAuth provider. The email must match an email registered in Redmine.
+If such an email is not found, the user will be offered to register in Redmine, depending on Redmine's setting **Self-registration**.
 
 Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
@@ -17,7 +16,7 @@ Supported OAuth providers:
 * GitLab (https://about.gitlab.com)
 * Google (https://google.com)
 * Keycloak (https://www.keycloak.org)
-* Otka (https://www.okta.com)
+* Okta (https://www.okta.com)
 
 ### Installation:
 
@@ -27,7 +26,7 @@ Supported OAuth providers:
 4. Install required gems
 5. Restart the application
 
-E.g. Linux + Apache web server
+e.g. Linux + Apache web server
 
 ```shell 
 cd plugins
@@ -38,10 +37,29 @@ bundle install
 systemctl restart apache2
 ```
 
+#### Docker installation
+
+1. Enter the plugins folder you mount into Docker
+2. Clone the repository
+3. Add permission fix and build-essential:
+```
+FROM redmine:latest
+
+# Fix permissions for bundle install of bigdecimal for redmine_oauth
+RUN chown -R redmine: /usr/local/bundle/ && chmod -R o-w /usr/local/bundle/
+
+# Install build-essential to build dependencies of redmine_oauth
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update \
+ && apt-get install --yes --no-install-recommends build-essential \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+```
+
 ### Registration
 
-Register your Redmine instance as an application by your OAuth provider. Follow the instructions given on their web 
-sites. As the redirect URI add https://yourdomain/oauth2callback.
+Register your Redmine instance as an application with your OAuth provider. Follow the instructions given on their web 
+sites. Add `https://yourdomain/oauth2callback` as redirect URI.
 
 ### Configuration
 
@@ -49,25 +67,25 @@ Open _Administration -> Plugins_ in your Redmine and configure the plugin.
 
 Examples:
 
-#### Provider  Azure AD
+#### Provider Azure AD
 
 * Site: https://login.microsoftonline.com
-* Client ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-* Client secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-* Tenant ID / Realm xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx
+* Client ID: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+* Client secret: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+* Tenant ID / Realm `xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx`
 
 #### Provider Google
 
 * Site: https://accounts.google.com
-* Client ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-* Client secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+* Client ID: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+* Client secret: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
 #### Provider Keycloak
 
 Create a new OIDC Client in your Keycloak Realm. Activate `Client authentication`.
 
-* Site: https://keycloak.example.com (without any paths)
-* Client-ID: keycloak.example.com (do not include `https://` or other special characters in the Client ID)
+* Site: `https://keycloak.example.com` (without any paths)
+* Client-ID: `keycloak.example.com` (do not include `https://` or other special characters in the Client ID)
 * Secret: Copy the client secret from Keycloak
 * Tenant ID: the name of your Keycloak realm
 
@@ -90,7 +108,9 @@ Available options:
 
 Example:
 
-```rake redmine_oauth:email:receive_imap username='notifications@example.com' RAILS_ENV="production"```
+```shell
+rake redmine_oauth:email:receive_imap username='notifications@example.com' RAILS_ENV="production"
+```
 
 **Prior accessing IMAP via OAuth, it is necessary to grant flow to authenticate IMAP connections.**
 
@@ -100,7 +120,7 @@ https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how
 
 ### Uninstallation
 
-```
+```shell
 cd plugins
 rm redmine_oauth
 ```
