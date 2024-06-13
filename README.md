@@ -91,7 +91,7 @@ Create a new OIDC Client in your Keycloak Realm. Activate `Client authentication
 
 ### Tasks
 
-## Receive IMAP
+#### Receive IMAP
 Read emails from an IMAP server and process them into Redmine.
 
 Available options:
