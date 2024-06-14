@@ -47,6 +47,7 @@ Redmine::Plugin.register :redmine_oauth do
     custom_email_field: 'email',
     button_color: '#ffbe6f',
     button_icon: 'fas fa-address-card',
-    hide_login_form: nil
+    hide_login_form: nil,
+    self_registration: '0'
   }, partial: 'settings/oauth_settings'
 end
