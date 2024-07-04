@@ -1,8 +1,14 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.2 *????-??-??*
+2.2.2 *2024-07-04*
 ------------------
+
+    Separated self-registartion
+
+* New: #42 - Add standalone self-registration setting
+* New: #41 - Update README.md
+* New: #39 - Decouple self-registration and OIDC registration 
 
 2.2.1 *2024-06-04*
 ------------------
