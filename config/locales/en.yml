@@ -45,9 +45,11 @@ en:
   oauth_custom_profile_endpoint: Profile endpoint
   oauth_custom_profile_endpoint_info: Application Profile endpoint
   oauth_custom_scope: OAuth scope
-  oauth_custom_scope_info: OAuth scope (default - 'openid profile email')
+  oauth_custom_scope_info: "OAuth scope (default: 'openid profile email')"
   oauth_custom_uid_field: UID field
-  oauth_custom_uid_field_info: UID field (default - preferred_username)
+  oauth_custom_uid_field_info: "UID field (default: preferred_username)"
   oauth_custom_email_field: Email field
-  oauth_custom_email_field_info: Email field (default - email)
+  oauth_custom_email_field_info: "Email field (default: email)"
   oauth_hide_login_form: Hide login form
+  oauth_custom_firstname_field: Provider's firstname field
+  oauth_custom_lastname_field: Provider's lastname field

@@ -51,3 +51,5 @@ fr:
   oauth_custom_email_field: Email field
   oauth_custom_email_field_info: Email field (default - email)
   oauth_hide_login_form: Hide login form
+  oauth_custom_firstname_field: Provider's firstname field
+  oauth_custom_lastname_field: Provider's lastname field

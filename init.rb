@@ -48,6 +48,8 @@ Redmine::Plugin.register :redmine_oauth do
     button_color: '#ffbe6f',
     button_icon: 'fas fa-address-card',
     hide_login_form: nil,
-    self_registration: '0'
+    self_registration: '0',
+    custom_firstname_field: 'given_name',
+    custom_lastname_field: 'family_name'
   }, partial: 'settings/oauth_settings'
 end

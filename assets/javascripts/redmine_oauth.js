@@ -124,3 +124,15 @@ function oauth_toggle_fieldset(el)
     fieldset.classList.toggle('oauth_collapsed');
     $('div#login-form').toggle();
 }
+
+function oauth_self_registration_changed()
+{
+    let osr = $("#oauth_self_registration");
+    let sr = $("#settings_self_registration");
+    if (sr.val() > 0) {
+        osr.show();
+    }
+    else {
+        osr.hide();
+    }
+}

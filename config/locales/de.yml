@@ -36,8 +36,8 @@ de:
   oauth_tenant_id_info: Verzeichnis-ID (Mandant)
   oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons (Leer für keinen Button)
   oauth_login_button: Anmeldebutton
-  oauth_custom_name: Provider name
-  oauth_custom_name_info: Title to be shown on the OAuth login button
+  oauth_custom_name: Name des Anbieters
+  oauth_custom_name_info: Titel auf dem OAuth-Login-Button
   oauth_custom_auth_endpoint: Auth endpoint
   oauth_custom_auth_endpoint_info: Application Auth endpoint
   oauth_custom_token_endpoint: Token endpoint
@@ -45,9 +45,11 @@ de:
   oauth_custom_profile_endpoint: Profile endpoint
   oauth_custom_profile_endpoint_info: Application Profile endpoint
   oauth_custom_scope: OAuth scope
-  oauth_custom_scope_info: OAuth scope (default - 'openid profile email')
-  oauth_custom_uid_field: UID field
-  oauth_custom_uid_field_info: UID field (default - preferred_username)
-  oauth_custom_email_field: Email field
-  oauth_custom_email_field_info: Email field (default - email)
+  oauth_custom_scope_info: "OAuth scope (Standard: 'openid profile email')"
+  oauth_custom_uid_field: UID-Feld
+  oauth_custom_uid_field_info: "UID-Feld (Stadard: preferred_username)"
+  oauth_custom_email_field: E-Mail-Feld
+  oauth_custom_email_field_info: "E-Mail-Feld (Standard: email)"
   oauth_hide_login_form: Login-Formular ausblenden
+  oauth_custom_firstname_field: Vorname-Feld des Anbieters
+  oauth_custom_lastname_field: Nachname-Feld des Anbieters

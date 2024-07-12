@@ -162,9 +162,13 @@ class RedmineOauthController < AccountController
       user = User.new
       user.mail = email
       firstname, lastname = info['name'].split if info['name'].present?
-      firstname ||= info['given_name']
-      lastname ||= info['family_name']
+      key = Setting.plugin_redmine_oauth[:custom_firstname_field]
+      key ||= 'given_name'
+      firstname ||= info[key]
       user.firstname = firstname
+      key = Setting.plugin_redmine_oauth[:custom_lastname_field]
+      key ||= 'family_name'
+      lastname ||= info[key]
       user.lastname = lastname
       user.mail = email
       login = info['login']
