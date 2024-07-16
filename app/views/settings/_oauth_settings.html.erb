@@ -100,7 +100,11 @@
         ], @settings[:self_registration]), onchange: 'oauth_self_registration_changed();' %>
       <em class="info"><%= l(:label_default)%>: <%= l(:label_disabled) %></em>
     </p>
-    <% style = @settings[:self_registration].present? ? 'display: none' : 'display: block' %>
+    <% style = if @settings[:self_registration].present? && (@settings[:self_registration] != '0')
+                 'display: block'
+               else
+                 'display: none'
+               end %>
     <div id="oauth_self_registration" style="<%= style %>">
       <p>
         <label><%= l(:oauth_custom_firstname_field) %></label>
