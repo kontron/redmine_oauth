@@ -78,7 +78,8 @@
     </p>
     <p>
       <label><%= l(:oauth_client_secret) %></label>
-      <%= text_field_tag 'settings[client_secret]', @settings[:client_secret], size: 40 %>
+      <%= text_field_tag 'settings[client_secret]', Redmine::Ciphering.decrypt_text(@settings[:client_secret]),
+                         size: 40 %>
       <em class="info"><%= l(:oauth_client_secret_info) %></em>
     </p>
     <% if %w(GitLab Google Custom).include?(@settings[:oauth_name]) %>

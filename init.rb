@@ -21,6 +21,7 @@
 require 'redmine'
 require File.expand_path('lib/redmine_oauth/hooks/views/base_view_hooks', __dir__)
 require File.expand_path('lib/redmine_oauth/hooks/views/login_view_hooks', __dir__)
+require File.expand_path('lib/redmine_oauth/patches/settings_controller_patch', __dir__)
 
 Redmine::Plugin.register :redmine_oauth do
   name 'Redmine OAuth plugin'
