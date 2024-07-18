@@ -1,8 +1,14 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.3 *????-??-??*
+2.2.3 *2024-04-18*
 ------------------
+
+    Client secret encrypted
+    Configurable provider's fields for the first and last name
+
+* New: #45 - Add configuration fields for mapping of first name and last name values
+* New: #44 - Encrypt client_secret
 
 2.2.2 *2024-07-04*
 ------------------
