@@ -27,7 +27,7 @@ module RedmineOauth
       def check(imap_options = {}, options = {})
         client = OAuth2::Client.new(
           Setting.plugin_redmine_oauth[:client_id],
-          Setting.plugin_redmine_oauth[:client_secret],
+          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
           site: Setting.plugin_redmine_oauth[:site]&.chomp('/'),
           token_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/v2.0/token"
         )
