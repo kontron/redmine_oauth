@@ -1,10 +1,14 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.4 *????-??-??*
+2.2.4 *2024-07-23*
 ------------------
 
-2.2.3 *2024-04-18*
+    Bugs fixing
+
+* Bug: #46 - IMAP: Invalid client secret provided 
+
+2.2.3 *2024-07-18*
 ------------------
 
     Client secret encrypted
