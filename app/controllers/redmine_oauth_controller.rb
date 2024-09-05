@@ -103,6 +103,17 @@ class RedmineOauthController < AccountController
       user_info = JWT.decode(token.token, nil, false).first
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
+      if user_info.key?(:resource_access) && user_info[:resource_access].key?(:redmine)
+        roles = user_info[:resource_access][:redmine][:roles]
+        if roles.blank? || roles.to_a.exclude?('user')
+          params[:username] = email
+          invalid_credentials
+          Rails.logger.info 'Authentication failed due to a missing role in the token'
+          raise StandardError, l(:notice_account_invalid_credentials)
+        else
+          @admin = roles.to_a.include?('admin')
+        end
+      end
     when 'Okta'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       userinfo_response = token.get(
@@ -195,6 +206,7 @@ class RedmineOauthController < AccountController
       invalid_credentials
       raise StandardError, l(:notice_account_invalid_credentials)
     end
+    user.admin = @admin unless @admin.nil?
   end
 
   def oauth_client
