@@ -121,7 +121,15 @@
     <p>
       <label><%= l(:oauth_hide_login_form) %></label>
       <%= check_box_tag 'settings[hide_login_form]', true, @settings[:hide_login_form] %>
-      <em class="info"> <%= l(:label_default)%>: <%= l(:general_text_No) %></em>
+      <em class="info"><%= l(:label_default)%>: <%= l(:general_text_No) %></em>
+    </p>
+    <p>
+      <label><%= l(:oauth_update_login) %></label>
+      <%= check_box_tag 'settings[update_login]', true, @settings[:update_login] %>
+      <em class="info">
+        <%= l(:oauth_update_login_info)%>
+        <%= l(:label_default)%>: <%= l(:general_text_No) %>
+      </em>
     </p>
     <% style = %w(Custom).exclude?(@settings[:oauth_name]) ? 'display: none' : 'display: block' %>
     <div id="oauth_options_custom" style="<%= style %>">

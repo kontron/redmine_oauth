@@ -53,3 +53,5 @@ fr:
   oauth_hide_login_form: Hide login form
   oauth_custom_firstname_field: Provider's firstname field
   oauth_custom_lastname_field: Provider's lastname field
+  oauth_update_login: Update login
+  oauth_update_login_info: Update the user's login after a successful login.

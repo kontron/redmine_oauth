@@ -53,3 +53,5 @@ cs:
   oauth_hide_login_form: Skrýt přihlašovací formulář
   oauth_custom_firstname_field: Pole jména u poskytovatele
   oauth_custom_lastname_field: Pole příjmení u poskytovatele
+  oauth_update_login: Aktualizovat login
+  oauth_update_login_info: Aktualizovat login uživatele po úspěšném přihlášení.

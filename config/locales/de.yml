@@ -53,3 +53,5 @@ de:
   oauth_hide_login_form: Login-Formular ausblenden
   oauth_custom_firstname_field: Vorname-Feld des Anbieters
   oauth_custom_lastname_field: Nachname-Feld des Anbieters
+  oauth_update_login: Login aktualizieren
+  oauth_update_login_info: Aktualizieren Login des Benutzers nach einer erfolgreichen Anmeldung.

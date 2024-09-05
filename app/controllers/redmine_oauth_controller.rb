@@ -151,6 +151,10 @@ class RedmineOauthController < AccountController
       elsif user.active? # Active
         handle_active_user user
         user.update_last_login_on!
+        if Setting.plugin_redmine_oauth[:update_login] && (info['login'] || info['unique_name'])
+          user.login = info['login'] || info['unique_name']
+          Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
+        end
         # Disable 2FA initialization request
         session.delete(:must_activate_twofa)
         # Disable password change request

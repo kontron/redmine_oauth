@@ -51,6 +51,7 @@ Redmine::Plugin.register :redmine_oauth do
     hide_login_form: nil,
     self_registration: '0',
     custom_firstname_field: 'given_name',
-    custom_lastname_field: 'family_name'
+    custom_lastname_field: 'family_name',
+    update_login: nil
   }, partial: 'settings/oauth_settings'
 end
