@@ -53,3 +53,7 @@ cs:
   oauth_hide_login_form: Skrýt přihlašovací formulář
   oauth_custom_firstname_field: Pole jména u poskytovatele
   oauth_custom_lastname_field: Pole příjmení u poskytovatele
+  oauth_validate_user_roles_info: "Klíč, kde jsou definované role v tokenu. Pokud je nastaveno, tak 'user' role povolí
+    přihlášení, 'admin' přidělí práva administrátora. Jestliže role 'user' není uvedena, přístup je odmítnut. Jestliže
+    chybí role 'admin', práva administrátora jsou odebrána. př.: Zadejte 'resource_access.redmine.roles', když máte
+    v tokenu nakonfigurováno toto: 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }."

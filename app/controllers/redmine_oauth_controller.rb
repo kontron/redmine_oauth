@@ -103,17 +103,6 @@ class RedmineOauthController < AccountController
       user_info = JWT.decode(token.token, nil, false).first
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
-      if user_info.key?(:resource_access) && user_info[:resource_access].key?(:redmine)
-        roles = user_info[:resource_access][:redmine][:roles]
-        if roles.blank? || roles.to_a.exclude?('user')
-          params[:username] = email
-          invalid_credentials
-          Rails.logger.info 'Authentication failed due to a missing role in the token'
-          raise StandardError, l(:notice_account_invalid_credentials)
-        else
-          @admin = roles.to_a.include?('admin')
-        end
-      end
     when 'Okta'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       userinfo_response = token.get(
@@ -141,6 +130,25 @@ class RedmineOauthController < AccountController
     end
     raise StandardError, l(:oauth_no_verified_email) unless email
 
+    # Roles
+    if Setting.plugin_redmine_oauth[:validate_user_roles].present?
+      keys = Setting.plugin_redmine_oauth[:validate_user_roles].split('.')
+      if keys.size.positive?
+        roles = user_info
+        roles = roles[keys.shift.to_sym] while keys.size.positive?
+        roles = roles.to_a
+        if roles.blank? || roles.to_a.exclude?('user')
+          params[:username] = email
+          invalid_credentials
+          Rails.logger.info 'Authentication failed due to a missing role in the token'
+          raise StandardError, l(:notice_account_invalid_credentials)
+        else
+          @admin = roles.to_a.include?('admin')
+        end
+      end
+    end
+
+    # Try to log in
     try_to_login email, user_info
   rescue StandardError => e
     Rails.logger.error e.message
@@ -206,7 +214,10 @@ class RedmineOauthController < AccountController
       invalid_credentials
       raise StandardError, l(:notice_account_invalid_credentials)
     end
-    user.admin = @admin unless @admin.nil?
+    return if @admin.nil?
+
+    user.admin = @admin
+    Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
   end
 
   def oauth_client

@@ -53,3 +53,7 @@ de:
   oauth_hide_login_form: Login-Formular ausblenden
   oauth_custom_firstname_field: Vorname-Feld des Anbieters
   oauth_custom_lastname_field: Nachname-Feld des Anbieters
+  oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access, 
+      'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
+      rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
+      'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
