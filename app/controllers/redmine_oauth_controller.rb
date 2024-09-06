@@ -131,20 +131,25 @@ class RedmineOauthController < AccountController
     raise StandardError, l(:oauth_no_verified_email) unless email
 
     # Roles
-    if Setting.plugin_redmine_oauth[:validate_user_roles].present?
-      keys = Setting.plugin_redmine_oauth[:validate_user_roles].split('.')
-      if keys.size.positive?
-        roles = user_info
-        roles = roles[keys.shift.to_sym] while keys.size.positive?
-        roles = roles.to_a
-        if roles.blank? || roles.to_a.exclude?('user')
-          params[:username] = email
-          invalid_credentials
-          Rails.logger.info 'Authentication failed due to a missing role in the token'
-          raise StandardError, l(:notice_account_invalid_credentials)
-        else
-          @admin = roles.to_a.include?('admin')
+    keys = Setting.plugin_redmine_oauth[:validate_user_roles]&.split('.')
+    if keys&.size&.positive?
+      roles = user_info
+      while keys.size.positive?
+        key = keys.shift.to_sym
+        unless roles.has_key?(key)
+          roles = []
+          break
         end
+        roles = roles[key]
+      end
+      roles = roles.to_a
+      if roles.blank? || roles.exclude?('user')
+        Rails.logger.info 'Authentication failed due to a missing role in the token'
+        params[:username] = email
+        invalid_credentials
+        raise StandardError, l(:notice_account_invalid_credentials)
+      else
+        @admin = roles.to_a.include?('admin')
       end
     end
 
