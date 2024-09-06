@@ -136,7 +136,7 @@ class RedmineOauthController < AccountController
       roles = user_info
       while keys.size.positive?
         key = keys.shift.to_sym
-        unless roles.has_key?(key)
+        unless roles.key?(key)
           roles = []
           break
         end
