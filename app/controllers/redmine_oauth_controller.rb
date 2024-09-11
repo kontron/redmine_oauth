@@ -131,29 +131,67 @@ class RedmineOauthController < AccountController
     raise StandardError, l(:oauth_no_verified_email) unless email
 
     # Roles
+    user_info = {
+      "exp": 1725864532,
+      "iat": 1725864232,
+      "jti": "a165eff7-17f6-4f42-87bd-618cc093d013",
+      "iss": "https://keycloak.medelexis.ch/realms/Medelexis",
+      "sub": "c64712b8-a25b-4368-82e0-a73d5fb7c944",
+      "typ": "Bearer",
+      "azp": "mis",
+      "sid": "1173cc58-9397-41b9-b9c5-c1e2406b5376",
+      "acr": "1",
+      "allowed-origins": [
+        "/*"
+      ],
+      "resource_access": {
+        "mis": {
+          "roles": [
+            "user"
+          ]
+        }
+      },
+      "scope": "openid profile email",
+      "email_verified": true,
+      "name": "Test flawil",
+      "preferred_username": "tester",
+      "locale": "de",
+      "given_name": "Test",
+      "family_name": "flawil",
+      "email": "tester@whatever.at"
+    }
+
+    Rails.logger.debug "Setting.validate_user_roles = '#{Setting.plugin_redmine_oauth[:validate_user_roles]}'"
     keys = Setting.plugin_redmine_oauth[:validate_user_roles]&.split('.')
     if keys&.size&.positive?
       roles = user_info
       while keys.size.positive?
         key = keys.shift.to_sym
+        Rails.logger.debug "key: #{key}"
         unless roles.key?(key)
+          Rails.logger.debug 'Key not found => access denied'
           roles = []
           break
         end
         roles = roles[key]
       end
       roles = roles.to_a
+      Rails.logger.debug "Roles: #{roles.join(',')}"
       if roles.blank? || roles.exclude?('user')
+        Rails.logger.debug 'user role not found => access denied'
         Rails.logger.info 'Authentication failed due to a missing role in the token'
         params[:username] = email
         invalid_credentials
         raise StandardError, l(:notice_account_invalid_credentials)
       else
         @admin = roles.to_a.include?('admin')
+        Rails.logger.debug "admin = #{@admin}"
       end
     end
 
     # Try to log in
+    Rails.logger.debug "try_to_log_in #{email}"
+    Rails.logger.debug user_info
     try_to_login email, user_info
   rescue StandardError => e
     Rails.logger.error e.message
