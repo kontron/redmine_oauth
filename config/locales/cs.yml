@@ -55,3 +55,7 @@ cs:
   oauth_custom_lastname_field: Pole příjmení u poskytovatele
   oauth_update_login: Aktualizovat login
   oauth_update_login_info: Aktualizovat login uživatele po úspěšném přihlášení.
+  oauth_logout: OAuth odhlášení
+  oauth_logout_info: Odhlásit se také od poskytovatele OAuth po dohlášení z Redminu
+  oauth_custom_logout_endpoint: Endpoint odhlášení
+  oauth_custom_logout_endpoint_info: Endpoint pro odhlášení od poskytovatele

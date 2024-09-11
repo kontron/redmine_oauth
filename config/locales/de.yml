@@ -55,3 +55,7 @@ de:
   oauth_custom_lastname_field: Nachname-Feld des Anbieters
   oauth_update_login: Login aktualizieren
   oauth_update_login_info: Aktualizieren Login des Benutzers nach einer erfolgreichen Anmeldung.
+  oauth_logout: OAuth-Abmeldung
+  oauth_logout_info: Abmelden auch vom OAuth-Anbieter nach der Redmine-Abmeldung
+  oauth_custom_logout_endpoint: Abmeldung-Endpoint
+  oauth_custom_logout_endpoint_info: Abmeldung-Endpoint für Abmeldung vom OAuth-Anbieter

@@ -54,4 +54,8 @@ en:
   oauth_custom_firstname_field: Provider's firstname field
   oauth_custom_lastname_field: Provider's lastname field
   oauth_update_login: Update login
-  oauth_update_login_info: Update the user's login after a successful login.
+  oauth_update_login_info: Update the user's login after a successful login
+  oauth_logout: OAuth logout
+  oauth_logout_info: Log out from the OAuth provider too after Redmine log out
+  oauth_custom_logout_endpoint: Logout endpoint
+  oauth_custom_logout_endpoint_info: Application Logout endpoint
