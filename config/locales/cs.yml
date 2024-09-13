@@ -57,5 +57,3 @@ cs:
     přihlášení, 'admin' přidělí práva administrátora. Jestliže role 'user' není uvedena, přístup je odmítnut. Jestliže
     chybí role 'admin', práva administrátora jsou odebrána. př.: Zadejte 'resource_access.redmine.roles', když máte
     v tokenu nakonfigurováno toto: 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }."
-  oauth_token_type: Typ tokenu
-  oauth_token_type_info: Vyber upřednostěný typ tokenu. Automatický výběr když není nic vybráno.

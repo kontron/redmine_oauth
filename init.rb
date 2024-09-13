@@ -22,7 +22,6 @@ require 'redmine'
 require File.expand_path('lib/redmine_oauth/hooks/views/base_view_hooks', __dir__)
 require File.expand_path('lib/redmine_oauth/hooks/views/login_view_hooks', __dir__)
 require File.expand_path('lib/redmine_oauth/patches/settings_controller_patch', __dir__)
-require File.expand_path('lib/redmine_oauth/patches/access_token_patch', __dir__)
 
 Redmine::Plugin.register :redmine_oauth do
   name 'Redmine OAuth plugin'
@@ -53,7 +52,6 @@ Redmine::Plugin.register :redmine_oauth do
     self_registration: '0',
     custom_firstname_field: 'given_name',
     custom_lastname_field: 'family_name',
-    validate_user_roles: '',
-    token_type: 'none'
+    validate_user_roles: ''
   }, partial: 'settings/oauth_settings'
 end

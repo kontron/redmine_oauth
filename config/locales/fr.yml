@@ -57,5 +57,3 @@ fr:
       'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
       rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
       'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
-  oauth_token_type: Token type
-  oauth_token_type_info: Select a preferred token type. Empty for an automatic selection.
