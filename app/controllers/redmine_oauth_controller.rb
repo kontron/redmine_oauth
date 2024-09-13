@@ -130,6 +130,38 @@ class RedmineOauthController < AccountController
     end
     raise StandardError, l(:oauth_no_verified_email) unless email
 
+    # Roles
+    Rails.logger.debug { "Setting.validate_user_roles = '#{Setting.plugin_redmine_oauth[:validate_user_roles]}'" }
+    keys = Setting.plugin_redmine_oauth[:validate_user_roles]&.split('.')
+    if keys&.size&.positive?
+      Rails.logger.debug { user_info }
+      roles = user_info
+      while keys.size.positive?
+        key = keys.shift
+        Rails.logger.debug { "key: #{key}" }
+        unless roles.key?(key)
+          Rails.logger.debug { 'Key not found => access denied' }
+          roles = []
+          break
+        end
+        roles = roles[key]
+      end
+      roles = roles.to_a
+      Rails.logger.debug { "Roles: #{roles.join(',')}" }
+      if roles.blank? || roles.exclude?('user')
+        Rails.logger.debug { 'user role not found => access denied' }
+        Rails.logger.info 'Authentication failed due to a missing role in the token'
+        params[:username] = email
+        invalid_credentials
+        raise StandardError, l(:notice_account_invalid_credentials)
+      else
+        @admin = roles.to_a.include?('admin')
+        Rails.logger.debug { "admin = #{@admin}" }
+      end
+    end
+
+    # Try to log in
+    Rails.logger.debug { "try_to_log_in #{email}" }
     try_to_login email, user_info
   rescue StandardError => e
     Rails.logger.error e.message
@@ -199,6 +231,10 @@ class RedmineOauthController < AccountController
       invalid_credentials
       raise StandardError, l(:notice_account_invalid_credentials)
     end
+    return if @admin.nil?
+
+    user.admin = @admin
+    Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
   end
 
   def oauth_client

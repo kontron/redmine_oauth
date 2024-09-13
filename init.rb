@@ -55,6 +55,7 @@ Redmine::Plugin.register :redmine_oauth do
     custom_lastname_field: 'family_name',
     update_login: nil,
     oauth_logout: nil,
-    custom_logout_endpoint: ''
+    custom_logout_endpoint: '',
+    validate_user_roles: ''
   }, partial: 'settings/oauth_settings'
 end

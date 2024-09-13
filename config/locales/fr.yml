@@ -59,3 +59,7 @@ fr:
   oauth_logout_info: Log out from the OAuth provider too after Redmine log out
   oauth_custom_logout_endpoint: Logout endpoint
   oauth_custom_logout_endpoint_info: Application Logout endpoint
+  oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access, 
+      'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
+      rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
+      'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
