@@ -137,7 +137,7 @@ class RedmineOauthController < AccountController
       Rails.logger.debug { user_info }
       roles = user_info
       while keys.size.positive?
-        key = keys.shift.to_sym
+        key = keys.shift
         Rails.logger.debug { "key: #{key}" }
         unless roles.key?(key)
           Rails.logger.debug { 'Key not found => access denied' }
