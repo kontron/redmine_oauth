@@ -134,6 +134,7 @@ class RedmineOauthController < AccountController
     Rails.logger.debug { "Setting.validate_user_roles = '#{Setting.plugin_redmine_oauth[:validate_user_roles]}'" }
     keys = Setting.plugin_redmine_oauth[:validate_user_roles]&.split('.')
     if keys&.size&.positive?
+      Rails.logger.debug { user_info }
       roles = user_info
       while keys.size.positive?
         key = keys.shift.to_sym
@@ -161,7 +162,6 @@ class RedmineOauthController < AccountController
 
     # Try to log in
     Rails.logger.debug { "try_to_log_in #{email}" }
-    Rails.logger.debug { user_info }
     try_to_login email, user_info
   rescue StandardError => e
     Rails.logger.error e.message
