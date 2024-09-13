@@ -5,8 +5,11 @@
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
 
-The user is identified by the email registered with the OAuth provider. The email must match an email registered in Redmine.
-If such an email is not found, the user will be offered to register in Redmine, depending on Redmine's setting **Self-registration**.
+The user is identified by the email registered with the OAuth provider. The email must match an email registered
+in Redmine. If such an email is not found, the user will be offered to register in Redmine, depending on Redmine's 
+setting **Self-registration**. OAuth logout is also supported, if it is set in the options.
+Access to Redmine can controlled by roles assigned in your OAuth provider.
+See [#36](https://github.com/kontron/redmine_oauth/issues/36#issuecomment-2348842432) for details.
 
 Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
