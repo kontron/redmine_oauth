@@ -144,13 +144,12 @@ class RedmineOauthController < AccountController
         roles = roles[key]
       end
       roles = roles.to_a
-      if roles.blank? || roles.exclude?('user')
+      @admin = roles.include?('admin')
+      if roles.blank? || (roles.exclude?('user') && !@admin)
         Rails.logger.info 'Authentication failed due to a missing role in the token'
         params[:username] = email
         invalid_credentials
         raise StandardError, l(:notice_account_invalid_credentials)
-      else
-        @admin = roles.to_a.include?('admin')
       end
     end
 
