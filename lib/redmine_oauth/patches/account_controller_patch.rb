@@ -28,7 +28,7 @@ module RedmineOauth
       def login
         return super if request.post? || oauth_autologin_cookie.blank?
 
-        redirect_to oauth_path
+        redirect_to oauth_path(back_url: params[:back_url])
       end
 
       def logout
