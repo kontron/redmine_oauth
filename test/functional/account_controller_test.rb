@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 # Load the normal Rails helper
-require File.expand_path('../../../../test/test_helper', __dir__)
+require File.expand_path('../../../../../test/test_helper', __FILE__)
 
 # Account controller patch
 class AccountControllerTest < ActionDispatch::IntegrationTest

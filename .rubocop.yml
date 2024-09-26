@@ -54,5 +54,8 @@ Metrics/PerceivedComplexity:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
+Style/ExpandPathArguments:
+  Enabled: false
+
 Style/HashSyntax:
   EnforcedShorthandSyntax: either
