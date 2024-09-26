@@ -21,45 +21,50 @@
 de:
   oauth_login_via: "Weiter mit <b>%{oauth}</b>"
   oauth_login_with: Anmelden mit with OAuth
-  oauth_no_verified_email: Keine verifizierte E-Mail zur Verfügung gestellt. Überprüfen Sie Ihre OAuth-Anbieter-Einstellung.
+  oauth_no_verified_email: "Keine verifizierte E-Mail zur Verfügung gestellt. Überprüfen Sie Ihre 
+    OAuth-Anbieter-Einstellung."
   oauth_invalid_provider: Ungültiger OAuth-Anbieter
   oauth_none: Keiner
   oauth_provider: Anbieter
-  oauth_provider_info: OAuth-Anbieter
+  oauth_provider_info: OAuth-Anbieter.
   oauth_site: Seite
-  oauth_site_info: URI des OAuth-Anbieter
+  oauth_site_info: URI des OAuth-Anbieter.
   oauth_client_id: Client-ID
-  oauth_client_id_info: Anwendungs-ID (Client)
+  oauth_client_id_info: Anwendungs-ID (Client).
   oauth_client_secret: Geheime Zeichenfolge
-  oauth_client_secret_info: Anwendungskennwort
+  oauth_client_secret_info: Anwendungskennwort.
   oauth_tenant_id: Mandant-ID
-  oauth_tenant_id_info: Verzeichnis-ID (Mandant)
-  oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons (Leer für keinen Button)
+  oauth_tenant_id_info: Verzeichnis-ID (Mandant).
+  oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons (Leer für keinen Button).
   oauth_login_button: Anmeldebutton
   oauth_custom_name: Name des Anbieters
-  oauth_custom_name_info: Titel auf dem OAuth-Login-Button
+  oauth_custom_name_info: Titel auf dem OAuth-Login-Button.
   oauth_custom_auth_endpoint: Auth endpoint
-  oauth_custom_auth_endpoint_info: Application Auth endpoint
+  oauth_custom_auth_endpoint_info: Application Auth endpoint.
   oauth_custom_token_endpoint: Token endpoint
-  oauth_custom_token_endpoint_info: Application Token endpoint
+  oauth_custom_token_endpoint_info: Application Token endpoint.
   oauth_custom_profile_endpoint: Profile endpoint
-  oauth_custom_profile_endpoint_info: Application Profile endpoint
+  oauth_custom_profile_endpoint_info: Application Profile endpoint.
   oauth_custom_scope: OAuth scope
-  oauth_custom_scope_info: "OAuth scope (Standard: 'openid profile email')"
+  oauth_custom_scope_info: "OAuth scope (Standard: 'openid profile email')."
   oauth_custom_uid_field: UID-Feld
-  oauth_custom_uid_field_info: "UID-Feld (Stadard: preferred_username)"
+  oauth_custom_uid_field_info: "UID-Feld (Stadard: preferred_username)."
   oauth_custom_email_field: E-Mail-Feld
-  oauth_custom_email_field_info: "E-Mail-Feld (Standard: email)"
+  oauth_custom_email_field_info: "E-Mail-Feld (Standard: email)."
   oauth_hide_login_form: Login-Formular ausblenden
   oauth_custom_firstname_field: Vorname-Feld des Anbieters
   oauth_custom_lastname_field: Nachname-Feld des Anbieters
   oauth_update_login: Login aktualizieren
   oauth_update_login_info: Aktualizieren Login des Benutzers nach einer erfolgreichen Anmeldung.
   oauth_logout: OAuth-Abmeldung
-  oauth_logout_info: Abmelden auch vom OAuth-Anbieter nach der Redmine-Abmeldung
+  oauth_logout_info: Abmelden auch vom OAuth-Anbieter nach der Redmine-Abmeldung.
+  oauth_login: OAuth login
+  oauth_login_info: Ermöglicht der Benutzer automatisches Anmelden über den OAuth-Anbieter ohne des Anmeldeformulars.
   oauth_custom_logout_endpoint: Abmeldung-Endpoint
-  oauth_custom_logout_endpoint_info: Abmeldung-Endpoint für Abmeldung vom OAuth-Anbieter
-  oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access, 
-      'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
-      rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
-      'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
+  oauth_custom_logout_endpoint_info: Abmeldung-Endpoint für Abmeldung vom OAuth-Anbieter.
+  oauth_validate_user_roles_info: "Ein Schlüssel, bei dem Benutzerrollen im Token vorhanden sind. Wenn gesetzt, 
+    die Rolle 'user' gewährt Zugriff, 'admin' gewährt Admin-Rechte. Wenn die Rolle 'user' nicht vorhanden ist, 
+    wird der Zugriff verweigert. Wenn die Rolle 'admin' fehlt, werden die Admin-Rechte widerrufen. z.B.: Geben Sie 
+    'resource_access.redmine.roles' ein, wenn Sie den Token als 
+    'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } } eingestellt."
+  oauth_autologin: "Automatische Anmeldung mit %{oauth}"

@@ -21,45 +21,50 @@
 fr:
   oauth_login_via: "Continuer avec <b>%{oauth}</b>"
   oauth_login_with: Se connecter avec OAuth
-  oauth_no_verified_email: Aucun email vérifié n'a été fourni, vérifiez vos réglages sur le site de votre fournisseur Oauth.
+  oauth_no_verified_email: "Aucun email vérifié n'a été fourni, vérifiez vos réglages sur le site de votre fournisseur 
+    Oauth."
   oauth_invalid_provider: Fournisseur OAuth invalide
   oauth_none: Aucun
   oauth_provider: Fournisseur
-  oauth_provider_info: Fournisseur OAuth
+  oauth_provider_info: Fournisseur OAuth.
   oauth_site: Site
-  oauth_site_info: URL d'authentification du fournisseur OAuth
+  oauth_site_info: URL d'authentification du fournisseur OAuth.
   oauth_client_id: ID client
-  oauth_client_id_info: ID d'application
+  oauth_client_id_info: ID d'application.
   oauth_client_secret: Secret client
-  oauth_client_secret_info: Mot de passe d'application
+  oauth_client_secret_info: Mot de passe d'application.
   oauth_tenant_id: ID de Tenant / Realm
-  oauth_tenant_id_info: ID de répertoire (tenant)
-  oauth_button_info: Couleur et icône (classe Font Awesome) du bouton de connexion via OAuth (Laissez vite pour masquer le bouton)
+  oauth_tenant_id_info: ID de répertoire (tenant).
+  oauth_button_info: "Couleur et icône (classe Font Awesome) du bouton de connexion via OAuth (Laissez vite pour masquer 
+    le bouton)."
   oauth_login_button: Bouton de connexion
   oauth_custom_name: Provider name
-  oauth_custom_name_info: Title to be shown on the OAuth login button
+  oauth_custom_name_info: Title to be shown on the OAuth login button.
   oauth_custom_auth_endpoint: Auth endpoint
-  oauth_custom_auth_endpoint_info: Application Auth endpoint
+  oauth_custom_auth_endpoint_info: Application Auth endpoint.
   oauth_custom_token_endpoint: Token endpoint
-  oauth_custom_token_endpoint_info: Application Token endpoint
+  oauth_custom_token_endpoint_info: Application Token endpoint.
   oauth_custom_profile_endpoint: Profile endpoint
-  oauth_custom_profile_endpoint_info: Application Profile endpoint
+  oauth_custom_profile_endpoint_info: Application Profile endpoint.
   oauth_custom_scope: OAuth scope
-  oauth_custom_scope_info: OAuth scope (default - 'openid profile email')
+  oauth_custom_scope_info: OAuth scope (default - 'openid profile email').
   oauth_custom_uid_field: UID field
-  oauth_custom_uid_field_info: UID field (default - preferred_username)
+  oauth_custom_uid_field_info: UID field (default - preferred_username).
   oauth_custom_email_field: Email field
-  oauth_custom_email_field_info: Email field (default - email)
+  oauth_custom_email_field_info: Email field (default - email).
   oauth_hide_login_form: Hide login form
   oauth_custom_firstname_field: Provider's firstname field
   oauth_custom_lastname_field: Provider's lastname field
   oauth_update_login: Update login
   oauth_update_login_info: Update the user's login after a successful login.
   oauth_logout: OAuth logout
-  oauth_logout_info: Log out from the OAuth provider too after Redmine log out
+  oauth_logout_info: Log out from the OAuth provider too after Redmine logout.
+  oauth_login: OAuth login
+  oauth_login_info: Allow users to log in automatically via OAuth provider skipping the login form.
   oauth_custom_logout_endpoint: Logout endpoint
-  oauth_custom_logout_endpoint_info: Application Logout endpoint
+  oauth_custom_logout_endpoint_info: Application Logout endpoint.
   oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access, 
-      'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
-      rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
-      'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
+    'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
+    rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
+    'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
+  oauth_autologin: "Autologin with %{oauth}"

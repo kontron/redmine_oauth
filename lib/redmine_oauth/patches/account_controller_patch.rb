@@ -24,13 +24,20 @@ module RedmineOauth
     module AccountControllerPatch
       ################################################################################################################
       # Overridden methods
-      #
+
+      def login
+        return super if request.post? || oauth_autologin_cookie.blank?
+
+        redirect_to oauth_path
+      end
+
       def logout
+        delete_oauth_autologin_cookie
         return super if User.current.anonymous? || !request.post? || Setting.plugin_redmine_oauth[:oauth_logout].blank?
 
-        site = Setting.plugin_redmine_oauth[:client_id]
+        site = Setting.plugin_redmine_oauth[:site]&.chomp('/')
         id = Setting.plugin_redmine_oauth[:client_id]
-        url = signin_url
+        url = signout_url
         case Setting.plugin_redmine_oauth[:oauth_name]
         when 'Azure AD'
           logout_user
@@ -54,6 +61,19 @@ module RedmineOauth
         Rails.logger.error e.message
         flash['error'] = e.message
         redirect_to signin_path
+      end
+
+      ################################################################################################################
+      # New methods
+
+      private
+
+      def delete_oauth_autologin_cookie
+        cookies.delete :oauth_autologin
+      end
+
+      def oauth_autologin_cookie
+        cookies[:oauth_autologin]
       end
     end
   end

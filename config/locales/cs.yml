@@ -25,41 +25,44 @@ cs:
   oauth_invalid_provider: Neplatný poskytovatel OAuth
   oauth_none: Žádný
   oauth_provider: Poskytovatel
-  oauth_provider_info: Poskytovatel OAuth
+  oauth_provider_info: Poskytovatel OAuth.
   oauth_site: Stránka
-  oauth_site_info: Ověřovací URL poskytovatele OAuth
+  oauth_site_info: Ověřovací URL poskytovatele OAuth.
   oauth_client_id: ID klienta
-  oauth_client_id_info: ID aplikace (klienta)
+  oauth_client_id_info: ID aplikace (klienta).
   oauth_client_secret: Tajný kód
-  oauth_client_secret_info: Heslo aplikace
+  oauth_client_secret_info: Heslo aplikace.
   oauth_tenant_id: ID tenanta
-  oauth_tenant_id_info: ID adresáře (tenanta)
-  oauth_button_info: Barva a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth (prázdné pro žádné tlačítko)
+  oauth_tenant_id_info: ID adresáře (tenanta).
+  oauth_button_info: Barva a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth (prázdné pro žádné tlačítko).
   oauth_login_button: Přihlašovací tlačítko
   oauth_custom_name: Název poskytovatele
-  oauth_custom_name_info: Titulek zobrazený na přihlašovacím tlačítku OAuth
+  oauth_custom_name_info: Titulek zobrazený na přihlašovacím tlačítku OAuth.
   oauth_custom_auth_endpoint: Autorizační endpoint
-  oauth_custom_auth_endpoint_info: Autorizační endpoint aplikace
+  oauth_custom_auth_endpoint_info: Autorizační endpoint aplikace.
   oauth_custom_token_endpoint: Endpoint tokenu
-  oauth_custom_token_endpoint_info: Endpoint tokenu aplikace
+  oauth_custom_token_endpoint_info: Endpoint tokenu aplikace.
   oauth_custom_profile_endpoint: Endpoint profilu
-  oauth_custom_profile_endpoint_info: Endpoint profilu aplikace
+  oauth_custom_profile_endpoint_info: Endpoint profilu aplikace.
   oauth_custom_scope: OAuth scope
-  oauth_custom_scope_info: "OAuth scope (výchozí: 'openid profile email')"
+  oauth_custom_scope_info: "OAuth scope (výchozí: 'openid profile email')."
   oauth_custom_uid_field: UID
-  oauth_custom_uid_field_info: "Pole UID (výchozí: preferred_username)"
+  oauth_custom_uid_field_info: "Pole UID (výchozí: preferred_username)."
   oauth_custom_email_field: E-mail
-  oauth_custom_email_field_info: "Pole e-mail (výchozí: email)"
+  oauth_custom_email_field_info: "Pole e-mail (výchozí: email)."
   oauth_hide_login_form: Skrýt přihlašovací formulář
   oauth_custom_firstname_field: Pole jména u poskytovatele
   oauth_custom_lastname_field: Pole příjmení u poskytovatele
-  oauth_update_login: Aktualizovat login
-  oauth_update_login_info: Aktualizovat login uživatele po úspěšném přihlášení.
-  oauth_logout: OAuth odhlášení
-  oauth_logout_info: Odhlásit se také od poskytovatele OAuth po dohlášení z Redminu
+  oauth_update_login: Aktualizovat přihlašovací jméno
+  oauth_update_login_info: Aktualizovat přihlašovací jméno uživatele po úspěšném přihlášení.
+  oauth_login: Přihlášení OAuth
+  oauth_login_info: Umožní uživatelům přihlásit se automaticky pomocí poskytovatele OAuth bez přihlašovacího formuláře.
+  oauth_logout: Odhlášení OAuth
+  oauth_logout_info: Odhlásit se také od poskytovatele OAuth po dohlášení z Redminu.
   oauth_custom_logout_endpoint: Endpoint odhlášení
-  oauth_custom_logout_endpoint_info: Endpoint pro odhlášení od poskytovatele
+  oauth_custom_logout_endpoint_info: Endpoint pro odhlášení od poskytovatele.
   oauth_validate_user_roles_info: "Klíč, kde jsou definované role v tokenu. Pokud je nastaveno, tak 'user' role povolí
     přihlášení, 'admin' přidělí práva administrátora. Jestliže role 'user' není uvedena, přístup je odmítnut. Jestliže
     chybí role 'admin', práva administrátora jsou odebrána. př.: Zadejte 'resource_access.redmine.roles', když máte
     v tokenu nakonfigurováno toto: 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }."
+  oauth_autologin: "Automatické přihlašování s %{oauth}"

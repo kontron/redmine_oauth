@@ -28,7 +28,7 @@ module RedmineOauth
           return unless oauth.present? && (oauth != 'none')
 
           context[:controller].send(
-            :render_to_string, { partial: 'hooks/view_account_login_bottom', locals: context }
+            :render_to_string, { partial: 'hooks/redmine_oauth/view_account_login_bottom', locals: context }
           )
         end
       end

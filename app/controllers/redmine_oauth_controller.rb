@@ -28,6 +28,7 @@ class RedmineOauthController < AccountController
   def oauth
     session[:back_url] = params[:back_url]
     session[:autologin] = params[:autologin]
+    session[:oauth_autologin] = params[:oauth_autologin]
     oauth_csrf_token = generate_csrf_token
     session[:oauth_csrf_token] = oauth_csrf_token
     case Setting.plugin_redmine_oauth[:oauth_name]
@@ -154,6 +155,7 @@ class RedmineOauthController < AccountController
     end
 
     # Try to log in
+    set_params
     try_to_login email, user_info
   rescue StandardError => e
     Rails.logger.error e.message
@@ -161,13 +163,30 @@ class RedmineOauthController < AccountController
     redirect_to signin_path
   end
 
+  def set_oauth_autologin_cookie(value, request)
+    cookie_options = {
+      value: value,
+      expires: 1.year.from_now,
+      path: RedmineApp::Application.config.relative_url_root || '/',
+      same_site: :lax,
+      secure: request.ssl?,
+      httponly: true
+    }
+    cookies[:oauth_autologin] = cookie_options
+  end
+
   private
 
-  def try_to_login(email, info)
+  def set_params
     params['back_url'] = session[:back_url]
     session.delete :back_url
     params['autologin'] = session[:autologin]
     session.delete :autologin
+    params['oauth_autologin'] = session[:oauth_autologin]
+    session.delete :oauth_autologin
+  end
+
+  def try_to_login(email, info)
     user = User.joins(:email_addresses).where(email_addresses: { address: email }).first
     if user # Existing user
       if user.registered? # Registered

@@ -18,25 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# Load the normal Rails helper
-require Rails.root.join('test/test_helper')
+module RedmineOauth
+  module Hooks
+    module Controllers
+      # AccountController hooks
+      class AccountControllerHooks < Redmine::Hook::Listener
+        def controller_account_success_authentication_after(context = {})
+          return unless Setting.plugin_redmine_oauth[:oauth_login] && context[:controller].params[:oauth_autologin]
 
-# OAuth controller
-class RedmineOAuthControllerTest < ActionDispatch::IntegrationTest
-  include Redmine::I18n
-
-  fixtures :users
-
-  def test_oauth
-    with_settings plugin_redmine_oauth: { 'oauth_name' => '' } do
-      get '/oauth'
-      assert_redirected_to signin_path
-      assert_equal l(:oauth_invalid_provider), flash[:error]
+          context[:controller].set_oauth_autologin_cookie context[:user], context[:request]
+        end
+      end
     end
-  end
-
-  def test_oauth_callback_csrf
-    get '/oauth2callback'
-    assert_response 422
   end
 end

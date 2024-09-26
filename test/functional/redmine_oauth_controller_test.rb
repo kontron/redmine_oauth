@@ -18,27 +18,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-module RedmineOauth
-  module Patches
-    # SettingsController patch
-    module SettingsControllerPatch
-      def self.prepended(base)
-        base.class_eval do
-          before_action :cipher_settings, only: [:plugin], prepend: true
-        end
-      end
+# Load the normal Rails helper
+require File.expand_path('../../../../test/test_helper', __dir__)
 
-      ################################################################################################################
-      # New methods
+# OAuth controller
+class RedmineOauthControllerTest < ActionDispatch::IntegrationTest
+  include Redmine::I18n
 
-      def cipher_settings
-        return unless request.post? && (params[:id] == 'redmine_oauth')
+  fixtures :users
 
-        params[:settings][:client_secret] = Redmine::Ciphering.encrypt_text(params[:settings][:client_secret])
-      end
-    end
+  def test_oauth
+    Setting.plugin_redmine_oauth[:oauth_name] = ''
+    get '/oauth'
+    assert_redirected_to signin_path
+    assert_equal l(:oauth_invalid_provider), flash[:error]
+  end
+
+  def test_oauth_callback_csrf
+    get '/oauth2callback'
+    assert_response 422
   end
 end
-
-# Apply the patch
-SettingsController.prepend RedmineOauth::Patches::SettingsControllerPatch

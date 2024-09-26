@@ -146,6 +146,15 @@
         <%= l(:label_default) %>: <%= l(:general_text_No) %>
       </em>
     </p>
+    <p>
+      <label><%= l(:oauth_login) %></label>
+      <%= check_box_tag 'settings[oauth_login]', true, @settings[:oauth_login] %>
+      <em class="info">
+        <%= l(:oauth_login_info) %>
+        <br>
+        <%= l(:label_default) %>: <%= l(:general_text_No) %>
+      </em>
+    </p>
     <% style = %w(Custom).exclude?(@settings[:oauth_name]) ? 'display: none' : 'display: block' %>
     <div id="oauth_options_custom" style="<%= style %>">
       <p>

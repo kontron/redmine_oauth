@@ -25,6 +25,17 @@ button#login-oauth-submit {
   display:block;
 }
 
+label[for="oauth_autologin"] {
+  margin:auto;
+  display:block;
+  width: fit-content;
+}
+
+div#oauth-form {
+  margin: auto;
+  width: 340px;
+}
+
 input#button_color {
   padding: 0;
 }

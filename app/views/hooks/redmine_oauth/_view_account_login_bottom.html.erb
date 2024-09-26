@@ -28,14 +28,25 @@
       <legend class="oauth_legend" onclick="oauth_toggle_fieldset(this)"><%= l(:button_login) %></legend>
     </fieldset>
   <% end %>
-  <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
-    <%= back_url_hidden_field_tag %>
-    <%= button_tag(name: 'login-oauth', tabindex: 6, id: 'login-oauth-submit', title: l(:oauth_login_with),
-          style: "background: #{Setting.plugin_redmine_oauth[:button_color]}") do %>
-      <i id="button_icon" class="<%= Setting.plugin_redmine_oauth[:button_icon] %>"></i>
-      <%= l(:oauth_login_via, oauth: Setting.plugin_redmine_oauth[:custom_name].blank? ? Setting.plugin_redmine_oauth[:oauth_name] : Setting.plugin_redmine_oauth[:custom_name]).html_safe %>
+  <div id="oauth-form">
+    <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
+      <%= back_url_hidden_field_tag %>
+      <%= button_tag(name: 'login-oauth', tabindex: 7, id: 'login-oauth-submit', title: l(:oauth_login_with),
+            style: "background: #{Setting.plugin_redmine_oauth[:button_color]}") do %>
+        <i id="button_icon" class="<%= Setting.plugin_redmine_oauth[:button_icon] %>"></i>
+        <%= l(:oauth_login_via,
+              oauth: Setting.plugin_redmine_oauth[:custom_name].blank? ? Setting.plugin_redmine_oauth[:oauth_name] : Setting.plugin_redmine_oauth[:custom_name]).html_safe %>
+      <% end %>
+      <% if Setting.plugin_redmine_oauth[:oauth_login] %>
+        <br>
+        <label for="oauth_autologin">
+          <%= check_box_tag 'oauth_autologin', 1, false, tabindex: 6 %>
+          <%= l(:oauth_autologin,
+                oauth: Setting.plugin_redmine_oauth[:custom_name].blank? ? Setting.plugin_redmine_oauth[:oauth_name] : Setting.plugin_redmine_oauth[:custom_name]) %>
+        </label>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 <% end %>
 
 <%= javascript_tag do %>

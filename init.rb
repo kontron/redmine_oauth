@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 require 'redmine'
+require File.expand_path('lib/redmine_oauth/hooks/controllers/account_controller_hooks', __dir__)
 require File.expand_path('lib/redmine_oauth/hooks/views/base_view_hooks', __dir__)
 require File.expand_path('lib/redmine_oauth/hooks/views/login_view_hooks', __dir__)
 require File.expand_path('lib/redmine_oauth/patches/settings_controller_patch', __dir__)
@@ -55,6 +56,7 @@ Redmine::Plugin.register :redmine_oauth do
     custom_lastname_field: 'family_name',
     update_login: nil,
     oauth_logout: nil,
+    oauth_login: nil,
     custom_logout_endpoint: '',
     validate_user_roles: ''
   }, partial: 'settings/oauth_settings'
