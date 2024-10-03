@@ -53,3 +53,17 @@ en:
   oauth_hide_login_form: Ocultar formulario de login
   oauth_custom_firstname_field: Nombre del campo firstname del Provider
   oauth_custom_lastname_field: Nombre del campo lastname del Provider
+  oauth_update_login: Update login
+  oauth_update_login_info: Update the user's login after a successful login.
+  oauth_logout: OAuth logout
+  oauth_logout_info: Log out from the OAuth provider too after Redmine logout.
+  oauth_login: OAuth login
+  oauth_login_info: Allow users to log in automatically via OAuth provider skipping the login form.
+  oauth_custom_logout_endpoint: Logout endpoint
+  oauth_custom_logout_endpoint_info: Application Logout endpoint.
+  oauth_validate_user_roles: Validate user roles
+  oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access, 
+    'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
+    rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
+    'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
+  oauth_autologin: "Autologin with %{oauth}"
