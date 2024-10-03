@@ -1,0 +1,55 @@
+# frozen_string_literal: true
+
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+en:
+  oauth_login_via: "Acceder con <b>%{oauth}</b>"
+  oauth_login_with: Autenticación con OAuth
+  oauth_no_verified_email: No se proporcionó ningún correo electrónico, verifique su configuración en el sitio del proveedor OAuth.
+  oauth_invalid_provider: Proveedor OAuth no válido
+  oauth_none: Ninguno
+  oauth_provider: Proveedor
+  oauth_provider_info: Proveedor OAuth
+  oauth_site: Sitio web
+  oauth_site_info: URL de autenticación del proveedor OAuth
+  oauth_client_id: ID del cliente
+  oauth_client_id_info: ID de la aplicación (client)
+  oauth_client_secret: Secreto del cliente
+  oauth_client_secret_info: Contraseña de la aplicación
+  oauth_tenant_id: Tenant ID / Realm
+  oauth_tenant_id_info: Directorio (tenant) ID
+  oauth_button_info: Color e icono (Awesome font class) del botón de login OAuth (Vacío para que no haya botón)
+  oauth_login_button: Botón de login
+  oauth_custom_name: Nombre del proveedor
+  oauth_custom_name_info: Título que se mostrará en el botón de inicio de sesión de OAuth
+  oauth_custom_auth_endpoint: Auth endpoint
+  oauth_custom_auth_endpoint_info: Application Auth endpoint
+  oauth_custom_token_endpoint: Token endpoint
+  oauth_custom_token_endpoint_info: Application Token endpoint
+  oauth_custom_profile_endpoint: Profile endpoint
+  oauth_custom_profile_endpoint_info: Application Profile endpoint
+  oauth_custom_scope: OAuth scope
+  oauth_custom_scope_info: "OAuth scope (default: 'openid profile email')"
+  oauth_custom_uid_field: UID field
+  oauth_custom_uid_field_info: "UID field (default: preferred_username)"
+  oauth_custom_email_field: Email field
+  oauth_custom_email_field_info: "Email field (default: email)"
+  oauth_hide_login_form: Ocultar formulario de login
+  oauth_custom_firstname_field: Nombre del campo firstname del Provider
+  oauth_custom_lastname_field: Nombre del campo lastname del Provider
