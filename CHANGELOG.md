@@ -1,8 +1,19 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.5 *????-??-??*
+2.2.5 *2024-10-09*
 ------------------
+
+    Spanish localization
+    An automatic update of user's name based on data from OAuth
+    Authorization based on roles provided from OAuth
+    Automatic logon
+    SSO Logoff
+
+* New: #50 - Added file with language spanish (Spain) "es_ES"
+* New: #43 - Setting username automatically
+* New: #36 - Require a certain role or group membership to allow login
+* New: #32 - Option to skip manual button press requirement if redmine_oauth only authentication method
 
 2.2.4 *2024-07-23*
 ------------------
