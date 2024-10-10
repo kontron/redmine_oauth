@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.6 *????-??-??*
+2.2.6 *2024-10-10*
 ------------------
+
+    Spanish localization fix
+
+* Bug: #51 - Text is spanish by default
 
 2.2.5 *2024-10-09*
 ------------------
