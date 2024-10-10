@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-en:
+es:
   oauth_login_via: "Acceder con <b>%{oauth}</b>"
   oauth_login_with: Autenticación con OAuth
   oauth_no_verified_email: No se proporcionó ningún correo electrónico, verifique su configuración en el sitio del proveedor OAuth.
