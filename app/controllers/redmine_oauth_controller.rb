@@ -204,7 +204,8 @@ class RedmineOauthController < AccountController
       else # Locked
         handle_inactive_user user
       end
-    elsif Setting.plugin_redmine_oauth[:self_registration] # Create on the fly
+    elsif Setting.plugin_redmine_oauth[:self_registration] && Setting.plugin_redmine_oauth[:self_registration] != '0'
+      # Create on the fly
       user = User.new
       user.mail = email
       firstname, lastname = info['name'].split if info['name'].present?
