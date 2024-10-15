@@ -1,8 +1,13 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.7 *????-??-??*
+2.2.7 *2024-10-14*
 ------------------
+
+    Bug fixing 
+
+* Bux: #52 - Self-Registration Behavior with Google Login 
+
 
 2.2.6 *2024-10-10*
 ------------------
