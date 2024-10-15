@@ -31,6 +31,10 @@ jobs:
       RAILS_ENV: test
       NAME: redmine_oauth
     steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          isudo apt-get install subversion
       - name: Clone Redmine
         # Get the latest stable Redmine and fix the conflict in gems
         run: |
