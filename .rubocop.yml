@@ -19,8 +19,8 @@
 # Rubocop configuration
 
 AllCops:
-  TargetRubyVersion: 3.1
-  TargetRailsVersion: 6.1
+  TargetRubyVersion: 3.2
+  TargetRailsVersion: 7.1
 
   NewCops: enable
 
