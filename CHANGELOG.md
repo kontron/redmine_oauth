@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.8 *????-??-??*
+2.2.8 *2024-10-24*
 ------------------
+
+    Spanish localization update
+
+* New: #55 - Added more spanish translates
 
 2.2.7 *2024-10-14*
 ------------------
