@@ -67,3 +67,5 @@ es:
     administrador. Ejemplo.: Introduce 'resource_access.redmine.roles', si tu token sigue el siguiente formato:
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
   oauth_autologin: "Autologin mediante %{oauth}"
+  oauth_version: Versión
+  oauth_version_info: Endpoint versión

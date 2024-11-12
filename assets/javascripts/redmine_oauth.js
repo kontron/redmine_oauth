@@ -71,6 +71,7 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_site').show();
             div_oauth_options.find('#oauth_options_tenant').show();
             div_oauth_options.find('#oauth_options_custom').hide();
+            div_oauth_options.find('#oauth_option_version').show();
             tenant_id.val("");
             break;
         case 'GitLab':
@@ -78,18 +79,21 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_site').show();
             div_oauth_options.find('#oauth_options_tenant').hide();
             div_oauth_options.find('#oauth_options_custom').hide();
+            div_oauth_options.find('#oauth_option_version').hide();
             break;
         case 'Google':
             div_oauth_options.show();
             div_oauth_options.find('#oauth_options_site').show();
             div_oauth_options.find('#oauth_options_tenant').hide();
             div_oauth_options.find('#oauth_options_custom').hide();
+            div_oauth_options.find('#oauth_option_version').hide();
             break;
         case 'Keycloak':
             div_oauth_options.show();
             div_oauth_options.find('#oauth_options_site').show();
             div_oauth_options.find('#oauth_options_tenant').show();
             div_oauth_options.find('#oauth_options_custom').hide();
+            div_oauth_options.find('#oauth_option_version').hide();
             tenant_id.val("");
             break;
         case 'Okta':
@@ -97,6 +101,7 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_site').show();
             div_oauth_options.find('#oauth_options_tenant').show();
             div_oauth_options.find('#oauth_options_custom').hide();
+            div_oauth_options.find('#oauth_option_version').hide();
             tenant_id.val("default");
             break;
         case 'Custom':
@@ -104,6 +109,7 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_site').hide();
             div_oauth_options.find('#oauth_options_tenant').hide();
             tenant_id.val("");
+            div_oauth_options.find('#oauth_option_version').hide();
             div_oauth_options.find('#oauth_options_custom').show();
             $("input#settings_custom_auth_endpoint").val("");
             $("input#settings_custom_token_endpoint").val("");

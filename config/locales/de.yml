@@ -68,3 +68,5 @@ de:
     'resource_access.redmine.roles' ein, wenn Sie den Token als 
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } } eingestellt."
   oauth_autologin: "Automatische Anmeldung mit %{oauth}"
+  oauth_version: Version
+  oauth_version_info: Endpoint-Version

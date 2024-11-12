@@ -79,7 +79,10 @@ class RedmineOauthController < AccountController
   end
 
   def oauth_callback
-    raise StandardError, l(:notice_access_denied) if params['error']
+    if params['error'].present?
+      Rails.logger.error params['error_description']
+      raise StandardError, l(:notice_account_invalid_credentials)
+    end
 
     case Setting.plugin_redmine_oauth[:oauth_name]
     when 'Azure AD'
@@ -159,6 +162,7 @@ class RedmineOauthController < AccountController
   rescue StandardError => e
     Rails.logger.error e.message
     flash['error'] = e.message
+    cookies.delete :oauth_autologin
     redirect_to signin_path
   end
 
@@ -257,12 +261,17 @@ class RedmineOauthController < AccountController
     @client =
       case Setting.plugin_redmine_oauth[:oauth_name]
       when 'Azure AD'
+        url = if Setting.plugin_redmine_oauth[:oauth_version].present?
+                "#{Setting.plugin_redmine_oauth[:oauth_version]}/"
+              else
+                ''
+              end
         OAuth2::Client.new(
           Setting.plugin_redmine_oauth[:client_id],
           Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
           site: site,
-          authorize_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/authorize",
-          token_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/token"
+          authorize_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/#{url}authorize",
+          token_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/#{url}token"
         )
       when 'GitLab'
         OAuth2::Client.new(

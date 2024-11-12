@@ -58,6 +58,7 @@ Redmine::Plugin.register :redmine_oauth do
     oauth_logout: nil,
     oauth_login: nil,
     custom_logout_endpoint: '',
-    validate_user_roles: ''
+    validate_user_roles: '',
+    oauth_version: ''
   }, partial: 'settings/oauth_settings'
 end

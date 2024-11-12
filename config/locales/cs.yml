@@ -66,3 +66,5 @@ cs:
     chybí role 'admin', práva administrátora jsou odebrána. př.: Zadejte 'resource_access.redmine.roles', když máte
     v tokenu nakonfigurováno toto: 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }."
   oauth_autologin: "Automatické přihlašování s %{oauth}"
+  oauth_version: Verze
+  oauth_version_info: Verze endpointu

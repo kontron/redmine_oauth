@@ -68,3 +68,5 @@ fr:
     rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
   oauth_autologin: "Autologin with %{oauth}"
+  oauth_version: Version
+  oauth_version_info: Endpoint version

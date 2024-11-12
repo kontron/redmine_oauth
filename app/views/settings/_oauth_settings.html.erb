@@ -71,6 +71,21 @@
       <%= text_field_tag 'settings[site]', @settings[:site], size: 40 %>
       <em class="info"><%= l(:oauth_site_info) %></em>
     </p>
+    <% if %w(Azure\ AD).include?(@settings[:oauth_name]) %>
+      <p id="oauth_option_version">
+    <% else %>
+      <p id="oauth_option_version" style="display: none">
+    <% end %>
+      <label><%= l(:oauth_version) %></label>
+      <%= select_tag 'settings[oauth_version]',
+                     options_for_select([['v1.0', ''], %w[v2.0 v2.0]],
+                     @settings[:oauth_version]) %>
+      <em class="info">
+        <%= l(:oauth_version_info) %>
+        <br>
+        <%= l(:label_default) %>: v1.0
+      </em>
+    </p>
     <p>
       <label><%= l(:oauth_client_id) %></label>
       <%= text_field_tag 'settings[client_id]', @settings[:client_id], size: 40 %>
