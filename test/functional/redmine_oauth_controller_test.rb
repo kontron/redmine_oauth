@@ -36,6 +36,6 @@ class RedmineOauthControllerTest < ActionDispatch::IntegrationTest
 
   def test_oauth_callback_csrf
     get '/oauth2callback'
-    assert_response 422
+    assert_response :unprocessable_content
   end
 end

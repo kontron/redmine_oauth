@@ -29,11 +29,11 @@ Redmine::Plugin.register :redmine_oauth do
   name 'Redmine OAuth plugin'
   author 'Karel Pičman'
   description 'Redmine OAuth plugin'
-  version '2.2.9 devel'
+  version '3.0.0 devel'
   url 'https://github.com/kontron/redmine_oauth'
   author_url 'https://github.com/kontron/redmine_oauth/graphs/contributors'
 
-  requires_redmine version_or_higher: '5.1.0'
+  requires_redmine version_or_higher: '6.0.0'
 
   settings default: {
     oauth_name: 'none',

@@ -241,7 +241,7 @@ class RedmineOauthController < AccountController
           onthefly_creation_failed user
         end
       end
-    else  # Invalid credentials
+    else # Invalid credentials
       params[:username] = email
       invalid_credentials
       raise StandardError, l(:notice_account_invalid_credentials)

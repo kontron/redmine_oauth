@@ -28,9 +28,9 @@ module RedmineOauth
             context[:controller].class.name
           )
 
-          "\n".html_safe + stylesheet_link_tag('redmine_oauth.css', plugin: :redmine_oauth) +
-            "\n".html_safe + stylesheet_link_tag('../vendor/fontawesome/all.min.css', plugin: :redmine_oauth) +
-            "\n".html_safe + javascript_include_tag('redmine_oauth.js', plugin: :redmine_oauth)
+          "\n".html_safe + stylesheet_link_tag('redmine_oauth', plugin: :redmine_oauth) +
+            "\n".html_safe + stylesheet_link_tag('fontawesome/all.min', plugin: :redmine_oauth) +
+            "\n".html_safe + javascript_include_tag('redmine_oauth', plugin: :redmine_oauth)
         end
       end
     end
