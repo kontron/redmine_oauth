@@ -159,7 +159,6 @@ class RedmineOauthController < AccountController
     # Try to log in
     set_params
     try_to_login email, user_info
-    set_oauth_login_cookie true, request
   rescue StandardError => e
     Rails.logger.error e.message
     flash['error'] = e.message
@@ -168,25 +167,25 @@ class RedmineOauthController < AccountController
     redirect_to signin_path
   end
 
-  def set_oauth_autologin_cookie(value, request)
+  def set_oauth_autologin_cookie
     cookie_options = {
-      value: value,
+      value: '1',
       expires: 1.year.from_now,
       path: RedmineApp::Application.config.relative_url_root || '/',
       same_site: :lax,
-      secure: request.ssl?,
+      secure: Setting.protocol == 'https',
       httponly: true
     }
     cookies[:oauth_autologin] = cookie_options
   end
 
-  def set_oauth_login_cookie(value, request)
+  def set_oauth_login_cookie
     cookie_options = {
-      value: value,
+      value: '1',
       expires: 1.year.from_now,
       path: RedmineApp::Application.config.relative_url_root || '/',
       same_site: :lax,
-      secure: request.ssl?,
+      secure: Setting.protocol == 'https',
       httponly: true
     }
     cookies[:oauth_login] = cookie_options
@@ -201,6 +200,8 @@ class RedmineOauthController < AccountController
     session.delete :autologin
     params['oauth_autologin'] = session[:oauth_autologin]
     session.delete :oauth_autologin
+    params['oauth_login'] = session[:oauth_autologin]
+    session.delete :oauth_login
   end
 
   def try_to_login(email, info)

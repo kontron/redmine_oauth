@@ -44,7 +44,7 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
 
   def test_logout_oauth
     post '/login', params: { username: 'jsmith', password: 'jsmith' }
-    cookies[:oauth_login] = true
+    cookies[:oauth_login] = '1'
     Setting.plugin_redmine_oauth[:oauth_logout] = '1'
     site = 'https://login.microsoftonline.com'
     Setting.plugin_redmine_oauth[:site] = site
