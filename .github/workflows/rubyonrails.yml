@@ -41,7 +41,7 @@ jobs:
           svn export https://svn.redmine.org/redmine/branches/6.0-stable/ /opt/redmine
           sed -i "s/gem 'net-imap'/#gem 'net-imap'/" /opt/redmine/Gemfile
       - name: Checkout code
-        uses: actions/checkout@v3        
+        uses: actions/checkout@v4
       - name: Link the plugin
         # Link the plugin to the redmine folder
         run: | 
