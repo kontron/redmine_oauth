@@ -33,8 +33,10 @@ module RedmineOauth
 
       def logout
         delete_oauth_autologin_cookie
-        return super if User.current.anonymous? || !request.post? || Setting.plugin_redmine_oauth[:oauth_logout].blank?
+        return super if User.current.anonymous? || !request.post? ||
+                        Setting.plugin_redmine_oauth[:oauth_logout].blank? || oauth_login_cookie.blank?
 
+        delete_oauth_login_cookie
         site = Setting.plugin_redmine_oauth[:site]&.chomp('/')
         id = Setting.plugin_redmine_oauth[:client_id]
         url = signout_url
@@ -72,8 +74,16 @@ module RedmineOauth
         cookies.delete :oauth_autologin
       end
 
+      def delete_oauth_login_cookie
+        cookies.delete :oauth_login
+      end
+
       def oauth_autologin_cookie
         cookies[:oauth_autologin]
+      end
+
+      def oauth_login_cookie
+        cookies[:oauth_login]
       end
     end
   end
