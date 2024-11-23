@@ -26,17 +26,17 @@ module RedmineOauth
       # Overridden methods
 
       def login
-        return super if request.post? || oauth_autologin_cookie.blank?
+        return super if request.post? || cookies[:oauth_autologin].blank?
 
         redirect_to oauth_path(back_url: params[:back_url])
       end
 
       def logout
-        delete_oauth_autologin_cookie
+        cookies.delete :oauth_autologin
         return super if User.current.anonymous? || !request.post? ||
-                        Setting.plugin_redmine_oauth[:oauth_logout].blank? || oauth_login_cookie.blank?
+                        Setting.plugin_redmine_oauth[:oauth_logout].blank? || session[:oauth_login].blank?
 
-        delete_oauth_login_cookie
+        session.delete :oauth_login
         site = Setting.plugin_redmine_oauth[:site]&.chomp('/')
         id = Setting.plugin_redmine_oauth[:client_id]
         url = signout_url
@@ -63,27 +63,6 @@ module RedmineOauth
         Rails.logger.error e.message
         flash['error'] = e.message
         redirect_to signin_path
-      end
-
-      ################################################################################################################
-      # New methods
-
-      private
-
-      def delete_oauth_autologin_cookie
-        cookies.delete :oauth_autologin
-      end
-
-      def delete_oauth_login_cookie
-        cookies.delete :oauth_login
-      end
-
-      def oauth_autologin_cookie
-        cookies[:oauth_autologin]
-      end
-
-      def oauth_login_cookie
-        cookies[:oauth_login]
       end
     end
   end

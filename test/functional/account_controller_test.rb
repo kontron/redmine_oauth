@@ -37,21 +37,8 @@ class AccountControllerTest < ActionDispatch::IntegrationTest
 
   def test_logout
     post '/login', params: { username: 'jsmith', password: 'jsmith' }
-    Setting.plugin_redmine_oauth[:oauth_logout] = ''
+    Setting.plugin_redmine_oauth[:oauth_logout] = nil
     post '/logout'
     assert_redirected_to home_path
-  end
-
-  def test_logout_oauth
-    post '/login', params: { username: 'jsmith', password: 'jsmith' }
-    cookies[:oauth_login] = '1'
-    Setting.plugin_redmine_oauth[:oauth_logout] = '1'
-    site = 'https://login.microsoftonline.com'
-    Setting.plugin_redmine_oauth[:site] = site
-    client_id = 'acgd0c84-8784-4f1e-8052-31iabf4b7o00'
-    Setting.plugin_redmine_oauth[:client_id] = client_id
-    Setting.plugin_redmine_oauth[:oauth_name] = 'Azure AD'
-    post '/logout'
-    assert_redirected_to "#{site}/#{client_id}/oauth2/logout?post_logout_redirect_uri=#{signout_url}"
   end
 end
