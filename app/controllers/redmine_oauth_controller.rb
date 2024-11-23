@@ -158,6 +158,7 @@ class RedmineOauthController < AccountController
 
     # Try to log in
     set_params
+    set_oauth_login_cookie
     try_to_login email, user_info
   rescue StandardError => e
     Rails.logger.error e.message

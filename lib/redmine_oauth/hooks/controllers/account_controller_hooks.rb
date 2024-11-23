@@ -26,7 +26,7 @@ module RedmineOauth
         def controller_account_success_authentication_after(context = {})
           return unless Setting.plugin_redmine_oauth[:oauth_login] && context[:controller].params[:oauth_autologin]
 
-          context[:controller].set_oauth_autologin_cookie context[:user], context[:request]
+          context[:controller].set_oauth_autologin_cookie
         end
       end
     end
