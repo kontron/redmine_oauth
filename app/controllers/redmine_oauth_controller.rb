@@ -198,7 +198,7 @@ class RedmineOauthController < AccountController
       elsif user.active? # Active
         handle_active_user user
         user.update_last_login_on!
-        if RedmineOauth.update_login && (info['login'] || info['unique_name'])
+        if RedmineOauth.update_login? && (info['login'] || info['unique_name'])
           user.login = info['login'] || info['unique_name']
           Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
         end

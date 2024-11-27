@@ -33,7 +33,7 @@ module RedmineOauth
 
       def logout
         cookies.delete :oauth_autologin
-        return super if User.current.anonymous? || !request.post? || !RedmineOauth.oauth_logout ||
+        return super if User.current.anonymous? || !request.post? || !RedmineOauth.oauth_logout? ||
                         session[:oauth_login].blank?
 
         session.delete :oauth_login
