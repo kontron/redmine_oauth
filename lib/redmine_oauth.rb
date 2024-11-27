@@ -135,11 +135,8 @@ module RedmineOauth
     end
 
     def hide_login_form
-      if Setting.plugin_redmine_oauth['hide_login_form'].is_a?(TrueClass)
-        Setting.plugin_redmine_oauth['hide_login_form']
-      else
-        Setting.plugin_redmine_oauth['hide_login_form'].to_i.positive?
-      end
+      value = Setting.plugin_redmine_oauth['hide_login_form']
+      value.is_a?(TrueClass) || value.is_a?(FalseClass) ? value : value.to_i.positive?
     end
 
     def self_registration
@@ -163,27 +160,18 @@ module RedmineOauth
     end
 
     def update_login
-      if Setting.plugin_redmine_oauth['update_login'].is_a?(TrueClass)
-        Setting.plugin_redmine_oauth['update_login']
-      else
-        Setting.plugin_redmine_oauth['update_login'].to_i.positive?
-      end
+      value = Setting.plugin_redmine_oauth['update_login']
+      value.is_a?(TrueClass) || value.is_a?(FalseClass) ? value : value.to_i.positive?
     end
 
     def oauth_logout
-      if Setting.plugin_redmine_oauth['oauth_logout'].is_a?(TrueClass)
-        Setting.plugin_redmine_oauth['oauth_logout']
-      else
-        Setting.plugin_redmine_oauth['oauth_logout'].to_i.positive?
-      end
+      value = Setting.plugin_redmine_oauth['oauth_logout']
+      value.is_a?(TrueClass) || value.is_a?(FalseClass) ? value : value.to_i.positive?
     end
 
     def oauth_login
-      if Setting.plugin_redmine_oauth['oauth_login'].is_a?(TrueClass)
-        Setting.plugin_redmine_oauth['oauth_login']
-      else
-        Setting.plugin_redmine_oauth['oauth_login'].to_i.positive?
-      end
+      value = Setting.plugin_redmine_oauth['oauth_login']
+      value.is_a?(TrueClass) || value.is_a?(FalseClass) ? value : value.to_i.positive?
     end
 
     def custom_logout_endpoint
