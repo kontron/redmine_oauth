@@ -26,10 +26,10 @@ module RedmineOauth
     class << self
       def check(imap_options = {}, options = {})
         client = OAuth2::Client.new(
-          Setting.plugin_redmine_oauth[:client_id],
-          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
-          site: Setting.plugin_redmine_oauth[:site]&.chomp('/'),
-          token_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/v2.0/token"
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
+          site: RedmineOauth.site,
+          token_url: "/#{RedmineOauth.tenant_id}/oauth2/v2.0/token"
         )
         params = {
           scope: imap_options[:scope],

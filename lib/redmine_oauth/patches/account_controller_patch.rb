@@ -33,22 +33,22 @@ module RedmineOauth
 
       def logout
         cookies.delete :oauth_autologin
-        return super if User.current.anonymous? || !request.post? ||
-                        Setting.plugin_redmine_oauth[:oauth_logout].blank? || session[:oauth_login].blank?
+        return super if User.current.anonymous? || !request.post? || !RedmineOauth.oauth_logout ||
+                        session[:oauth_login].blank?
 
         session.delete :oauth_login
-        site = Setting.plugin_redmine_oauth[:site]&.chomp('/')
-        id = Setting.plugin_redmine_oauth[:client_id]
+        site = RedmineOauth.site
+        id = RedmineOauth.client_id
         url = signout_url
-        case Setting.plugin_redmine_oauth[:oauth_name]
+        case RedmineOauth.oauth_name
         when 'Azure AD'
           logout_user
           redirect_to "#{site}/#{id}/oauth2/logout?post_logout_redirect_uri=#{url}"
         when 'Custom'
           logout_user
-          redirect_to Setting.plugin_redmine_oauth[:custom_logout_endpoint]
+          redirect_to RedmineOauth.custom_logout_endpoint
         when 'GitLab', 'Google'
-          Rails.logger.info "#{Setting.plugin_redmine_oauth[:oauth_name]} logout not implement"
+          Rails.logger.info "#{RedmineOauth.oauth_name} logout not implement"
           super
         when 'Keycloak'
           logout_user

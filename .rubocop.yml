@@ -33,6 +33,9 @@ require:
   - rubocop-rails
 
 # Rules for OAuth
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
 
@@ -42,16 +45,16 @@ Metrics/BlockNesting:
 Metrics/ClassLength:
   Enabled: false
 
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
 Metrics/MethodLength:
   Enabled: false
 
-Metrics/AbcSize:
-  Enabled: false
-
 Metrics/PerceivedComplexity:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
   Enabled: false
 
 Style/ExpandPathArguments:

@@ -31,7 +31,7 @@ class RedmineOauthController < AccountController
     session[:oauth_autologin] = params[:oauth_autologin]
     oauth_csrf_token = generate_csrf_token
     session[:oauth_csrf_token] = oauth_csrf_token
-    case Setting.plugin_redmine_oauth[:oauth_name]
+    case RedmineOauth.oauth_name
     when 'Azure AD'
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
@@ -66,7 +66,7 @@ class RedmineOauthController < AccountController
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
-        scope: Setting.plugin_redmine_oauth[:custom_scope]
+        scope: RedmineOauth.custom_scope
       )
     else
       flash['error'] = l(:oauth_invalid_provider)
@@ -84,7 +84,7 @@ class RedmineOauthController < AccountController
       raise StandardError, l(:notice_account_invalid_credentials)
     end
 
-    case Setting.plugin_redmine_oauth[:oauth_name]
+    case RedmineOauth.oauth_name
     when 'Azure AD'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       user_info = JWT.decode(token.token, nil, false).first
@@ -110,7 +110,7 @@ class RedmineOauthController < AccountController
     when 'Okta'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
       userinfo_response = token.get(
-        "/oauth2/#{Setting.plugin_redmine_oauth[:tenant_id]}/v1/userinfo",
+        "/oauth2/#{RedmineOauth.tenant_id}/v1/userinfo",
         headers: { 'Accept' => 'application/json' }
       )
       user_info = JSON.parse(userinfo_response.body)
@@ -118,24 +118,24 @@ class RedmineOauthController < AccountController
       email = user_info['email']
     when 'Custom'
       token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url)
-      if Setting.plugin_redmine_oauth[:custom_profile_endpoint].strip.empty?
+      if RedmineOauth.custom_profile_endpoint.empty?
         user_info = JWT.decode(token.token, nil, false).first
       else
         userinfo_response = token.get(
-          Setting.plugin_redmine_oauth[:custom_profile_endpoint],
+          RedmineOauth.custom_profile_endpoint,
           headers: { 'Accept' => 'application/json' }
         )
         user_info = JSON.parse(userinfo_response.body)
       end
-      user_info['login'] = user_info[Setting.plugin_redmine_oauth[:custom_uid_field]]
-      email = user_info[Setting.plugin_redmine_oauth[:custom_email_field]]
+      user_info['login'] = user_info[RedmineOauth.custom_uid_field]
+      email = user_info[RedmineOauth.custom_email_field]
     else
       raise StandardError, l(:oauth_invalid_provider)
     end
     raise StandardError, l(:oauth_no_verified_email) unless email
 
     # Roles
-    keys = Setting.plugin_redmine_oauth[:validate_user_roles]&.split('.')
+    keys = RedmineOauth.validate_user_roles.split('.')
     if keys&.size&.positive?
       roles = user_info
       while keys.size.positive?
@@ -198,7 +198,7 @@ class RedmineOauthController < AccountController
       elsif user.active? # Active
         handle_active_user user
         user.update_last_login_on!
-        if Setting.plugin_redmine_oauth[:update_login] && (info['login'] || info['unique_name'])
+        if RedmineOauth.update_login && (info['login'] || info['unique_name'])
           user.login = info['login'] || info['unique_name']
           Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
         end
@@ -209,17 +209,15 @@ class RedmineOauthController < AccountController
       else # Locked
         handle_inactive_user user
       end
-    elsif Setting.plugin_redmine_oauth[:self_registration] && Setting.plugin_redmine_oauth[:self_registration] != '0'
+    elsif RedmineOauth.self_registration.positive?
       # Create on the fly
       user = User.new
       user.mail = email
       firstname, lastname = info['name'].split if info['name'].present?
-      key = Setting.plugin_redmine_oauth[:custom_firstname_field]
-      key ||= 'given_name'
+      key = RedmineOauth.custom_firstname_field
       firstname ||= info[key]
       user.firstname = firstname
-      key = Setting.plugin_redmine_oauth[:custom_lastname_field]
-      key ||= 'family_name'
+      key = RedmineOauth.custom_lastname_field
       lastname ||= info[key]
       user.lastname = lastname
       user.mail = email
@@ -228,12 +226,12 @@ class RedmineOauthController < AccountController
       user.login = login
       user.random_password
       user.register
-      case Setting.plugin_redmine_oauth[:self_registration]
-      when '1'
+      case RedmineOauth.self_registration
+      when 1
         register_by_email_activation(user) do
           onthefly_creation_failed user
         end
-      when '3'
+      when 3
         register_automatically(user) do
           onthefly_creation_failed user
         end
@@ -256,63 +254,59 @@ class RedmineOauthController < AccountController
   def oauth_client
     return @client if @client
 
-    site = Setting.plugin_redmine_oauth[:site]&.chomp('/')
+    site = RedmineOauth.site
     raise StandardError, l(:oauth_invalid_provider) unless site
 
     @client =
-      case Setting.plugin_redmine_oauth[:oauth_name]
+      case RedmineOauth.oauth_name
       when 'Azure AD'
-        url = if Setting.plugin_redmine_oauth[:oauth_version].present?
-                "#{Setting.plugin_redmine_oauth[:oauth_version]}/"
-              else
-                ''
-              end
+        url = RedmineOauth.oauth_version.present? ? "#{RedmineOauth.oauth_version}/" : ''
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth[:client_id],
-          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
           site: site,
-          authorize_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/#{url}authorize",
-          token_url: "/#{Setting.plugin_redmine_oauth[:tenant_id]}/oauth2/#{url}token"
+          authorize_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}authorize",
+          token_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}token"
         )
       when 'GitLab'
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth[:client_id],
-          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
           site: site,
           authorize_url: '/oauth/authorize',
           token_url: '/oauth/token'
         )
       when 'Google'
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth[:client_id],
-          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
           site: site,
           authorize_url: '/o/oauth2/v2/auth',
           token_url: 'https://oauth2.googleapis.com/token'
         )
       when 'Keycloak'
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth[:client_id],
-          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
           site: site,
-          authorize_url: "/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/auth",
-          token_url: "/realms/#{Setting.plugin_redmine_oauth[:tenant_id]}/protocol/openid-connect/token"
+          authorize_url: "/realms/#{RedmineOauth.tenant_id}/protocol/openid-connect/auth",
+          token_url: "/realms/#{RedmineOauth.tenant_id}/protocol/openid-connect/token"
         )
       when 'Okta'
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth[:client_id],
-          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
           site: site,
-          authorize_url: "/oauth2/#{Setting.plugin_redmine_oauth[:tenant_id]}/v1/authorize",
-          token_url: "/oauth2/#{Setting.plugin_redmine_oauth[:tenant_id]}/v1/token"
+          authorize_url: "/oauth2/#{RedmineOauth.tenant_id}/v1/authorize",
+          token_url: "/oauth2/#{RedmineOauth.tenant_id}/v1/token"
         )
       when 'Custom'
         OAuth2::Client.new(
-          Setting.plugin_redmine_oauth[:client_id],
-          Redmine::Ciphering.decrypt_text(Setting.plugin_redmine_oauth[:client_secret]),
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
           site: site,
-          authorize_url: Setting.plugin_redmine_oauth[:custom_auth_endpoint],
-          token_url: Setting.plugin_redmine_oauth[:custom_token_endpoint]
+          authorize_url: RedmineOauth.custom_auth_endpoint,
+          token_url: RedmineOauth.custom_token_endpoint
         )
       else
         raise StandardError, l(:oauth_invalid_provider)
