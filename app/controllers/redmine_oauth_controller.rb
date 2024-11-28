@@ -36,7 +36,12 @@ class RedmineOauthController < AccountController
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
-        scope: 'user:email'
+        scope: case RedmineOauth.oauth_version
+               when 'v2.0'
+                 'openid profile email'
+               else
+                 'user:email'
+               end
       )
     when 'GitLab'
       redirect_to oauth_client.auth_code.authorize_url(
