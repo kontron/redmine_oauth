@@ -1,8 +1,15 @@
 Changelog for Redmine OAuth
 ==========================
 
-2.2.9 *????-??-??*
+3.0.0 *2024-12-06*
 ------------------
+
+    Redmine 6
+
+* Bug: #62 - Keycloak logout url fix
+* Bug: #61 - OAuth logout
+* New: #60 - Redmine 6 
+* New: #59 - Issue with authentication against MS Entra ID
 
 2.2.8 *2024-10-24*
 ------------------
