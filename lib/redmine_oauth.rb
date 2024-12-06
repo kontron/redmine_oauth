@@ -213,7 +213,6 @@ module RedmineOauth
         ''
       end
     end
-
   end
 end
 
