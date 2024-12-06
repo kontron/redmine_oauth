@@ -197,6 +197,23 @@ module RedmineOauth
         ''
       end
     end
+
+    def custom_uid_field
+      if Setting.plugin_redmine_oauth['custom_uid_field'].present?
+        Setting.plugin_redmine_oauth['custom_uid_field'].strip
+      else
+        ''
+      end
+    end
+
+    def custom_email_field
+      if Setting.plugin_redmine_oauth['custom_email_field'].present?
+        Setting.plugin_redmine_oauth['custom_email_field'].strip
+      else
+        ''
+      end
+    end
+
   end
 end
 
