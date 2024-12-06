@@ -1,8 +1,10 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.1 *????-??-??*
+3.0.1 *2024-12-06*
 ------------------
+
+* Bug: #64 - adds custom_uid_field and custom_email_field to RedmineOauth class
 
 3.0.0 *2024-12-06*
 ------------------
