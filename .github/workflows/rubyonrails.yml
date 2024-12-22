@@ -21,9 +21,9 @@
 name: "GitHub CI"
 on:
   push:
-    branches: ["main"]
+    branches: ["devel"]
   pull_request:
-    branches: ["main"]
+    branches: ["devel"]
 jobs:
   plugin_tests:
     runs-on: ubuntu-latest
@@ -66,6 +66,7 @@ jobs:
           bundle exec rake generate_secret_token
           bundle exec rake db:migrate          
           bundle exec rake redmine:load_default_data
+          bundle exec rake assets:precompile
         env:
           REDMINE_LANG: en
       - name: Standard tests

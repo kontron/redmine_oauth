@@ -1,4 +1,4 @@
-## Redmine OAuth plugin 3.0.1
+## Redmine OAuth plugin 3.0.2 devel
 
 [![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
@@ -116,7 +116,7 @@ Example:
 rake redmine_oauth:email:receive_imap username='notifications@example.com' RAILS_ENV="production"
 ```
 
-**Prior accessing IMAP via OAuth, it is necessary to grant flow to authenticate IMAP connections.**
+**Prior to accessing IMAP via OAuth, it is necessary to grant flow to authenticate IMAP connections.**
 
 Here is a procedure how to do that in Azure:
 
