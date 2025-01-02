@@ -115,29 +115,39 @@ class RedmineOauthController < AccountController
 
     case RedmineOauth.oauth_name
     when 'Azure AD'
-      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url, code_verifier: code_verifier)
+      token = oauth_client.auth_code.get_token(params['code'],
+                                               redirect_uri: oauth_callback_url,
+                                               code_verifier: code_verifier)
       user_info = JWT.decode(token.token, nil, false).first
       email = user_info['unique_name']
     when 'GitLab'
-      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url, code_verifier: code_verifier)
+      token = oauth_client.auth_code.get_token(params['code'],
+                                               redirect_uri: oauth_callback_url,
+                                               code_verifier: code_verifier)
       userinfo_response = token.get('/api/v4/user', headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['username']
       email = user_info['email']
     when 'Google'
-      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url, code_verifier: code_verifier)
+      token = oauth_client.auth_code.get_token(params['code'],
+                                               redirect_uri: oauth_callback_url,
+                                               code_verifier: code_verifier)
       userinfo_response = token.get('https://openidconnect.googleapis.com/v1/userinfo',
                                     headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['email']
       email = user_info['email']
     when 'Keycloak'
-      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url, code_verifier: code_verifier)
+      token = oauth_client.auth_code.get_token(params['code'],
+                                               redirect_uri: oauth_callback_url,
+                                               code_verifier: code_verifier)
       user_info = JWT.decode(token.token, nil, false).first
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
     when 'Okta'
-      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url, code_verifier: code_verifier)
+      token = oauth_client.auth_code.get_token(params['code'],
+                                               redirect_uri: oauth_callback_url,
+                                               code_verifier: code_verifier)
       userinfo_response = token.get(
         "/oauth2/#{RedmineOauth.tenant_id}/v1/userinfo",
         headers: { 'Accept' => 'application/json' }
@@ -146,7 +156,9 @@ class RedmineOauthController < AccountController
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
     when 'Custom'
-      token = oauth_client.auth_code.get_token(params['code'], redirect_uri: oauth_callback_url, code_verifier: code_verifier)
+      token = oauth_client.auth_code.get_token(params['code'],
+                                               redirect_uri: oauth_callback_url,
+                                               code_verifier: code_verifier)
       if RedmineOauth.custom_profile_endpoint.empty?
         user_info = JWT.decode(token.token, nil, false).first
       else
@@ -215,7 +227,7 @@ class RedmineOauthController < AccountController
   end
 
   def generate_code_challenge(code_verifier)
-    Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete("=")
+    Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete('=')
   end
 
   def set_params
