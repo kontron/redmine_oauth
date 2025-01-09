@@ -1,13 +1,17 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.2 *????-??-??*
+3.0.2 *2025-01-09*
 ------------------
+
+    PKCE (Proof Key for Code Exchange) support 
+
+* New: #69 - Add PKCE support to redmine_oauth_controller
 
 3.0.1 *2024-12-06*
 ------------------
 
-* Bug: #64 - adds custom_uid_field and custom_email_field to RedmineOauth class
+* Bug: #64 - Adds custom_uid_field and custom_email_field to RedmineOauth class
 
 3.0.0 *2024-12-06*
 ------------------

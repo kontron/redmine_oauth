@@ -1,4 +1,4 @@
-## Redmine OAuth plugin 3.0.2 devel
+## Redmine OAuth plugin 3.0.2
 
 [![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
