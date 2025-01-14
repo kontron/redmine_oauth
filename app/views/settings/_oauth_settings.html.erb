@@ -32,14 +32,14 @@
       %w(Okta Okta),
       %w(Custom),
       ["&nbsp;".html_safe, 'none']
-    ], @settings[:oauth_name]), onchange: 'oauth_settings_visibility()' %>
+    ], RedmineOauth.oauth_name), onchange: 'oauth_settings_visibility()' %>
   <em class="info"><%= l(:oauth_provider_info) %></em>
 </p>
-<div id="oauth_options" class="<%= (@settings[:oauth_name] == 'none') ? 'oauth_hidden' : '' %>">
+<div id="oauth_options" class="<%= (RedmineOauth.oauth_name == 'none') ? 'oauth_hidden' : '' %>">
     <p>
         <label for="button_color"><%= l(:oauth_login_button) %></label>
         <span>
-          <input type="color" id="button_color" name="settings[button_color]" value="<%= @settings[:button_color] %>"
+          <input type="color" id="button_color" name="settings[button_color]" value="<%= RedmineOauth.button_color %>"
             onChange="oauth_set_color();">
           <%
             icons = %w(far\ fa-address-book far\ fa-address-card far\ fa-angry far\ fa-arrow-alt-circle-down far\ fa-arrow-alt-circle-left far\ fa-arrow-alt-circle-right far\ fa-arrow-alt-circle-up far\ fa-bell far\ fa-bell-slash far\ fa-bookmark far\ fa-building far\ fa-calendar far\ fa-calendar-alt far\ fa-calendar-check far\ fa-calendar-minus far\ fa-calendar-plus far\ fa-calendar-times far\ fa-caret-square-down far\ fa-caret-square-left far\ fa-caret-square-right far\ fa-caret-square-up far\ fa-chart-bar far\ fa-check-circle far\ fa-check-square far\ fa-circle far\ fa-clipboard far\ fa-clock far\ fa-clone far\ fa-closed-captioning far\ fa-comment far\ fa-comment-alt far\ fa-comment-dots far\ fa-comments far\ fa-compass far\ fa-copy far\ fa-copyright far\ fa-credit-card far\ fa-dizzy far\ fa-dot-circle far\ fa-edit far\ fa-envelope far\ fa-envelope-open far\ fa-eye far\ fa-eye-slash far\ fa-file far\ fa-file-alt far\ fa-file-archive far\ fa-file-audio far\ fa-file-code far\ fa-file-excel far\ fa-file-image far\ fa-file-pdf far\ fa-file-powerpoint far\ fa-file-video far\ fa-file-word far\ fa-flag far\ fa-flushed far\ fa-folder far\ fa-folder-open far\ fa-frown far\ fa-frown-open far\ fa-futbol far\ fa-gem far\ fa-grimace far\ fa-grin far\ fa-grin-alt far\ fa-grin-beam far\ fa-grin-beam-sweat far\ fa-grin-hearts far\ fa-grin-squint far\ fa-grin-squint-tears far\ fa-grin-stars far\ fa-grin-tears far\ fa-grin-tongue far\ fa-grin-tongue-squint far\ fa-grin-tongue-wink far\ fa-grin-wink far\ fa-hand-lizard far\ fa-hand-paper far\ fa-hand-peace far\ fa-hand-point-down far\ fa-hand-point-left far\ fa-hand-point-right far\ fa-hand-point-up far\ fa-hand-pointer far\ fa-hand-rock far\ fa-hand-scissors far\ fa-hand-spock far\ fa-handshake far\ fa-hdd far\ fa-heart far\ fa-hospital far\ fa-hourglass far\ fa-id-badge far\ fa-id-card far\ fa-image far\ fa-images far\ fa-keyboard far\ fa-kiss far\ fa-kiss-beam far\ fa-kiss-wink-heart far\ fa-laugh far\ fa-laugh-beam far\ fa-laugh-squint far\ fa-laugh-wink far\ fa-lemon far\ fa-life-ring far\ fa-lightbulb far\ fa-list-alt far\ fa-map far\ fa-meh far\ fa-meh-blank far\ fa-meh-rolling-eyes far\ fa-minus-square far\ fa-money-bill-alt far\ fa-moon far\ fa-newspaper far\ fa-object-group far\ fa-object-ungroup far\ fa-paper-plane far\ fa-pause-circle far\ fa-play-circle far\ fa-plus-square far\ fa-question-circle far\ fa-registered far\ fa-sad-cry far\ fa-sad-tear far\ fa-save far\ fa-share-square far\ fa-smile far\ fa-smile-beam far\ fa-smile-wink far\ fa-snowflake far\ fa-square far\ fa-star far\ fa-star-half far\ fa-sticky-note far\ fa-stop-circle far\ fa-sun far\ fa-surprise far\ fa-thumbs-down far\ fa-thumbs-up far\ fa-times-circle far\ fa-tired far\ fa-trash-alt far\ fa-user far\ fa-user-circle far\ fa-window-close far\ fa-window-maximize far\ fa-window-minimize far\ fa-window-restore
@@ -48,75 +48,73 @@
             icons.map!{ |icon| Array.new(2, icon) }
             icons.insert(0, ["&nbsp;".html_safe, 'none'])
           %>
-          <%= select_tag 'settings[button_icon]', options_for_select(icons, @settings[:button_icon]),
+          <%= select_tag 'settings[button_icon]', options_for_select(icons, RedmineOauth.button_icon),
                 onchange: "oauth_set_icon();"  %>
-          <% style = "background: #{@settings[:button_color]};" %>
-          <% if @settings[:button_icon] == 'none' %>
+          <% style = "background: #{RedmineOauth.button_color};" %>
+          <% if RedmineOauth.button_icon == 'none' %>
             <% style << 'display: none;'%>
           <% end %>
           <%= button_tag(name: 'login-oauth', id: 'login-oauth-button', title: l(:oauth_login_with), style: style,
                 disabled: true) do %>
-            <i id="button_icon" class="<%= @settings[:button_icon] %>"></i>
-            <%= l(:oauth_login_via, oauth: !@settings[:custom_name].nil? && !@settings[:custom_name].empty? ? @settings[:custom_name] : @settings[:oauth_name]).html_safe %>
+            <i id="button_icon" class="<%= RedmineOauth.button_icon %>"></i>
+            <%= l(:oauth_login_via, oauth: RedmineOauth.custom_name.present? ? RedmineOauth.custom_name : RedmineOauth.oauth_name) %>
           <% end %>
         </span>
         <em class="info"><%= l(:oauth_button_info) %></em>
     </p>
-    <% if %w(Custom).include?(@settings[:oauth_name]) %>
+    <% if %w(Custom).include?(RedmineOauth.oauth_name) %>
       <p id="oauth_options_site" style="display: none">
     <% else %>
       <p id="oauth_options_site">
     <% end %>
       <label><%= l(:oauth_site) %></label>
-      <%= text_field_tag 'settings[site]', @settings[:site], size: 40 %>
+      <%= text_field_tag 'settings[site]', RedmineOauth.site, size: 40 %>
       <em class="info"><%= l(:oauth_site_info) %></em>
     </p>
-    <% if %w(Azure\ AD).include?(@settings[:oauth_name]) %>
+    <% if %w(Azure\ AD).include?(RedmineOauth.oauth_name) %>
       <p id="oauth_option_version">
     <% else %>
       <p id="oauth_option_version" style="display: none">
     <% end %>
       <label><%= l(:oauth_version) %></label>
       <%= select_tag 'settings[oauth_version]',
-                     options_for_select([['v1.0', ''], %w[v2.0 v2.0]],
-                     @settings[:oauth_version]) %>
+                     options_for_select([['v1.0', ''], %w[v2.0 v2.0]], RedmineOauth.oauth_version) %>
       <em class="info">
-        <%= l(:oauth_version_info) %>
-        <br>
+        <%= l(:oauth_version_info) %><br>
         <%= l(:label_default) %>: v1.0
       </em>
     </p>
     <p>
       <label><%= l(:oauth_client_id) %></label>
-      <%= text_field_tag 'settings[client_id]', @settings[:client_id], size: 40 %>
+      <%= text_field_tag 'settings[client_id]', RedmineOauth.client_id, size: 40 %>
       <em class="info"><%= l(:oauth_client_id_info) %></em>
     </p>
     <p>
       <label><%= l(:oauth_client_secret) %></label>
-      <%= text_field_tag 'settings[client_secret]', Redmine::Ciphering.decrypt_text(@settings[:client_secret]),
+      <%= text_field_tag 'settings[client_secret]', Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
                          size: 40 %>
       <em class="info"><%= l(:oauth_client_secret_info) %></em>
     </p>
-    <% if %w(GitLab Google Custom).include?(@settings[:oauth_name]) %>
+    <% if %w(GitLab Google Custom).include?(RedmineOauth.oauth_name) %>
       <p id="oauth_options_tenant" style="display: none">
     <% else %>
       <p id="oauth_options_tenant">
     <% end %>
       <label><%= l(:oauth_tenant_id) %></label>
-      <%= text_field_tag 'settings[tenant_id]', @settings[:tenant_id], size: 40 %>
+      <%= text_field_tag 'settings[tenant_id]', RedmineOauth.tenant_id, size: 40 %>
       <em class="info"><%= l(:oauth_tenant_id_info) %></em>
     </p>
     <p>
       <label><%= l(:setting_self_registration) %></label>
       <%= select_tag 'settings[self_registration]', options_for_select([
-          [l(:label_disabled), "0"],
-          [l(:label_registration_activation_by_email), "1"],
-          [l(:label_registration_manual_activation), "2"],
-          [l(:label_registration_automatic_activation), "3"]
-        ], @settings[:self_registration]), onchange: 'oauth_self_registration_changed();' %>
+          [l(:label_disabled), '0'],
+          [l(:label_registration_activation_by_email), '1'],
+          [l(:label_registration_manual_activation), '2'],
+          [l(:label_registration_automatic_activation), '3']
+        ], RedmineOauth.self_registration), onchange: 'oauth_self_registration_changed();' %>
       <em class="info"><%= l(:label_default)%>: <%= l(:label_disabled) %></em>
     </p>
-    <% style = if @settings[:self_registration].present? && (@settings[:self_registration] != '0')
+    <% style = if RedmineOauth.self_registration != '0'
                  'display: block'
                else
                  'display: none'
@@ -124,28 +122,28 @@
     <div id="oauth_self_registration" style="<%= style %>">
       <p>
         <label><%= l(:oauth_custom_firstname_field) %></label>
-        <%= text_field_tag 'settings[custom_firstname_field]', @settings[:custom_firstname_field] %>
+        <%= text_field_tag 'settings[custom_firstname_field]', RedmineOauth.custom_firstname_field %>
         <em class="info"><%= l(:label_default) %>: given_name</em>
       </p>
       <p>
         <label><%= l(:oauth_custom_lastname_field) %></label>
-        <%= text_field_tag 'settings[custom_lastname_field]', @settings[:custom_lastname_field] %>
+        <%= text_field_tag 'settings[custom_lastname_field]', RedmineOauth.custom_lastname_field %>
         <em class="info"><%= l(:label_default) %>: family_name</em>
       </p>
     </div>
     <p>
       <label><%= l(:oauth_validate_user_roles) %></label>
-      <%= text_field_tag 'settings[validate_user_roles]', @settings[:validate_user_roles], size: 40 %>
+      <%= text_field_tag 'settings[validate_user_roles]', RedmineOauth.validate_user_roles, size: 40 %>
       <em class="info"><%= l(:oauth_validate_user_roles_info) %></em>
     </p>
     <p>
       <label><%= l(:oauth_hide_login_form) %></label>
-      <%= check_box_tag 'settings[hide_login_form]', true, @settings[:hide_login_form] %>
+      <%= check_box_tag 'settings[hide_login_form]', '1', RedmineOauth.hide_login_form? %>
       <em class="info"><%= l(:label_default)%>: <%= l(:general_text_No) %></em>
     </p>
     <p>
       <label><%= l(:oauth_update_login) %></label>
-      <%= check_box_tag 'settings[update_login]', true, @settings[:update_login] %>
+      <%= check_box_tag 'settings[update_login]', '1', RedmineOauth.update_login? %>
       <em class="info">
         <%= l(:oauth_update_login_info) %>
         <br>
@@ -154,63 +152,61 @@
     </p>
     <p>
       <label><%= l(:oauth_logout) %></label>
-      <%= check_box_tag 'settings[oauth_logout]', true, @settings[:oauth_logout] %>
+      <%= check_box_tag 'settings[oauth_logout]', '1', RedmineOauth.oauth_logout? %>
       <em class="info">
-        <%= l(:oauth_logout_info) %>
-        <br>
+        <%= l(:oauth_logout_info) %><br>
         <%= l(:label_default) %>: <%= l(:general_text_No) %>
       </em>
     </p>
     <p>
       <label><%= l(:oauth_login) %></label>
-      <%= check_box_tag 'settings[oauth_login]', true, @settings[:oauth_login] %>
+      <%= check_box_tag 'settings[oauth_login]', '1', RedmineOauth.oauth_login? %>
       <em class="info">
-        <%= l(:oauth_login_info) %>
-        <br>
+        <%= l(:oauth_login_info) %><br>
         <%= l(:label_default) %>: <%= l(:general_text_No) %>
       </em>
     </p>
-    <% style = %w(Custom).exclude?(@settings[:oauth_name]) ? 'display: none' : 'display: block' %>
+    <% style = %w(Custom).exclude?(RedmineOauth.oauth_name) ? 'display: none' : 'display: block' %>
     <div id="oauth_options_custom" style="<%= style %>">
       <p>
         <label><%= l(:oauth_custom_name) %></label>
-        <input type="text" id="settings_custom_name" name="settings[custom_name]" value="<%= @settings[:custom_name] %>" 
+        <input type="text" id="settings_custom_name" name="settings[custom_name]" value="<%= RedmineOauth.custom_name %>"
           onchange="oauth_set_btn_title();">
         <em class="info"><%= l(:oauth_custom_name_info) %></em>
       </p>
       <p>
         <label><%= l(:oauth_custom_auth_endpoint) %></label>
-        <%= text_field_tag 'settings[custom_auth_endpoint]', @settings[:custom_auth_endpoint], size: 80 %>
+        <%= text_field_tag 'settings[custom_auth_endpoint]', RedmineOauth.custom_auth_endpoint, size: 80 %>
         <em class="info"><%= l(:oauth_custom_auth_endpoint_info) %></em>
       </p>
       <p>
         <label><%= l(:oauth_custom_token_endpoint) %></label>
-        <%= text_field_tag 'settings[custom_token_endpoint]', @settings[:custom_token_endpoint], size: 80 %>
+        <%= text_field_tag 'settings[custom_token_endpoint]', RedmineOauth.custom_token_endpoint, size: 80 %>
         <em class="info"><%= l(:oauth_custom_token_endpoint_info) %></em>
       </p>
       <p>
         <label><%= l(:oauth_custom_profile_endpoint) %></label>
-        <%= text_field_tag 'settings[custom_profile_endpoint]', @settings[:custom_profile_endpoint], size: 80 %>
+        <%= text_field_tag 'settings[custom_profile_endpoint]', RedmineOauth.custom_profile_endpoint, size: 80 %>
         <em class="info"><%= l(:oauth_custom_profile_endpoint_info) %></em>
       </p>
       <p>
         <label><%= l(:oauth_custom_logout_endpoint) %></label>
-        <%= text_field_tag 'settings[custom_logout_endpoint]', @settings[:custom_logout_endpoint], size: 80 %>
+        <%= text_field_tag 'settings[custom_logout_endpoint]', RedmineOauth.custom_logout_endpoint, size: 80 %>
         <em class="info"><%= l(:oauth_custom_logout_endpoint_info) %></em>
       </p>
       <p>
         <label><%= l(:oauth_custom_scope) %></label>
-        <%= text_field_tag 'settings[custom_scope]', @settings[:custom_scope], size: 40 %>
+        <%= text_field_tag 'settings[custom_scope]',RedmineOauth.custom_scope, size: 40 %>
         <em class="info"><%= l(:oauth_custom_scope_info) %></em>
       </p>
       <p>
         <label><%= l(:oauth_custom_uid_field) %></label>
-        <%= text_field_tag 'settings[custom_uid_field]', @settings[:custom_uid_field], size: 40 %>
+        <%= text_field_tag 'settings[custom_uid_field]', RedmineOauth.custom_uid_field, size: 40 %>
         <em class="info"><%= l(:oauth_custom_uid_field_info) %></em>
       </p>
       <p>
         <label><%= l(:oauth_custom_email_field) %></label>
-        <%= text_field_tag 'settings[custom_email_field]', @settings[:custom_email_field], size: 40 %>
+        <%= text_field_tag 'settings[custom_email_field]', RedmineOauth.custom_email_field, size: 40 %>
         <em class="info"><%= l(:oauth_custom_email_field_info) %></em>
       </p>
     </div>
