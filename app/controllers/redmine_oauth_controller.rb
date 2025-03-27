@@ -311,8 +311,8 @@ class RedmineOauthController < AccountController
     end
     return if @admin.nil?
 
-    user.admin = @admin
-    Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
+    user = User.find(user.id)
+    Rails.logger.error(user.errors.full_messages.to_sentence) unless user.update(admin: @admin)
   end
 
   def oauth_client
