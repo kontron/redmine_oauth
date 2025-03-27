@@ -17,6 +17,7 @@ Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 Supported OAuth providers:
 * Azure AD (https://azure.microsoft.com)
 * Custom (OpenID Connect - OIDC)
+* GitHub (https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
 * GitLab (https://about.gitlab.com)
 * Google (https://google.com)
 * Keycloak (https://www.keycloak.org)

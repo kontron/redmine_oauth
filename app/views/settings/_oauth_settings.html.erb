@@ -26,6 +26,7 @@
   <label><%= l(:oauth_provider) %></label>
   <%= select_tag 'settings[oauth_name]', options_for_select([
       %w(Azure\ AD Azure\ AD),
+      %w(GitHub GitHub),
       %w(GitLab GitLab),
       %w(Google Google),
       %w(Keycloak Keycloak),
@@ -57,7 +58,7 @@
           <%= button_tag(name: 'login-oauth', id: 'login-oauth-button', title: l(:oauth_login_with), style: style,
                 disabled: true) do %>
             <i id="button_icon" class="<%= RedmineOauth.button_icon %>"></i>
-            <%= l(:oauth_login_via, oauth: RedmineOauth.custom_name.present? ? RedmineOauth.custom_name : RedmineOauth.oauth_name) %>
+            <%= raw(l(:oauth_login_via, oauth: RedmineOauth.custom_name.present? ? RedmineOauth.custom_name : RedmineOauth.oauth_name)) %>
           <% end %>
         </span>
         <em class="info"><%= l(:oauth_button_info) %></em>
@@ -95,7 +96,7 @@
                          size: 40 %>
       <em class="info"><%= l(:oauth_client_secret_info) %></em>
     </p>
-    <% if %w(GitLab Google Custom).include?(RedmineOauth.oauth_name) %>
+    <% if %w(GitHub GitLab Google Custom).include?(RedmineOauth.oauth_name) %>
       <p id="oauth_options_tenant" style="display: none">
     <% else %>
       <p id="oauth_options_tenant">

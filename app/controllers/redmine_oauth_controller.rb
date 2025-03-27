@@ -54,6 +54,14 @@ class RedmineOauthController < AccountController
         code_challenge: code_challenge,
         code_challenge_method: 'S256'
       )
+    when 'GitHub'
+      redirect_to oauth_client.auth_code.authorize_url(
+        redirect_uri: oauth_callback_url,
+        state: oauth_csrf_token,
+        scope: 'user:email',
+        code_challenge: code_challenge,
+        code_challenge_method: 'S256'
+      )
     when 'GitLab'
       redirect_to oauth_client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
@@ -120,6 +128,13 @@ class RedmineOauthController < AccountController
                                                code_verifier: code_verifier)
       user_info = JWT.decode(token.token, nil, false).first
       email = user_info['unique_name']
+    when 'GitHub'
+      token = oauth_client.auth_code.get_token(params['code'],
+                                               redirect_uri: oauth_callback_url,
+                                               code_verifier: code_verifier)
+      userinfo_response = token.get('https://api.github.com/user', headers: { 'Accept' => 'application/json' })
+      user_info = JSON.parse(userinfo_response.body)
+      email = user_info['email']
     when 'GitLab'
       token = oauth_client.auth_code.get_token(params['code'],
                                                redirect_uri: oauth_callback_url,
@@ -316,6 +331,14 @@ class RedmineOauthController < AccountController
           site: site,
           authorize_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}authorize",
           token_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}token"
+        )
+      when 'GitHub'
+        OAuth2::Client.new(
+          RedmineOauth.client_id,
+          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
+          site: site,
+          authorize_url: '/login/oauth/authorize',
+          token_url: '/login/oauth/access_token'
         )
       when 'GitLab'
         OAuth2::Client.new(

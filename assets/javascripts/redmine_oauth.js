@@ -54,10 +54,12 @@ function oauth_settings_visibility()
     let div_oauth_options = $("div#oauth_options");
     let tenant_id = $("input#settings_tenant_id");   
     let oauth_name = $("#settings_oauth_name option:selected").val();
+    let site = $("input#settings_site");
+
     $("input#settings_custom_name").val(oauth_name);
     oauth_set_btn_title();
     
-    $("input#settings_site").val("");
+    site.val("");
     $("input#settings_client_id").val("");
     $("input#settings_client_secret").val("");
     
@@ -73,6 +75,15 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').show();
             tenant_id.val("");
+            site.val("https://login.microsoftonline.com");
+            break;
+        case 'GitHub':
+            div_oauth_options.show();
+            div_oauth_options.find('#oauth_options_site').show();
+            div_oauth_options.find('#oauth_options_tenant').hide();
+            div_oauth_options.find('#oauth_options_custom').hide();
+            div_oauth_options.find('#oauth_option_version').hide();
+            site.val("https://github.com");
             break;
         case 'GitLab':
             div_oauth_options.show();
@@ -87,6 +98,7 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_tenant').hide();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').hide();
+            site.val("https://accounts.google.com");
             break;
         case 'Keycloak':
             div_oauth_options.show();

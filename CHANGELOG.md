@@ -4,6 +4,8 @@ Changelog for Redmine OAuth
 3.0.3 *????-??-??*
 ------------------
 
+    GitHub OAuth support
+
 3.0.2 *2025-01-09*
 ------------------
 
