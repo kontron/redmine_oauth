@@ -1,6 +1,6 @@
-## Redmine OAuth plugin 3.0.3 devel
+## Redmine OAuth plugin 3.0.3
 
-[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=devel)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
+[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
@@ -17,7 +17,7 @@ Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 Supported OAuth providers:
 * Azure AD (https://azure.microsoft.com)
 * Custom (OpenID Connect - OIDC)
-* GitHub (https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
+* GitHub (https://github.com)
 * GitLab (https://about.gitlab.com)
 * Google (https://google.com)
 * Keycloak (https://www.keycloak.org)
@@ -79,6 +79,12 @@ Examples:
 * Client secret: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 * Tenant ID / Realm `xxxxxxxx-xxx-xxxx-xxxx-xxxxxxxxxxxx`
 
+#### Provider GitHub
+
+* Site: https://github.com
+* Client ID: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+* Client secret: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
 #### Provider Google
 
 * Site: https://accounts.google.com
@@ -127,6 +133,6 @@ https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how
 
 ```shell
 cd plugins
-rm redmine_oauth
+rm -r redmine_oauth
 ```
 Then restart the application/web server.

@@ -1,10 +1,13 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.3 *????-??-??*
+3.0.3 *2025-03-28*
 ------------------
 
     GitHub OAuth support
+
+* New: #73 - GitHub OAuth support?
+* Bug: #70 - Self-registration automatic account activation result in session expired
 
 3.0.2 *2025-01-09*
 ------------------
