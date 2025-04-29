@@ -30,8 +30,8 @@ module RedmineOauth
           grant_type: imap_options[:grant_type]
         }
         OauthClient.client
-        access_token = RedmineOauth.Oauth.client.get_token(params)
-        imap = Net::IMAP.new(imap_options[:host], imap_options[:port], imap_options[:ssl].present?)
+        access_token = RedmineOauth::OauthClient.client.get_token(params)
+        imap = Net::IMAP.new(imap_options[:host], port: imap_options[:port], ssl: imap_options[:ssl].present?)
         imap.starttls if imap_options[:starttls].present?
         imap.authenticate('XOAUTH2', imap_options[:username], access_token.token)
         imap.select imap_options[:folder]
