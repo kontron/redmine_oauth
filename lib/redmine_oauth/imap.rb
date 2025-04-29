@@ -25,17 +25,12 @@ module RedmineOauth
   module IMAP
     class << self
       def check(imap_options = {}, options = {})
-        client = OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: RedmineOauth.site,
-          token_url: "/#{RedmineOauth.tenant_id}/oauth2/v2.0/token"
-        )
         params = {
           scope: imap_options[:scope],
           grant_type: imap_options[:grant_type]
         }
-        access_token = client.get_token(params)
+        OauthClient.client
+        access_token = RedmineOauth.Oauth.client.get_token(params)
         imap = Net::IMAP.new(imap_options[:host], imap_options[:port], imap_options[:ssl].present?)
         imap.starttls if imap_options[:starttls].present?
         imap.authenticate('XOAUTH2', imap_options[:username], access_token.token)

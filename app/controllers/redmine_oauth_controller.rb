@@ -42,7 +42,7 @@ class RedmineOauthController < AccountController
 
     case RedmineOauth.oauth_name
     when 'Azure AD'
-      redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to RedmineOauth::OauthClient.client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: case RedmineOauth.oauth_version
@@ -55,7 +55,7 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'GitHub'
-      redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to RedmineOauth::OauthClient.client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'user:email',
@@ -63,7 +63,7 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'GitLab'
-      redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to RedmineOauth::OauthClient.client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'read_user',
@@ -71,7 +71,7 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'Google'
-      redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to RedmineOauth::OauthClient.client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'profile email',
@@ -79,7 +79,7 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'Keycloak'
-      redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to RedmineOauth::OauthClient.client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'openid email',
@@ -87,7 +87,7 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'Okta'
-      redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to RedmineOauth::OauthClient.client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'openid profile email',
@@ -95,7 +95,7 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'Custom'
-      redirect_to oauth_client.auth_code.authorize_url(
+      redirect_to RedmineOauth::OauthClient.client.auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: RedmineOauth.custom_scope,
@@ -123,46 +123,46 @@ class RedmineOauthController < AccountController
 
     case RedmineOauth.oauth_name
     when 'Azure AD'
-      token = oauth_client.auth_code.get_token(params['code'],
-                                               redirect_uri: oauth_callback_url,
-                                               code_verifier: code_verifier)
+      token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
+                                                                   redirect_uri: oauth_callback_url,
+                                                                   code_verifier: code_verifier)
       user_info = JWT.decode(token.token, nil, false).first
       email = user_info['unique_name']
     when 'GitHub'
-      token = oauth_client.auth_code.get_token(params['code'],
-                                               redirect_uri: oauth_callback_url,
-                                               code_verifier: code_verifier)
+      token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
+                                                                   redirect_uri: oauth_callback_url,
+                                                                   code_verifier: code_verifier)
       userinfo_response = token.get('https://api.github.com/user', headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       email = user_info['email']
     when 'GitLab'
-      token = oauth_client.auth_code.get_token(params['code'],
-                                               redirect_uri: oauth_callback_url,
-                                               code_verifier: code_verifier)
+      token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
+                                                                   redirect_uri: oauth_callback_url,
+                                                                   code_verifier: code_verifier)
       userinfo_response = token.get('/api/v4/user', headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['username']
       email = user_info['email']
     when 'Google'
-      token = oauth_client.auth_code.get_token(params['code'],
-                                               redirect_uri: oauth_callback_url,
-                                               code_verifier: code_verifier)
+      token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
+                                                                   redirect_uri: oauth_callback_url,
+                                                                   code_verifier: code_verifier)
       userinfo_response = token.get('https://openidconnect.googleapis.com/v1/userinfo',
                                     headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['email']
       email = user_info['email']
     when 'Keycloak'
-      token = oauth_client.auth_code.get_token(params['code'],
-                                               redirect_uri: oauth_callback_url,
-                                               code_verifier: code_verifier)
+      token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
+                                                                   redirect_uri: oauth_callback_url,
+                                                                   code_verifier: code_verifier)
       user_info = JWT.decode(token.token, nil, false).first
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
     when 'Okta'
-      token = oauth_client.auth_code.get_token(params['code'],
-                                               redirect_uri: oauth_callback_url,
-                                               code_verifier: code_verifier)
+      token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
+                                                                   redirect_uri: oauth_callback_url,
+                                                                   code_verifier: code_verifier)
       userinfo_response = token.get(
         "/oauth2/#{RedmineOauth.tenant_id}/v1/userinfo",
         headers: { 'Accept' => 'application/json' }
@@ -171,9 +171,9 @@ class RedmineOauthController < AccountController
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
     when 'Custom'
-      token = oauth_client.auth_code.get_token(params['code'],
-                                               redirect_uri: oauth_callback_url,
-                                               code_verifier: code_verifier)
+      token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
+                                                                   redirect_uri: oauth_callback_url,
+                                                                   code_verifier: code_verifier)
       if RedmineOauth.custom_profile_endpoint.empty?
         user_info = JWT.decode(token.token, nil, false).first
       else
@@ -313,76 +313,6 @@ class RedmineOauthController < AccountController
 
     user = User.find(user.id)
     Rails.logger.error(user.errors.full_messages.to_sentence) unless user.update(admin: @admin)
-  end
-
-  def oauth_client
-    return @client if @client
-
-    site = RedmineOauth.site
-    raise StandardError, l(:oauth_invalid_provider) unless site
-
-    @client =
-      case RedmineOauth.oauth_name
-      when 'Azure AD'
-        url = RedmineOauth.oauth_version.present? ? "#{RedmineOauth.oauth_version}/" : ''
-        OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: site,
-          authorize_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}authorize",
-          token_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}token"
-        )
-      when 'GitHub'
-        OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: site,
-          authorize_url: '/login/oauth/authorize',
-          token_url: '/login/oauth/access_token'
-        )
-      when 'GitLab'
-        OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: site,
-          authorize_url: '/oauth/authorize',
-          token_url: '/oauth/token'
-        )
-      when 'Google'
-        OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: site,
-          authorize_url: '/o/oauth2/v2/auth',
-          token_url: 'https://oauth2.googleapis.com/token'
-        )
-      when 'Keycloak'
-        OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: site,
-          authorize_url: "/realms/#{RedmineOauth.tenant_id}/protocol/openid-connect/auth",
-          token_url: "/realms/#{RedmineOauth.tenant_id}/protocol/openid-connect/token"
-        )
-      when 'Okta'
-        OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: site,
-          authorize_url: "/oauth2/#{RedmineOauth.tenant_id}/v1/authorize",
-          token_url: "/oauth2/#{RedmineOauth.tenant_id}/v1/token"
-        )
-      when 'Custom'
-        OAuth2::Client.new(
-          RedmineOauth.client_id,
-          Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-          site: site,
-          authorize_url: RedmineOauth.custom_auth_endpoint,
-          token_url: RedmineOauth.custom_token_endpoint
-        )
-      else
-        raise StandardError, l(:oauth_invalid_provider)
-      end
   end
 
   def verify_csrf_token
