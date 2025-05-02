@@ -110,12 +110,12 @@ Available options:
 * port - Port [993]
 * scope - Scope ['https://outlook.office365.com/.default']
 * grant_type - Grant type ['client_credentials']
-* ssl - use SSL [Yes]
-* starttls - Start TLS [No]
-* username - Login     
+* ssl - use SSL [true]
+* starttls - Start TLS [false]
+* username - Login ['']     
 * folder - Mail folder to scan [INBOX]
-* move_on_success - Where to move successfully processed messages
-* move_on_failure - Where to move unsuccessfully processed messages
+* move_on_success - Where to move successfully processed messages [nil]
+* move_on_failure - Where to move unsuccessfully processed messages [nil]
 
 Example:
 
