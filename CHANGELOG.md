@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.4 *????-??-??*
+3.0.4 *2025-05-09*
 ------------------
+
+    IMAP support for other OAuth providers
+
+* New: #77 receive_imap does not work
 
 3.0.3 *2025-03-28*
 ------------------
