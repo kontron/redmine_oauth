@@ -55,6 +55,6 @@ Redmine::Plugin.register :redmine_oauth do
     oauth_login: '0',
     custom_logout_endpoint: '',
     validate_user_roles: '',
-    oauth_version: ''
+    oauth_version: 'v2.0'
   }, partial: 'settings/oauth_settings'
 end
