@@ -1,8 +1,13 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.5 *????-??-??*
+3.0.5 *2025-07-07*
 ------------------
+    
+    Change of the license from GNU GPL v2 to v3
+
+* New: #80 - Make OAuth version v2.0 default for Azure provider
+* New: #81 - GNU GPL v2 -> v3 
 
 3.0.4 *2025-05-09*
 ------------------
