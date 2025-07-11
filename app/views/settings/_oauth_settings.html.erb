@@ -166,6 +166,14 @@
         <%= l(:label_default) %>: <%= l(:general_text_No) %>
       </em>
     </p>
+    <p>
+      <label><%= l(:oauth_only_login) %></label>
+      <%= check_box_tag 'settings[oauth_only_login]', '1', RedmineOauth.oauth_only_login? %>
+      <em class="info">
+        <%= l(:oauth_only_login_info) %><br>
+        <%= l(:label_default) %>: <%= l(:general_text_No) %>
+      </em>
+    </p>
     <% style = %w(Custom).exclude?(RedmineOauth.oauth_name) ? 'display: none' : 'display: block' %>
     <div id="oauth_options_custom" style="<%= style %>">
       <p>
