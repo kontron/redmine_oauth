@@ -73,4 +73,8 @@
     login_form.appendTo('#oauth-fieldset-login-form');
     login_form.toggle();
   <% end %>
+
+  <% if RedmineOauth.oauth_only_login? %>
+    document.getElementById('oauth-login').submit();
+  <% end %>
 <% end %>
