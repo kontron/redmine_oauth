@@ -137,6 +137,14 @@
       <em class="info"><%= l(:oauth_validate_user_roles_info) %></em>
     </p>
     <p>
+      <label><%= l(:enable_group_roles) %></label>
+      <%= check_box_tag 'settings[enable_group_roles]', '1', RedmineOauth.enable_group_roles? %>
+      <em class="info">
+        <%= l(:enable_group_roles_info) %><br>
+        <%= l(:label_default) %>: <%= l(:general_text_No) %>
+      </em>
+    </p>
+    <p>
       <label><%= l(:oauth_hide_login_form) %></label>
       <%= check_box_tag 'settings[hide_login_form]', '1', RedmineOauth.hide_login_form? %>
       <em class="info"><%= l(:label_default)%>: <%= l(:general_text_No) %></em>
