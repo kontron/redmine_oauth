@@ -138,6 +138,11 @@ module RedmineOauth
       value.to_i.positive? || value == 'true'
     end
 
+    def disable_password_login?
+      value = Setting.plugin_redmine_oauth['disable_password_login']
+      value.to_i.positive? || value == 'true'
+    end
+
     def self_registration
       Setting.plugin_redmine_oauth['self_registration'].to_i
     end

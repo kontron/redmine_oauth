@@ -310,6 +310,10 @@ class RedmineOauthController < AccountController
     end
     return if @admin.nil?
 
+    if RedmineOauth.disable_password_login?
+      user.update(hashed_password: 'invalid')
+    end
+
     user = User.find(user.id)
     Rails.logger.error(user.errors.full_messages.to_sentence) unless user.update(admin: @admin)
   end
