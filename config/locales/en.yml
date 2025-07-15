@@ -68,3 +68,6 @@ en:
   oauth_autologin: "Autologin with %{oauth}"
   oauth_version: Version
   oauth_version_info: Endpoint version
+  oauth_only_login: OAuth-only login
+  oauth_only_login_info: |
+    When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
