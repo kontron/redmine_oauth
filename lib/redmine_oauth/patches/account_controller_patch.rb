@@ -52,7 +52,9 @@ module RedmineOauth
         when 'Keycloak'
           logout_user
           tenant_id = RedmineOauth.tenant_id
-          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?redirect_uri=#{url}"
+          id = RedmineOauth.client_id
+          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout? \
+            id_token_hint=#{id}&post_logout_redirect_uri=#{url}"
         when 'Okta'
           logout_user
           id = RedmineOauth.client_id
