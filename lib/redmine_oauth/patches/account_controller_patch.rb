@@ -53,8 +53,7 @@ module RedmineOauth
           logout_user
           tenant_id = RedmineOauth.tenant_id
           id = RedmineOauth.client_id
-          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout? \
-            id_token_hint=#{id}&post_logout_redirect_uri=#{url}"
+          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?id_token_hint=#{id}&post_logout_redirect_uri=#{url}"
         when 'Okta'
           logout_user
           id = RedmineOauth.client_id
