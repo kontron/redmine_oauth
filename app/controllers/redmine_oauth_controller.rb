@@ -120,6 +120,8 @@ class RedmineOauthController < AccountController
     # Retrieve the PKCE code_verifier from the session
     code_verifier = session.delete(:code_verifier)
 
+    token = nil
+
     case RedmineOauth.oauth_name
     when 'Azure AD'
       token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
@@ -215,6 +217,7 @@ class RedmineOauthController < AccountController
     set_params
     try_to_login email, user_info
     session[:oauth_login] = true
+    session[:oauth_id_token] = token.params[:id_token] if token
   rescue StandardError => e
     Rails.logger.error e.message
     flash['error'] = e.message
