@@ -314,7 +314,6 @@ class RedmineOauthController < AccountController
       raise StandardError, l(:notice_account_invalid_credentials)
     end
 
-
     if RedmineOauth.enable_group_roles?
       desired_groups = Group.where(lastname: role_names)
       user.group_ids = desired_groups.ids
