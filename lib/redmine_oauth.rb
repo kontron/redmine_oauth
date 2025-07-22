@@ -173,6 +173,11 @@ module RedmineOauth
       value.to_i.positive? || value == 'true'
     end
 
+    def oauth_only_login?
+      value = Setting.plugin_redmine_oauth['oauth_only_login']
+      value.to_i.positive? || value == 'true'
+    end
+
     def custom_logout_endpoint
       if Setting.plugin_redmine_oauth['custom_logout_endpoint'].present?
         Setting.plugin_redmine_oauth['custom_logout_endpoint'].strip
@@ -188,7 +193,6 @@ module RedmineOauth
         ''
       end
     end
-
 
     def enable_group_roles?
       value = Setting.plugin_redmine_oauth['enable_group_roles']

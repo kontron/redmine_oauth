@@ -77,3 +77,6 @@ en:
     Users will be removed from any group that is not part of their roles if this option is enabled, meaning if you
     manually add a user to the 'developer' group but they don't have the role in your identity provider, the user
     will be removed from that group.
+  oauth_only_login: OAuth-only login
+  oauth_only_login_info: |
+    When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.

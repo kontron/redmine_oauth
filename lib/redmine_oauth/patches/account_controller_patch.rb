@@ -38,6 +38,8 @@ module RedmineOauth
         session.delete :oauth_login
         site = RedmineOauth.site
         url = signout_url
+        id_token = session[:oauth_id_token]
+        session.delete :oauth_id_token
         case RedmineOauth.oauth_name
         when 'Azure AD'
           logout_user
@@ -52,11 +54,11 @@ module RedmineOauth
         when 'Keycloak'
           logout_user
           tenant_id = RedmineOauth.tenant_id
-          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?redirect_uri=#{url}"
+          client_id = RedmineOauth.client_id
+          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?id_token_hint=#{id_token}&client_id=#{client_id}&post_logout_redirect_uri=#{url}"
         when 'Okta'
           logout_user
-          id = RedmineOauth.client_id
-          redirect_to "#{site}/oauth2/v1/logout?id_token_hint=#{id}&post_logout_redirect_uri=#{url}"
+          redirect_to "#{site}/oauth2/v1/logout?id_token_hint=#{id_token}&post_logout_redirect_uri=#{url}"
         else
           super
         end

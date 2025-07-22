@@ -35,6 +35,12 @@
     ], RedmineOauth.oauth_name), onchange: 'oauth_settings_visibility()' %>
   <em class="info"><%= l(:oauth_provider_info) %></em>
 </p>
+<p>
+  <label><%= l(:oauth_custom_name) %></label>
+  <input type="text" id="settings_custom_name" name="settings[custom_name]" value="<%= RedmineOauth.custom_name %>"
+         onchange="oauth_set_btn_title();">
+  <em class="info"><%= l(:oauth_custom_name_info) %></em>
+</p>
 <div id="oauth_options" class="<%= (RedmineOauth.oauth_name == 'none') ? 'oauth_hidden' : '' %>">
     <p>
         <label for="button_color"><%= l(:oauth_login_button) %></label>
@@ -174,14 +180,16 @@
         <%= l(:label_default) %>: <%= l(:general_text_No) %>
       </em>
     </p>
+    <p>
+      <label><%= l(:oauth_only_login) %></label>
+      <%= check_box_tag 'settings[oauth_only_login]', '1', RedmineOauth.oauth_only_login? %>
+      <em class="info">
+        <%= l(:oauth_only_login_info) %><br>
+        <%= l(:label_default) %>: <%= l(:general_text_No) %>
+      </em>
+    </p>
     <% style = %w(Custom).exclude?(RedmineOauth.oauth_name) ? 'display: none' : 'display: block' %>
     <div id="oauth_options_custom" style="<%= style %>">
-      <p>
-        <label><%= l(:oauth_custom_name) %></label>
-        <input type="text" id="settings_custom_name" name="settings[custom_name]" value="<%= RedmineOauth.custom_name %>"
-          onchange="oauth_set_btn_title();">
-        <em class="info"><%= l(:oauth_custom_name_info) %></em>
-      </p>
       <p>
         <label><%= l(:oauth_custom_auth_endpoint) %></label>
         <%= text_field_tag 'settings[custom_auth_endpoint]', RedmineOauth.custom_auth_endpoint, size: 80 %>

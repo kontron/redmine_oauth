@@ -32,6 +32,9 @@ require:
   - rubocop-rails
 
 # Rules for OAuth
+Layout/LineLength:
+  Exclude:
+    - lib/redmine_oauth/patches/account_controller_patch.rb
 Metrics/AbcSize:
   Enabled: false
 
