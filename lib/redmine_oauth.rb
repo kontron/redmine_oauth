@@ -194,6 +194,11 @@ module RedmineOauth
       end
     end
 
+    def enable_group_roles?
+      value = Setting.plugin_redmine_oauth['enable_group_roles']
+      value.to_i.positive? || value == 'true'
+    end
+
     def oauth_version
       if Setting.plugin_redmine_oauth['oauth_version'].present?
         Setting.plugin_redmine_oauth['oauth_version'].strip

@@ -68,6 +68,15 @@ en:
   oauth_autologin: "Autologin with %{oauth}"
   oauth_version: Version
   oauth_version_info: Endpoint version
+  enable_group_roles: Enable group roles
+  enable_group_roles_info: |
+    When enabled, any additional roles outside the default ones (admin, user) are mapped to a group of the same name.
+    Meaning, if you create a group called 'developer' and your user has a role called 'developer', the user will be
+    added to that group.
+    
+    Users will be removed from any group that is not part of their roles if this option is enabled, meaning if you
+    manually add a user to the 'developer' group but they don't have the role in your identity provider, the user
+    will be removed from that group.
   oauth_only_login: OAuth-only login
   oauth_only_login_info: |
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.

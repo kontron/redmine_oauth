@@ -192,6 +192,7 @@ class RedmineOauthController < AccountController
     raise StandardError, l(:oauth_no_verified_email) unless email
 
     # Roles
+    non_default_roles = []
     keys = RedmineOauth.validate_user_roles.split('.')
     if keys&.size&.positive?
       roles = user_info
@@ -211,11 +212,12 @@ class RedmineOauthController < AccountController
         invalid_credentials
         raise StandardError, l(:notice_account_invalid_credentials)
       end
+      non_default_roles = roles - %w[admin user]
     end
 
     # Try to log in
     set_params
-    try_to_login email, user_info
+    try_to_login email, user_info, non_default_roles
     session[:oauth_login] = true
     session[:oauth_id_token] = token.params[:id_token] if token
   rescue StandardError => e
@@ -256,7 +258,7 @@ class RedmineOauthController < AccountController
     session.delete :oauth_autologin
   end
 
-  def try_to_login(email, info)
+  def try_to_login(email, info, role_names)
     user = User.joins(:email_addresses).where(email_addresses: { address: email }).first
     if user # Existing user
       if user.registered? # Registered
@@ -311,6 +313,12 @@ class RedmineOauthController < AccountController
       invalid_credentials
       raise StandardError, l(:notice_account_invalid_credentials)
     end
+
+    if RedmineOauth.enable_group_roles?
+      desired_groups = Group.where(lastname: role_names)
+      user.group_ids = desired_groups.ids
+    end
+
     return if @admin.nil?
 
     user = User.find(user.id)
