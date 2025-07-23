@@ -54,12 +54,13 @@ cs:
   oauth_custom_lastname_field: Pole příjmení u poskytovatele
   oauth_update_login: Aktualizovat přihlašovací jméno
   oauth_update_login_info: Aktualizovat přihlašovací jméno uživatele po úspěšném přihlášení.
-  oauth_login: Přihlášení OAuth
-  oauth_login_info: Umožní uživatelům přihlásit se automaticky pomocí poskytovatele OAuth bez přihlašovacího formuláře.
   oauth_logout: Odhlášení OAuth
   oauth_logout_info: Odhlásit se také od poskytovatele OAuth po dohlášení z Redminu.
+  oauth_login: Přihlášení OAuth
+  oauth_login_info: Umožní uživatelům přihlásit se automaticky pomocí poskytovatele OAuth bez přihlašovacího formuláře.
   oauth_custom_logout_endpoint: Endpoint odhlášení
   oauth_custom_logout_endpoint_info: Endpoint pro odhlášení od poskytovatele.
+  oauth_validate_user_roles: Ověřit role uživatele
   oauth_validate_user_roles_info: "Klíč, kde jsou definované role v tokenu. Pokud je nastaveno, tak 'user' role povolí
     přihlášení, 'admin' přidělí práva administrátora. Jestliže role 'user' není uvedena, přístup je odmítnut. Jestliže
     chybí role 'admin', práva administrátora jsou odebrána. př.: Zadejte 'resource_access.redmine.roles', když máte
@@ -67,3 +68,15 @@ cs:
   oauth_autologin: "Automatické přihlašování s %{oauth}"
   oauth_version: Verze
   oauth_version_info: Verze endpointu
+  oauth_enable_group_roles: Povolit skupinové role
+  oauth_enable_group_roles_info: |
+    Pokud je povoleno, jakékoli další role mimo výchozích (admin, user) jsou namapována na skupinu stejného jména.
+    To znamená, že když vytvoříte skupinu 'developer' a uživatel má roli 'developer', bude uživatel přidán do této
+    skupiny.
+    
+    Uživatel bude odebrán z jakékoli skupiny, která se nejmenuje jako jeho role, pokud je tato volba zapnuta. To znamená,
+    že když je uživatel ve skupině 'developer', ale nemá tuto roli přiřazenou u poskytovatele OAuth, bude z této skipny
+    odebrán,
+  oauth_only_login: Pouze přihlášení OAuth
+  oauth_only_login_info: |
+    Pokud je tato volba zapnuta, uživatelé jsou automaticky přesměrováni na přihlášení pomocí OAuth bez možnosti přihlášení standardním přihlašovacím formulářem.

@@ -68,8 +68,8 @@ en:
   oauth_autologin: "Autologin with %{oauth}"
   oauth_version: Version
   oauth_version_info: Endpoint version
-  enable_group_roles: Enable group roles
-  enable_group_roles_info: |
+  oauth_enable_group_roles: Enable group roles
+  oauth_enable_group_roles_info: |
     When enabled, any additional roles outside the default ones (admin, user) are mapped to a group of the same name.
     Meaning, if you create a group called 'developer' and your user has a role called 'developer', the user will be
     added to that group.

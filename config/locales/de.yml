@@ -20,8 +20,7 @@
 de:
   oauth_login_via: "Weiter mit <b>%{oauth}</b>"
   oauth_login_with: Anmelden mit with OAuth
-  oauth_no_verified_email: "Keine verifizierte E-Mail zur Verfügung gestellt. Überprüfen Sie Ihre 
-    OAuth-Anbieter-Einstellung."
+  oauth_no_verified_email: Keine verifizierte E-Mail zur Verfügung gestellt. Überprüfen Sie Ihre OAuth-Anbieter-Einstellung.
   oauth_invalid_provider: Ungültiger OAuth-Anbieter
   oauth_none: Keiner
   oauth_provider: Anbieter
@@ -61,11 +60,23 @@ de:
   oauth_login_info: Ermöglicht der Benutzer automatisches Anmelden über den OAuth-Anbieter ohne des Anmeldeformulars.
   oauth_custom_logout_endpoint: Abmeldung-Endpoint
   oauth_custom_logout_endpoint_info: Abmeldung-Endpoint für Abmeldung vom OAuth-Anbieter.
+  oauth_validate_user_roles: Benutzerrollen überprüfen
   oauth_validate_user_roles_info: "Ein Schlüssel, bei dem Benutzerrollen im Token vorhanden sind. Wenn gesetzt, 
     die Rolle 'user' gewährt Zugriff, 'admin' gewährt Admin-Rechte. Wenn die Rolle 'user' nicht vorhanden ist, 
     wird der Zugriff verweigert. Wenn die Rolle 'admin' fehlt, werden die Admin-Rechte widerrufen. z.B.: Geben Sie 
-    'resource_access.redmine.roles' ein, wenn Sie den Token als 
-    'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } } eingestellt."
+    'resource_access.redmine.roles' ein, wenn Sie den Token als 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } } eingestellt."
   oauth_autologin: "Automatische Anmeldung mit %{oauth}"
   oauth_version: Version
   oauth_version_info: Endpoint-Version
+  oauth_enable_group_roles: Gruppenrollen aktivieren
+  oauth_enable_group_roles_info: |    
+    Wenn diese Option aktiviert ist, werden alle zusätzlichen Rollen außerhalb der Standardrollen (admin, user) einer 
+    Gruppe mit demselben Namen zugeordnet. Das heißt, wenn Sie eine Gruppe mit dem Namen 'developer' erstellen und Ihr 
+    Benutzer eine Rolle namens 'developer' hat, wird der Benutzer zu dieser Gruppe hinzugefügt.
+    
+    Benutzer werden aus allen Gruppen entfernt, die nicht Teil ihrer Rollen sind, wenn diese Option aktiviert ist. Das 
+    heißt wenn Sie Fügen Sie manuell einen Benutzer zur Gruppe 'developer' hinzu, der jedoch nicht über die Rolle in 
+    Ihrem Identitätsanbieter verfügt, den Benutzer wird aus dieser Gruppe entfernt.
+  oauth_only_login: Nur OAuth-Anmeldung
+  oauth_only_login_info: |
+    Wenn diese Option aktiviert ist, werden Benutzer direkt zum OAuth-Anbieter weitergeleitet, wodurch die Standard-Anmeldeseite vollständig übersprungen wird.
