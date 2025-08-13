@@ -127,8 +127,9 @@ class RedmineOauthController < AccountController
       token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
                                                                    redirect_uri: oauth_callback_url,
                                                                    code_verifier: code_verifier)
-      user_info = JWT.decode(token.token, nil, false).first
-      email = user_info['unique_name']
+      id_token = token.params['id_token']
+      user_info = JWT.decode(id_token, nil, false).first
+      email = user_info['email']
     when 'GitHub'
       token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
                                                                    redirect_uri: oauth_callback_url,
