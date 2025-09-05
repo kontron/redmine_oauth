@@ -1,8 +1,17 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.6 *????-??-??*
+3.0.6 *2025-09-05*
 ------------------
+
+    Keycloak v18 support
+
+* New #89 - Faraday/OAuth2 path joining issue
+* Bug #88 - AzureAD/Entra ID - ID token
+* New #87 - Can't fully sign out from Redmine when using Keycloak provider
+* New #85 - Feat: Add group syncing
+* New #84 - Feat: Make custom name available for every provider
+* New #83 - Feat: Add forced OAuth
 
 3.0.5 *2025-07-07*
 ------------------
