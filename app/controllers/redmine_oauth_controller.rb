@@ -260,7 +260,7 @@ class RedmineOauthController < AccountController
   end
 
   def try_to_login(email, info, role_names)
-    user = User.joins(:email_addresses).where(email_addresses: { address: email }).first
+    user = User.joins(:email_addresses).where('LOWER(email_addresses.address) = ?', email.downcase).first
     if user # Existing user
       if user.registered? # Registered
         account_pending user
