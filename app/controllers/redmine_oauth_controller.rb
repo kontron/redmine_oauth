@@ -292,6 +292,7 @@ class RedmineOauthController < AccountController
       user.mail = email
       login = info['login']
       login ||= info['unique_name']
+      login ||= info['preferred_username']
       user.login = login
       user.random_password
       user.register
