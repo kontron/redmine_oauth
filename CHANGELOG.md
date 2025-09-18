@@ -1,8 +1,14 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.7 *????-??-??*
+3.0.7 *2025-09-17*
 ------------------
+
+    Case insensitive email for identification of users
+
+* New #92 - Email check is case-sensitive
+* New #91 - First time login experience?
+* Bug #93 - Fix enable group roles label
 
 3.0.6 *2025-09-05*
 ------------------
