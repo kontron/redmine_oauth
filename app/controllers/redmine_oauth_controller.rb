@@ -161,6 +161,7 @@ class RedmineOauthController < AccountController
       user_info = JWT.decode(token.token, nil, false).first
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
+      session[:oauth_id_token] = token.params[:id_token]
     when 'Okta'
       token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
                                                                    redirect_uri: oauth_callback_url,
@@ -172,6 +173,7 @@ class RedmineOauthController < AccountController
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
+      session[:oauth_id_token] = token.params[:id_token]
     when 'Custom'
       token = RedmineOauth::OauthClient.client.auth_code.get_token(params['code'],
                                                                    redirect_uri: oauth_callback_url,
@@ -220,7 +222,6 @@ class RedmineOauthController < AccountController
     set_params
     try_to_login email, user_info, non_default_roles
     session[:oauth_login] = true
-    session[:oauth_id_token] = token.params[:id_token] if token
   rescue StandardError => e
     Rails.logger.error e.message
     flash['error'] = e.message
