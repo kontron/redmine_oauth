@@ -19,10 +19,8 @@
 
 # Load the normal Rails helper
 require File.expand_path('../../../../../test/test_helper', __FILE__)
-
 # Account controller patch
 class AccountControllerTest < ActionDispatch::IntegrationTest
-
   def test_login_oauth
     get '/login', headers: { 'HTTP_COOKIE' => 'oauth_autologin=1;' }
     assert_redirected_to oauth_path
