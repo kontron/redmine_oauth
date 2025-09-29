@@ -24,8 +24,6 @@ require File.expand_path('../../../../../test/test_helper', __FILE__)
 class RedmineOauthControllerTest < ActionDispatch::IntegrationTest
   include Redmine::I18n
 
-  fixtures :users
-
   def test_oauth
     Setting.plugin_redmine_oauth['oauth_name'] = ''
     get '/oauth'

@@ -22,7 +22,6 @@ require File.expand_path('../../../../../test/test_helper', __FILE__)
 
 # Account controller patch
 class AccountControllerTest < ActionDispatch::IntegrationTest
-  fixtures :users, :email_addresses
 
   def test_login_oauth
     get '/login', headers: { 'HTTP_COOKIE' => 'oauth_autologin=1;' }

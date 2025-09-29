@@ -26,8 +26,7 @@ AllCops:
   Exclude:
     - '**/vendor/**/*'
 
-# Enable extensions
-require:
+plugins:
   - rubocop-performance
   - rubocop-rails
 
