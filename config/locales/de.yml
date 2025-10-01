@@ -80,3 +80,5 @@ de:
   oauth_only_login: Nur OAuth-Anmeldung
   oauth_only_login_info: |
     Wenn diese Option aktiviert ist, werden Benutzer direkt zum OAuth-Anbieter weitergeleitet, wodurch die Standard-Anmeldeseite vollständig übersprungen wird.
+  identify_user_by: Identifizieren des Benutzers bei
+  identify_user_by_info: Anbieter-Feld zur Identifikation des Benutzers im Redmine

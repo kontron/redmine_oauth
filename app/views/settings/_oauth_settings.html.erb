@@ -188,6 +188,12 @@
         <%= l(:label_default) %>: <%= l(:general_text_No) %>
       </em>
     </p>
+    <p>
+      <label><%= l(:identify_user_by) %></label>
+      <%= select_tag 'settings[identify_user_by]',
+                     options_for_select([%w(email email), %w(login login)], RedmineOauth.identify_user_by) %>
+      <em class="info"><%= l(:identify_user_by_info) %></em>
+    </p>
     <% style = %w(Custom).exclude?(RedmineOauth.oauth_name) ? 'display: none' : 'display: block' %>
     <div id="oauth_options_custom" style="<%= style %>">
       <p>

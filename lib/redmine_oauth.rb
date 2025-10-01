@@ -222,6 +222,14 @@ module RedmineOauth
         ''
       end
     end
+
+    def identify_user_by
+      if Setting.plugin_redmine_oauth['identify_user_by'].present?
+        Setting.plugin_redmine_oauth['identify_user_by'].strip
+      else
+        'email'
+      end
+    end
   end
 end
 

@@ -80,3 +80,5 @@ cs:
   oauth_only_login: Pouze přihlášení OAuth
   oauth_only_login_info: |
     Pokud je tato volba zapnuta, uživatelé jsou automaticky přesměrováni na přihlášení pomocí OAuth bez možnosti přihlášení standardním přihlašovacím formulářem.
+  identify_user_by: Identifikovat uživatele podle
+  identify_user_by_info: Pole poskytovatele k identifikaci uživatele v Redminu

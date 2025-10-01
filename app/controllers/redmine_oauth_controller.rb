@@ -261,15 +261,25 @@ class RedmineOauthController < AccountController
   end
 
   def try_to_login(email, info, role_names)
-    user = User.joins(:email_addresses).where('LOWER(email_addresses.address) = ?', email.downcase).first
+    # Login name
+    login = info['login']
+    login ||= info['unique_name']
+    login ||= info['preferred_username']
+    # Find the user
+    user = case RedmineOauth.identify_user_by
+           when 'login'
+             User.where('LOWER(login) = ?', login.downcase).first
+           else
+             User.joins(:email_addresses).where('LOWER(email_addresses.address) = ?', email.downcase).first
+           end
     if user # Existing user
       if user.registered? # Registered
         account_pending user
       elsif user.active? # Active
         handle_active_user user
         user.update_last_login_on!
-        if RedmineOauth.update_login? && (info['login'] || info['unique_name'])
-          user.login = info['login'] || info['unique_name']
+        if RedmineOauth.update_login?
+          user.login = login
           Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
         end
         # Disable 2FA initialization request
@@ -291,9 +301,6 @@ class RedmineOauthController < AccountController
       lastname ||= info[key]
       user.lastname = lastname
       user.mail = email
-      login = info['login']
-      login ||= info['unique_name']
-      login ||= info['preferred_username']
       user.login = login
       user.random_password
       user.register

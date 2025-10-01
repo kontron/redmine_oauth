@@ -80,3 +80,5 @@ en:
   oauth_only_login: OAuth-only login
   oauth_only_login_info: |
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
+  identify_user_by: Identify user by
+  identify_user_by_info: Provider's field to identify the user in Redmine
