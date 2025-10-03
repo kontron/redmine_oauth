@@ -7,8 +7,6 @@ Changelog for Redmine OAuth
     Matching users by login
     Redmine 6.1 compatibility
 
-     (2)
-
 * Bug #98 - Cookie overflow
 * New #97 - Matching users by username instead of e-mail
 
