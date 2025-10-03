@@ -1,13 +1,13 @@
-## Redmine OAuth plugin 3.0.8 devel
+## Redmine OAuth plugin 3.0.8
 
-[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=devel)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
+[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
 
-The user is identified by the email registered with the OAuth provider. The email must match an email registered
-in Redmine. If such an email is not found, the user will be offered to register in Redmine, depending on Redmine's 
-setting **Self-registration**. OAuth logout is also supported, if it is set in the options.
+The user is identified by the email or login registered with the OAuth provider. The email or must match an email or 
+login registered in Redmine. If such an email or login is not found, the user will be offered to register in Redmine, 
+depending on Redmine's setting **Self-registration**. OAuth logout is also supported, if it is set in the options.
 Access to Redmine can be controlled by roles assigned in your OAuth provider.
 See [#36](https://github.com/kontron/redmine_oauth/issues/36#issuecomment-2348842432) for details; as well as OAuth 
 autologin.
