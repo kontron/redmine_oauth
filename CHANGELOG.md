@@ -1,8 +1,16 @@
 Changelog for Redmine OAuth
 ==========================
 
-3.0.8 *????-??-??*
+3.0.8 *2025-10-03*
 ------------------
+
+    Matching users by login
+    Redmine 6.1 compatibility
+
+     (2)
+
+* Bug #98 - Cookie overflow
+* New #97 - Matching users by username instead of e-mail
 
 3.0.7 *2025-09-17*
 ------------------
