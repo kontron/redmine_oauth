@@ -1,0 +1,85 @@
+# frozen_string_literal: true
+
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This file is part of Redmine OAuth plugin.
+#
+# Redmine OAuth plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General
+# Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# Redmine OAuth plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
+# <https://www.gnu.org/licenses/>.
+
+ko:
+  oauth_login_via: "<b>%{oauth}</b>(으)로 계속하기"
+  oauth_login_with: OAuth로 로그인
+  oauth_no_verified_email: 인증된 이메일이 제공되지 않았습니다. OAuth 제공자 사이트에서 설정을 확인하십시오.
+  oauth_invalid_provider: 잘못된 OAuth 제공자
+  oauth_none: 없음
+  oauth_provider: 제공자
+  oauth_provider_info: OAuth 제공자.
+  oauth_site: 사이트
+  oauth_site_info: OAuth 제공자의 인증 URL.
+  oauth_client_id: 클라이언트 ID
+  oauth_client_id_info: 애플리케이션(클라이언트) ID.
+  oauth_client_secret: 클라이언트 비밀키
+  oauth_client_secret_info: 애플리케이션 비밀번호.
+  oauth_tenant_id: 테넌트 ID / 영역(Realm)
+  oauth_tenant_id_info: 디렉터리(테넌트) ID.
+  oauth_button_info: OAuth 로그인 버튼의 색상 및 아이콘(Font Awesome 클래스) (버튼이 없으려면 비워 두세요).
+  oauth_login_button: 로그인 버튼
+  oauth_custom_name: 제공자 이름
+  oauth_custom_name_info: OAuth 로그인 버튼에 표시될 제목.
+  oauth_custom_auth_endpoint: 인증 엔드포인트
+  oauth_custom_auth_endpoint_info: 애플리케이션 인증 엔드포인트.
+  oauth_custom_token_endpoint: 토큰 엔드포인트
+  oauth_custom_token_endpoint_info: 애플리케이션 토큰 엔드포인트.
+  oauth_custom_profile_endpoint: 프로필 엔드포인트
+  oauth_custom_profile_endpoint_info: 애플리케이션 프로필 엔드포인트.
+  oauth_custom_scope: OAuth 범위(Scope)
+  oauth_custom_scope_info: "OAuth 범위(기본값: 'openid profile email')."
+  oauth_custom_uid_field: UID 필드
+  oauth_custom_uid_field_info: "UID 필드(기본값: preferred_username)."
+  oauth_custom_email_field: 이메일 필드
+  oauth_custom_email_field_info: "이메일 필드(기본값: email)."
+  oauth_hide_login_form: 로그인 폼 숨기기(접기)
+  oauth_custom_firstname_field: 이름 필드
+  oauth_custom_lastname_field: 성 필드
+  oauth_update_login: 로그인 갱신
+  oauth_update_login_info: 성공적인 로그인 후 사용자의 로그인 이름을 갱신합니다.
+  oauth_logout: OAuth 로그아웃
+  oauth_logout_info: Redmine 로그아웃 후 OAuth 제공자에서도 로그아웃합니다.
+  oauth_login: OAuth 로그인
+  oauth_login_info: 사용자가 로그인 폼을 건너뛰고 OAuth 제공자를 통해 자동으로 로그인할 수 있도록 허용합니다.
+  oauth_custom_logout_endpoint: 로그아웃 엔드포인트
+  oauth_custom_logout_endpoint_info: 애플리케이션 로그아웃 엔드포인트.
+  oauth_validate_user_roles: 사용자 역할 검증
+  oauth_validate_user_roles_info: "토큰 내에서 사용자 역할이 존재하는 키. 설정된 경우, 'user' 역할은 접근 권한을 부여하고,
+    'admin'은 관리자 권한을 부여합니다. 'user' 역할이 없으면 접근이 거부되며, 'admin' 역할이 없으면 관리자 권한이 취소됩니다.
+    예시: 토큰이 다음과 같이 설정되어 있다면 'resource_access.redmine.roles'를 입력하십시오:
+    'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
+  oauth_autologin: "%{oauth}로 자동 로그인"
+  oauth_version: 버전
+  oauth_version_info: 엔드포인트 버전
+  oauth_enable_group_roles: 그룹 역할 활성화
+  oauth_enable_group_roles_info: |
+    활성화되면 기본 역할(admin, user) 외의 모든 추가 역할은 동일한 이름의 그룹에 매핑됩니다.
+    즉, 'developer'라는 그룹을 생성하고 사용자가 'developer'라는 역할을 가지고 있다면,
+    그 사용자는 해당 그룹에 추가됩니다.
+    
+    이 옵션이 활성화된 경우, 사용자가 자신의 역할에 포함되지 않은 그룹에서 제거됩니다.
+    즉, 'developer' 그룹에 수동으로 사용자를 추가했지만,
+    그 사용자가 ID 제공자에서 해당 역할을 가지고 있지 않다면,
+    해당 사용자는 그 그룹에서 제거됩니다.
+  oauth_only_login: OAuth 전용 로그인
+  oauth_only_login_info: |
+    활성화되면, 사용자는 표준 로그인 페이지를 완전히 건너뛰고 바로 OAuth 제공자로 리디렉션됩니다.
+  identify_user_by: 사용자 식별 기준
+  identify_user_by_info: Redmine에서 사용자를 식별하기 위한 제공자의 필드
