@@ -293,13 +293,12 @@ class RedmineOauthController < AccountController
       # Create on the fly
       user = User.new
       user.mail = email
-      firstname, lastname = info['name'].split if info['name'].present?
-      key = RedmineOauth.custom_firstname_field
-      firstname ||= info[key]
-      user.firstname = firstname
-      key = RedmineOauth.custom_lastname_field
-      lastname ||= info[key]
-      user.lastname = lastname
+      user.firstname = info[RedmineOauth.custom_firstname_field]
+      user.lastname = info[RedmineOauth.custom_lastname_field]
+      first_name, last_name = info['name'].split if info['name'].present?
+      user.firstname ||= first_name
+      user.lastname ||= last_name
+      user.lastname ||= ''
       user.mail = email
       user.login = login
       user.random_password
