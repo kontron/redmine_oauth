@@ -55,7 +55,11 @@ module RedmineOauth
           client_id = RedmineOauth.client_id
           id_token = session[:oauth_id_token]
           session.delete :oauth_id_token
-          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?id_token_hint=#{id_token}&client_id=#{client_id}&post_logout_redirect_uri=#{url}"
+          logout_params = []
+          logout_params << "client_id=#{client_id}"
+          logout_params << "post_logout_redirect_uri=#{url}"
+          logout_params << "id_token_hint=#{id_token}" if id_token.present?
+          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?#{logout_params.join('&')}"
         when 'Okta'
           logout_user
           id_token = session[:oauth_id_token]
