@@ -1,6 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
+3.0.9 *2026-01-23*
+------------------
+
+* New #102 - Automatic user creation should prefer custom firstname/lastname field over splitting by name, and add better fallback for no custom field
+* Bug #103 - Fix Keycloak logout error when id_token is empty
+
 3.0.8 *2025-10-03*
 ------------------
 
