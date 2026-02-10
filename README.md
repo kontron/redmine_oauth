@@ -1,6 +1,6 @@
-## Redmine OAuth plugin 4.0.0 providers
+## Redmine OAuth plugin 4.0.0 devel
 
-[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=providers)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
+[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=devel)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
@@ -21,7 +21,6 @@ Supported OAuth providers:
 * Google (https://google.com)
 * Keycloak (https://www.keycloak.org)
 * Okta (https://www.okta.com)
-* Redmine (https://www.redmine.org)
 
 ### Installation:
 
