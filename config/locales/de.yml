@@ -65,7 +65,7 @@ de:
     die Rolle 'user' gewährt Zugriff, 'admin' gewährt Admin-Rechte. Wenn die Rolle 'user' nicht vorhanden ist, 
     wird der Zugriff verweigert. Wenn die Rolle 'admin' fehlt, werden die Admin-Rechte widerrufen. z.B.: Geben Sie 
     'resource_access.redmine.roles' ein, wenn Sie den Token als 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } } eingestellt."
-  oauth_autologin: "Automatische Anmeldung mit %{oauth}"
+  oauth_autologin: Automatische Anmeldung mit OAuth
   oauth_version: Version
   oauth_version_info: Endpoint-Version
   oauth_enable_group_roles: Gruppenrollen aktivieren
@@ -82,3 +82,9 @@ de:
     Wenn diese Option aktiviert ist, werden Benutzer direkt zum OAuth-Anbieter weitergeleitet, wodurch die Standard-Anmeldeseite vollständig übersprungen wird.
   identify_user_by: Identifizieren des Benutzers bei
   identify_user_by_info: Anbieter-Feld zur Identifikation des Benutzers im Redmine
+
+  label_oauth_provider: OAuth-Anbieter
+  label_oauth_providers: OAuth-Anbieter
+  label_new_oauth_provider: Neu OAuth-Anbieter
+  oauth_imap: IMAP
+  oauth_imap_info: Aktivieren diesen Anbieter für IMAP

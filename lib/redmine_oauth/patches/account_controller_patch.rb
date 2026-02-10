@@ -27,7 +27,7 @@ module RedmineOauth
       def login
         return super if request.post? || cookies[:oauth_autologin].blank?
 
-        redirect_to oauth_path(back_url: params[:back_url])
+        redirect_to oauth_path(back_url: params[:back_url], oauth_provider: cookies[:oauth_autologin])
       end
 
       def logout
@@ -35,24 +35,25 @@ module RedmineOauth
         return super if User.current.anonymous? || !request.post? || !RedmineOauth.oauth_logout? ||
                         session[:oauth_login].blank?
 
+        oauth_provider = OauthProvider.find(session[:oauth_login])
         session.delete :oauth_login
         site = RedmineOauth.site
         url = signout_url
-        case RedmineOauth.oauth_name
+        case oauth_provider.oauth_name
         when 'Azure AD'
           logout_user
-          id = RedmineOauth.client_id
+          id = oauth_provider.client_id
           redirect_to "#{site}/#{id}/oauth2/logout?post_logout_redirect_uri=#{url}"
         when 'Custom'
           logout_user
-          redirect_to RedmineOauth.custom_logout_endpoint
+          redirect_to oauth_provider.custom_logout_endpoint
         when 'GitLab', 'Google'
-          Rails.logger.info "#{RedmineOauth.oauth_name} logout not implement"
+          Rails.logger.info "#{oauth_provider.oauth_name} logout not implement"
           super
         when 'Keycloak'
           logout_user
-          tenant_id = RedmineOauth.tenant_id
-          client_id = RedmineOauth.client_id
+          tenant_id = oauth_provider.tenant_id
+          client_id = oauth_provider.client_id
           id_token = session[:oauth_id_token]
           session.delete :oauth_id_token
           logout_params = []

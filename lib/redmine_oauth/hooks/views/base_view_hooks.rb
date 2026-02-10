@@ -23,9 +23,11 @@ module RedmineOauth
       # Base view hooks
       class BaseViewHooks < Redmine::Hook::ViewListener
         def view_layouts_base_html_head(context = {})
-          return unless /^(AccountController|SettingsController|RedmineOauthController)/.match?(
+          unless /^(AccountController|SettingsController|RedmineOauthController|OauthProvidersController)/.match?(
             context[:controller].class.name
           )
+            return
+          end
 
           "\n".html_safe + stylesheet_link_tag('redmine_oauth', plugin: :redmine_oauth) +
             "\n".html_safe + stylesheet_link_tag('fontawesome/all.min', plugin: :redmine_oauth) +

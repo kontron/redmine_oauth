@@ -65,7 +65,7 @@ ko:
     'admin'은 관리자 권한을 부여합니다. 'user' 역할이 없으면 접근이 거부되며, 'admin' 역할이 없으면 관리자 권한이 취소됩니다.
     예시: 토큰이 다음과 같이 설정되어 있다면 'resource_access.redmine.roles'를 입력하십시오:
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
-  oauth_autologin: "%{oauth}로 자동 로그인"
+  oauth_autologin: OAuth로 자동 로그인
   oauth_version: 버전
   oauth_version_info: 엔드포인트 버전
   oauth_enable_group_roles: 그룹 역할 활성화
@@ -83,3 +83,9 @@ ko:
     활성화되면, 사용자는 표준 로그인 페이지를 완전히 건너뛰고 바로 OAuth 제공자로 리디렉션됩니다.
   identify_user_by: 사용자 식별 기준
   identify_user_by_info: Redmine에서 사용자를 식별하기 위한 제공자의 필드
+
+  label_oauth_provider: OAuth provider
+  label_oauth_providers: OAuth providers
+  label_new_oauth_provider: New OAuth provider
+  oauth_imap: IMAP
+  oauth_imap_info: Enable this provider for IMAP

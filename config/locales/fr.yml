@@ -65,7 +65,7 @@ fr:
     'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin role is missing, admin 
     rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
-  oauth_autologin: "Autologin with %{oauth}"
+  oauth_autologin: Autologin with OAuth
   oauth_version: Version
   oauth_version_info: Endpoint version
   oauth_enable_group_roles: Enable group roles
@@ -82,3 +82,9 @@ fr:
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
   identify_user_by: Identify user by
   identify_user_by_info: Provider's field to identify the user in Redmine
+
+  label_oauth_provider: OAuth provider
+  label_oauth_providers: OAuth providers
+  label_new_oauth_provider: New OAuth provider
+  oauth_imap: IMAP
+  oauth_imap_info: Enable this provider for IMAP

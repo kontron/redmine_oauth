@@ -17,5 +17,13 @@
 # You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
 # <https://www.gnu.org/licenses/>.
 
+# OAuth
 get 'oauth', to: 'redmine_oauth#oauth'
 get 'oauth2callback', to: 'redmine_oauth#oauth_callback', as: 'oauth_callback'
+
+RedmineApp::Application.routes.draw do
+  # OAuth providers
+  resources :oauth_providers, except: :show do
+    # Nothing to do
+  end
+end

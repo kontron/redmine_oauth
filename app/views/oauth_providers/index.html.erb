@@ -1,0 +1,56 @@
+<%
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This file is part of Redmine OAuth plugin.
+#
+# Redmine OAuth plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General
+# Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# Redmine OAuth plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
+# <https://www.gnu.org/licenses/>.
+%>
+
+<div class="contextual">
+  <%= link_to sprite_icon('add', t('.new')), new_oauth_provider_path, class: 'icon icon-add' %>
+</div>
+
+<%= title l('label_oauth_providers') %>
+
+<% if @oauth_providers.any? %>
+  <div class="autoscroll">
+  <table class="list oauth-providers">
+    <thead><tr>
+      <th><%= l(:field_name) %></th>
+      <th><%= l(:oauth_provider) %></th>
+      <th><%= l(:oauth_imap) %></th>
+      <th></th>
+    </tr></thead>
+    <tbody>
+    <% @oauth_providers.each do |oauth_provider| %>
+      <tr id="provider_<%= oauth_provider.id %>" class="<%= cycle('odd', 'even') %>">
+        <td class="name"><%= link_to oauth_provider.custom_name, edit_oauth_provider_path(oauth_provider) %></td>
+        <td><%= oauth_provider.oauth_name %></td>
+        <td><%= checked_image oauth_provider.imap %></td>
+        <td class="buttons">
+          <%= reorder_handle(oauth_provider) %>
+          <%= delete_link oauth_provider_path(oauth_provider) %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  </div>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+
+<%= javascript_tag do %>
+  $(function() { $("table.oauth-providers tbody").positionedItems(); });
+<% end %>

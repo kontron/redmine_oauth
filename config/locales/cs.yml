@@ -65,7 +65,7 @@ cs:
     přihlášení, 'admin' přidělí práva administrátora. Jestliže role 'user' není uvedena, přístup je odmítnut. Jestliže
     chybí role 'admin', práva administrátora jsou odebrána. př.: Zadejte 'resource_access.redmine.roles', když máte
     v tokenu nakonfigurováno toto: 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }."
-  oauth_autologin: "Automatické přihlašování s %{oauth}"
+  oauth_autologin: Automatické přihlašování s OAuth
   oauth_version: Verze
   oauth_version_info: Verze endpointu
   oauth_enable_group_roles: Povolit skupinové role
@@ -82,3 +82,9 @@ cs:
     Pokud je tato volba zapnuta, uživatelé jsou automaticky přesměrováni na přihlášení pomocí OAuth bez možnosti přihlášení standardním přihlašovacím formulářem.
   identify_user_by: Identifikovat uživatele podle
   identify_user_by_info: Pole poskytovatele k identifikaci uživatele v Redminu
+
+  label_oauth_provider: Poskytovatel OAuth
+  label_oauth_providers: Poskytovatelé OAuth
+  label_new_oauth_provider: Nový poskytovatel OAuth
+  oauth_imap: IMAP
+  oauth_imap_info: Povolit tohot poskytovatele pro IMAP

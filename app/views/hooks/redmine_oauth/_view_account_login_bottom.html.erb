@@ -19,34 +19,32 @@
 # <https://www.gnu.org/licenses/>.
 %>
 
-<% if RedmineOauth.button_icon != 'none' %>
-  <%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
-  <% if RedmineOauth.hide_login_form? %>
-    <%= javascript_include_tag('redmine_oauth.js', plugin: :redmine_oauth) %>
-    <fieldset id= "oauth-fieldset-login-form" class="oauth_collapsible oauth_collapsed">
-      <legend class="oauth_legend" onclick="oauth_toggle_fieldset(this)"><%= l(:button_login) %></legend>
-    </fieldset>
-  <% end %>
-  <div id="oauth-form">
-    <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
-      <%= back_url_hidden_field_tag %>
-      <%= button_tag(name: 'login-oauth', tabindex: 7, id: 'login-oauth-submit', title: l(:oauth_login_with),
-            style: "background: #{RedmineOauth.button_color}") do %>
-        <i id="button_icon" class="<%= RedmineOauth.button_icon %>"></i>
-        <%= l(:oauth_login_via,
-              oauth: RedmineOauth.custom_name.blank? ? RedmineOauth.oauth_name : RedmineOauth.custom_name).html_safe %>
-      <% end %>
-      <% if RedmineOauth.oauth_login? %>
-        <br>
-        <label for="oauth_autologin">
-          <%= check_box_tag 'oauth_autologin', 1, false, tabindex: 6 %>
-          <%= l(:oauth_autologin,
-                oauth: RedmineOauth.custom_name.blank? ? RedmineOauth.oauth_name : RedmineOauth.custom_name) %>
-        </label>
-      <% end %>
-    <% end %>
-  </div>
+<%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
+<% if RedmineOauth.hide_login_form? %>
+  <%= javascript_include_tag('redmine_oauth.js', plugin: :redmine_oauth) %>
+  <fieldset id= "oauth-fieldset-login-form" class="oauth_collapsible oauth_collapsed">
+    <legend class="oauth_legend" onclick="oauth_toggle_fieldset(this)"><%= l(:button_login) %></legend>
+  </fieldset>
 <% end %>
+<div id="oauth-form">
+  <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
+    <% OauthProvider.sorted.all.each_with_index do |oauth_provider, i| %>
+        <%= button_tag(name: 'oauth_provider', value: oauth_provider.id, tabindex: i + 7,
+                       id: "login-oauth-submit-#{oauth_provider.id}",
+                       title: l(:oauth_login_with), style: "background: #{oauth_provider.button_color}") do %>
+          <i id="button_icon" class="<%= oauth_provider.button_icon %>"></i>
+          <%= l(:oauth_login_via, oauth: oauth_provider.custom_name).html_safe %>
+        <% end %>
+    <% end %>
+    <% if RedmineOauth.oauth_login? %>
+      <br>
+      <label for="oauth_autologin">
+        <%= check_box_tag 'oauth_autologin', 1, false, tabindex: 6 %>
+        <%= l(:oauth_autologin) %>
+      </label>
+    <% end %>
+  <% end %>
+</div>
 
 <%= javascript_tag do %>
   <%# Autologin option %>

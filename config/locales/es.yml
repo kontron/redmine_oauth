@@ -65,7 +65,7 @@ es:
     el rol 'admin' otorga acceso de administrador. Si el rol 'user' no está presente, se deniega el acceso. Si el rol 'admin' no está presente, no habrá permisos de
     administrador. Ejemplo.: Introduce 'resource_access.redmine.roles', si tu token sigue el siguiente formato:
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
-  oauth_autologin: "Autologin mediante %{oauth}"
+  oauth_autologin: Autologin mediante OAuth
   oauth_version: Versión
   oauth_version_info: Endpoint versión
   oauth_enable_group_roles: Enable group roles
@@ -82,3 +82,9 @@ es:
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
   identify_user_by: Identify user by
   identify_user_by_info: Provider's field to identify the user in Redmine
+
+  label_oauth_provider: OAuth provider
+  label_oauth_providers: OAuth providers
+  label_new_oauth_provider: New OAuth provider
+  oauth_imap: IMAP
+  oauth_imap_info: Enable this provider for IMAP

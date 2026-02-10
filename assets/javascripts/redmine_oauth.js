@@ -25,7 +25,7 @@ function oauth_set_color()
 
 function oauth_set_icon()
 {
-    let icon_class = $("select#settings_button_icon option:selected").val();
+    let icon_class = $("select#oauth_provider_button_icon option:selected").val();
     let login_button = $("#login-oauth-button");
     if(icon_class == 'none'){
         login_button.hide();
@@ -41,7 +41,7 @@ function oauth_set_icon()
 
 function oauth_set_btn_title()
 {
-    let oauth_name = $("input#settings_custom_name").val().trim() ? $("input#settings_custom_name").val().trim() : $("#settings_oauth_name option:selected").val();
+    let oauth_name = $("input#oauth_provider_custom_name").val().trim() ? $("input#oauth_provider_custom_name").val().trim() : $("#oauth_provider_oauth_name option:selected").val();
     let button = $("button#login-oauth-button");
     let html = button.html();
     html = html.replace(/<b>.*<\/b>/, "<b>" + oauth_name + "</b>");
@@ -51,16 +51,16 @@ function oauth_set_btn_title()
 function oauth_settings_visibility()
 {
     let div_oauth_options = $("div#oauth_options");
-    let tenant_id = $("input#settings_tenant_id");   
-    let oauth_name = $("#settings_oauth_name option:selected").val();
-    let site = $("input#settings_site");
+    let tenant_id = $("input#oauth_provider_tenant_id");
+    let oauth_name = $("#oauth_provider_oauth_name option:selected").val();
+    let site = $("input#oauth_provider_site");
 
-    $("input#settings_custom_name").val(oauth_name);
+    $("input#oauth_provider_custom_name").val(oauth_name);
     oauth_set_btn_title();
     
     site.val("");
-    $("input#settings_client_id").val("");
-    $("input#settings_client_secret").val("");
+    $("input#oauth_provider_client_id").val("");
+    $("input#oauth_provider_client_secret").val("");
     
     switch(oauth_name) {
         case 'none':
@@ -122,12 +122,12 @@ function oauth_settings_visibility()
             tenant_id.val("");
             div_oauth_options.find('#oauth_option_version').hide();
             div_oauth_options.find('#oauth_options_custom').show();
-            $("input#settings_custom_auth_endpoint").val("");
-            $("input#settings_custom_token_endpoint").val("");
-            $("input#settings_custom_profile_endpoint").val("");
-            $("input#settings_custom_scope").val("openid profile email");
-            $("input#settings_custom_uid_field").val("preferred_username");
-            $("input#settings_custom_email_field").val("email");
+            $("input#oauth_provider_custom_auth_endpoint").val("");
+            $("input#oauth_provider_custom_token_endpoint").val("");
+            $("input#oauth_provider_custom_profile_endpoint").val("");
+            $("input#oauth_provider_custom_scope").val("openid profile email");
+            $("input#oauth_provider_custom_uid_field").val("preferred_username");
+            $("input#oauth_provider_custom_email_field").val("email");
             break;    
         default:
             break;
@@ -140,16 +140,4 @@ function oauth_toggle_fieldset(el)
     fieldset.classList.toggle('oauth_expanded');
     fieldset.classList.toggle('oauth_collapsed');
     $('div#login-form').toggle();
-}
-
-function oauth_self_registration_changed()
-{
-    let osr = $("#oauth_self_registration");
-    let sr = $("#settings_self_registration");
-    if (sr.val() > 0) {
-        osr.show();
-    }
-    else {
-        osr.hide();
-    }
 }

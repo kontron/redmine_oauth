@@ -1,4 +1,3 @@
-/*
 # frozen_string_literal: true
 
 # Redmine plugin OAuth
@@ -17,54 +16,14 @@
 #
 # You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
 # <https://www.gnu.org/licenses/>.
-*/
 
-label[for="oauth_autologin"] {
-  margin: 10px auto auto;
-  display: block;
-  width: fit-content;
-}
+# Load the normal Rails helper
+require File.expand_path('../../../../../test/test_helper', __FILE__)
 
-div#oauth-form {
-  margin: auto;
-  width: fit-content;
-}
-
-input#oauth_provider_button_color {
-  padding: 0;
-}
-
-.oauth_hidden {
-  display: none;
-}
-
-button#login-oauth-submit:hover {
-  background: #dddddd !important;
-}
-
-fieldset.oauth_collapsible {
-  border-width: 2px 0 0 0;
-  border-color: #FDBF3B;
-  width: 340px;
-  margin: auto;
-}
-
-fieldset.oauth_collapsed>legend::before {
-  content: "\a0\25bc\a0";
-  color: #FDBF3B;
-  display: inline-block;
-  transform: rotate(-90deg);
-}
-
-fieldset.oauth_expanded>legend::before {
-  content: "\a0\25bc\a0";
-  color: #FDBF3B;
-}
-
-fieldset.oauth_collapsible > legend {
-  cursor: pointer;
-}
-
-legend.oauth_legend {
-  font-weight: bolder;
-}
+# OauthProvidersController class test
+class OauthProvidersControllerTest < ActionDispatch::IntegrationTest
+  # Replace this with your real tests.
+  def test_truth
+    assert true
+  end
+end

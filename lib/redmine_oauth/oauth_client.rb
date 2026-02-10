@@ -21,67 +21,64 @@ module RedmineOauth
   # IMAP
   module OauthClient
     class << self
-      def client
-        site = RedmineOauth.site
-        raise StandardError, l(:oauth_invalid_provider) unless site
-
-        case RedmineOauth.oauth_name
+      def client(oauth_provider)
+        case oauth_provider.oauth_name
         when 'Azure AD'
-          url = RedmineOauth.oauth_version.present? ? "#{RedmineOauth.oauth_version}/" : ''
+          url = "#{oauth_provider.oauth_version}/"
           OAuth2::Client.new(
-            RedmineOauth.client_id,
-            Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-            site: site,
-            authorize_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}authorize",
-            token_url: "/#{RedmineOauth.tenant_id}/oauth2/#{url}token"
+            oauth_provider.client_id,
+            Redmine::Ciphering.decrypt_text(oauth_provider.client_secret),
+            site: oauth_provider.site,
+            authorize_url: "/#{oauth_provider.tenant_id}/oauth2/#{url}authorize",
+            token_url: "/#{oauth_provider.tenant_id}/oauth2/#{url}token"
           )
         when 'GitHub'
           OAuth2::Client.new(
-            RedmineOauth.client_id,
-            Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-            site: site,
+            oauth_provider.client_id,
+            Redmine::Ciphering.decrypt_text(oauth_provider.client_secret),
+            site: oauth_provider.site,
             authorize_url: '/login/oauth/authorize',
             token_url: '/login/oauth/access_token'
           )
         when 'GitLab'
           OAuth2::Client.new(
-            RedmineOauth.client_id,
-            Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-            site: site,
+            oauth_provider.client_id,
+            Redmine::Ciphering.decrypt_text(oauth_provider.client_secret),
+            site: oauth_provider.site,
             authorize_url: '/oauth/authorize',
             token_url: '/oauth/token'
           )
         when 'Google'
           OAuth2::Client.new(
-            RedmineOauth.client_id,
-            Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-            site: site,
+            oauth_provider.client_id,
+            Redmine::Ciphering.decrypt_text(oauth_provider.client_secret),
+            site: oauth_provider.site,
             authorize_url: '/o/oauth2/v2/auth',
             token_url: 'https://oauth2.googleapis.com/token'
           )
         when 'Keycloak'
           OAuth2::Client.new(
-            RedmineOauth.client_id,
-            Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-            site: site,
-            authorize_url: "realms/#{RedmineOauth.tenant_id}/protocol/openid-connect/auth",
-            token_url: "realms/#{RedmineOauth.tenant_id}/protocol/openid-connect/token"
+            oauth_provider.client_id,
+            Redmine::Ciphering.decrypt_text(oauth_provider.client_secret),
+            site: oauth_provider.site,
+            authorize_url: "realms/#{oauth_provider.tenant_id}/protocol/openid-connect/auth",
+            token_url: "realms/#{oauth_provider.tenant_id}/protocol/openid-connect/token"
           )
         when 'Okta'
           OAuth2::Client.new(
-            RedmineOauth.client_id,
-            Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-            site: site,
-            authorize_url: "/oauth2/#{RedmineOauth.tenant_id}/v1/authorize",
-            token_url: "/oauth2/#{RedmineOauth.tenant_id}/v1/token"
+            oauth_provider.client_id,
+            Redmine::Ciphering.decrypt_text(oauth_provider.client_secret),
+            site: oauth_provider.site,
+            authorize_url: "/oauth2/#{oauth_provider.tenant_id}/v1/authorize",
+            token_url: "/oauth2/#{oauth_provider.tenant_id}/v1/token"
           )
         when 'Custom'
           OAuth2::Client.new(
-            RedmineOauth.client_id,
-            Redmine::Ciphering.decrypt_text(RedmineOauth.client_secret),
-            site: site,
-            authorize_url: RedmineOauth.custom_auth_endpoint,
-            token_url: RedmineOauth.custom_token_endpoint
+            oauth_provider.client_id,
+            Redmine::Ciphering.decrypt_text(oauth_provider.client_secret),
+            site: oauth_provider.site,
+            authorize_url: oauth_provider.custom_auth_endpoint,
+            token_url: oauth_provider.custom_token_endpoint
           )
         else
           raise StandardError, l(:oauth_invalid_provider)

@@ -20,7 +20,7 @@
 # Load the normal Rails helper
 require File.expand_path('../../../../../test/test_helper', __FILE__)
 
-# OAuth controller
+# OAuth controller test
 class RedmineOauthControllerTest < ActionDispatch::IntegrationTest
   include Redmine::I18n
 

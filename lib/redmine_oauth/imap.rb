@@ -28,7 +28,12 @@ module RedmineOauth
           scope: imap_options[:scope],
           grant_type: imap_options[:grant_type]
         }
-        access_token = RedmineOauth::OauthClient.client.get_token(params)
+        oauth_provider = RedmineOauth.find_by(ldap: true).first
+        unless oauth_provider
+          Rails.logger.error 'No OAuth provider with LDAP set to On found'
+          return
+        end
+        access_token = RedmineOauth::OauthClient.client(oauth_provider).get_token(params)
         imap = Net::IMAP.new(imap_options[:host], port: imap_options[:port], ssl: imap_options[:ssl].present?)
         imap.starttls if imap_options[:starttls].present?
         imap.authenticate('XOAUTH2', imap_options[:username], access_token.token)
