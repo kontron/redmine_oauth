@@ -6,6 +6,11 @@ Changelog for Redmine OAuth
 
     Multiple Authorization providers
 
+IMPORTANT:
+
+During the database migration is an existing OAuth provider's configuration migrated from the plugin's settings into
+OAuth providers available in the Administration.
+
 * New #82 - Ability of multiple authentication sources (multi-tenant)
 
 3.0.9 *2026-01-23*
