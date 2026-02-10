@@ -17,27 +17,26 @@
 # You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
 # <https://www.gnu.org/licenses/>.
 
-# Load the normal Rails helper
-require File.expand_path('../../../../../test/test_helper', __FILE__)
+require File.expand_path('../../integration_test', __FILE__)
 
 # OAuth controller test
-class RedmineOauthControllerTest < ActionDispatch::IntegrationTest
+class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
   include Redmine::I18n
 
+  def setup
+    super
+    @keylock_provider = OauthProvider.find(1)
+    @invalid_provider = OauthProvider.find(2)
+  end
+
   def test_oauth
-    Setting.plugin_redmine_oauth['oauth_name'] = ''
-    get '/oauth'
+    get "/oauth?oauth_provider=#{@invalid_provider.id}"
     assert_redirected_to signin_path
     assert_equal l(:oauth_invalid_provider), flash[:error]
   end
 
   def test_oauth_url_concatenation_for_keycloak
-    Setting.plugin_redmine_oauth['oauth_name'] = 'Keycloak'
-    Setting.plugin_redmine_oauth['site'] = 'https://example.com/sso'
-    Setting.plugin_redmine_oauth['client_id'] = 'example-client'
-    Setting.plugin_redmine_oauth['client_secret'] = 'florp-burp-durk'
-    Setting.plugin_redmine_oauth['tenant_id'] = 'redmine'
-    get '/oauth'
+    get "/oauth?oauth_provider=#{@keylock_provider.id}"
     assert_redirected_to(%r{^https://example\.com/sso/realms/redmine/protocol/})
   end
 

@@ -37,7 +37,7 @@ module RedmineOauth
 
         oauth_provider = OauthProvider.find(session[:oauth_login])
         session.delete :oauth_login
-        site = RedmineOauth.site
+        site = oauth_provider.site
         url = signout_url
         case oauth_provider.oauth_name
         when 'Azure AD'

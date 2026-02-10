@@ -17,14 +17,13 @@
 # You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
 # <https://www.gnu.org/licenses/>.
 
-# Load the normal Rails helper
-require File.expand_path('../../../../../test/test_helper', __FILE__)
+require File.expand_path('../../integration_test', __FILE__)
 
 # Account controller patch test
-class AccountControllerTest < ActionDispatch::IntegrationTest
+class AccountControllerTest < RedmineOAuth::Test::IntegrationTest
   def test_login_oauth
     get '/login', headers: { 'HTTP_COOKIE' => 'oauth_autologin=1;' }
-    assert_redirected_to oauth_path
+    assert_redirected_to oauth_path(oauth_provider: 1)
   end
 
   def test_login

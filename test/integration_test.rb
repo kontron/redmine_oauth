@@ -17,12 +17,23 @@
 # You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
 # <https://www.gnu.org/licenses/>.
 
-require_relative '../test_helper'
+# Load the normal Rails helper
+require File.expand_path('../../../../test/test_helper', __FILE__)
 
-# OauthProviderTest class test
-class OauthProviderTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+module RedmineOAuth
+  module Test
+    # Integration test
+    class IntegrationTest < Redmine::IntegrationTest
+      def initialize(name)
+        super
+        # Load all plugin's fixtures
+        dir = File.join(File.dirname(__FILE__), 'fixtures')
+        ext = '.yml'
+        Dir.glob("#{dir}/**/*#{ext}").each do |file|
+          fixture = File.basename(file, ext)
+          ActiveRecord::FixtureSet.create_fixtures dir, fixture
+        end
+      end
+    end
   end
 end

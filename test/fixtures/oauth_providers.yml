@@ -1,0 +1,73 @@
+# frozen_string_literal: true
+
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This file is part of Redmine OAuth plugin.
+#
+# Redmine OAuth plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General
+# Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# Redmine OAuth plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
+# <https://www.gnu.org/licenses/>.
+
+---
+oauth_provider_keylock:
+  id: 1
+  oauth_name: 'Keycloak'
+  site: 'https://example.com/sso'
+  client_id: 'example-client'
+  client_secret: 'florp-burp-durk'
+  tenant_id: 'redmine'
+  custom_name: 'Keycloak'
+  custom_auth_endpoint:
+  custom_token_endpoint:
+  custom_profile_endpoint:
+  custom_scope:
+  custom_uid_field:
+  custom_email_field:
+  button_color: '#ffbe6f'
+  button_icon: 'far fa-address-card'
+  custom_firstname_field:
+  custom_lastname_field:
+  custom_logout_endpoint:
+  validate_user_roles:
+  oauth_version:
+  identify_user_by:
+  imap: true
+  position: 1
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+oauth_provider_invalid:
+  id: 2
+  oauth_name: ''
+  site: ''
+  client_id: ''
+  client_secret: ''
+  tenant_id: ''
+  custom_name: ''
+  custom_auth_endpoint:
+  custom_token_endpoint:
+  custom_profile_endpoint:
+  custom_scope:
+  custom_uid_field:
+  custom_email_field:
+  button_color: ''
+  button_icon: ''
+  custom_firstname_field:
+  custom_lastname_field:
+  custom_logout_endpoint:
+  validate_user_roles:
+  oauth_version:
+  identify_user_by:
+  imap: false
+  position: 2
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
