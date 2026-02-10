@@ -28,9 +28,9 @@ module RedmineOauth
           scope: imap_options[:scope],
           grant_type: imap_options[:grant_type]
         }
-        oauth_provider = RedmineOauth.find_by(ldap: true).first
+        oauth_provider = RedmineOauth.find_by(imap: true).first
         unless oauth_provider
-          Rails.logger.error 'No OAuth provider with LDAP set to On found'
+          Rails.logger.error 'No OAuth provider with IMAP set to On found'
           return
         end
         access_token = RedmineOauth::OauthClient.client(oauth_provider).get_token(params)

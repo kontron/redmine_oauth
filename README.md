@@ -5,12 +5,11 @@
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
 
-The user is identified by the email or login registered with the OAuth provider. The email or must match an email or 
-login registered in Redmine. If such an email or login is not found, the user will be offered to register in Redmine, 
+The user is identified by the email or login registered with the OAuth provider. The email or login must match an email 
+or login registered in Redmine. If such an email or login is not found, the user will be offered to register in Redmine, 
 depending on Redmine's setting **Self-registration**. OAuth logout is also supported, if it is set in the options.
 Access to Redmine can be controlled by roles assigned in your OAuth provider.
-See [#36](https://github.com/kontron/redmine_oauth/issues/36#issuecomment-2348842432) for details; as well as OAuth 
-autologin.
+See [#36](https://github.com/kontron/redmine_oauth/issues/36#issuecomment-2348842432) for details; as well as OAuth autologin.
 
 Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
 
@@ -22,6 +21,7 @@ Supported OAuth providers:
 * Google (https://google.com)
 * Keycloak (https://www.keycloak.org)
 * Okta (https://www.okta.com)
+* Redmine (https://www.redmine.org)
 
 ### Installation:
 
@@ -39,6 +39,7 @@ git clone https://github.com/kontron/redmine_oauth.git
 chown -R www-data:www-data redmine_oauth
 cd ..
 bundle install
+bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_oauth
 systemctl restart apache2
 ```
 
@@ -68,7 +69,7 @@ websites. Add `https://yourdomain/oauth2callback` as redirect URI.
 
 ### Configuration
 
-Open _Administration -> Plugins_ in your Redmine and configure the plugin.
+Open _Administration -> OAuth providers_ in your Redmine and add a provider.
 
 Examples:
 
@@ -103,7 +104,8 @@ Create a new OIDC Client in your Keycloak Realm. Activate `Client authentication
 ### Tasks
 
 #### Receive IMAP
-Read emails from an IMAP server and process them into Redmine.
+Read emails from an IMAP server and process them into Redmine. Don't forget to set _IMAP_ = **true** by the dedicated 
+OAuth provider which provides an access token.
 
 Available options:
 * host - IMAP server [outlook.office365.com]
@@ -132,6 +134,7 @@ https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how
 ### Uninstallation
 
 ```shell
+bundle exec rake redmine:plugins:migrate RAILS_ENV=production NAME=redmine_oauth VERSION=0
 cd plugins
 rm -r redmine_oauth
 ```
