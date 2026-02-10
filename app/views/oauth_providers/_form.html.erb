@@ -85,19 +85,18 @@
       </p>
       <p>
         <%= f.text_field :client_id, value: @oauth_provider.client_id, title: l(:oauth_client_id_info), required: true,
-                         size: 40 %>
+                         size: 60 %>
       </p>
       <p>
         <%= f.text_field :client_secret, value: Redmine::Ciphering.decrypt_text(@oauth_provider.client_secret),
-                         title: l(:oauth_client_secret_info), required: true, size: 40 %>
+                         title: l(:oauth_client_secret_info), required: true, size: 60 %>
       </p>
       <% if %w(GitHub GitLab Google Custom).include?(@oauth_provider.oauth_name) %>
         <p id="oauth_options_tenant" style="display: none">
       <% else %>
         <p id="oauth_options_tenant">
       <% end %>
-      <%= f.text_field :tenant_id, value: @oauth_provider.tenant_id, title: l(:oauth_tenant_id_info), required: true,
-                       size: 40 %>
+      <%= f.text_field :tenant_id, value: @oauth_provider.tenant_id, title: l(:oauth_tenant_id_info), size: 40 %>
       </p>
       <% style = if RedmineOauth.self_registration != 0
                    'display: block'

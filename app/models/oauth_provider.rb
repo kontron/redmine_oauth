@@ -21,9 +21,9 @@
 class OauthProvider < ApplicationRecord
   validates :oauth_name, presence: true
   validates :site, presence: true, length: { maximum: 40 }
-  validates :client_id, presence: true, length: { maximum: 40 }
-  validates :client_secret, presence: true, length: { maximum: 40 }
-  validates :tenant_id, presence: true, length: { maximum: 40 }
+  validates :client_id, presence: true, length: { maximum: 60 }
+  validates :client_secret, presence: true, length: { maximum: 60 }
+  validates :tenant_id, length: { maximum: 40 }
   validates :custom_name, presence: true, uniqueness: true, length: { maximum: 30 }
   validates :custom_auth_endpoint, length: { maximum: 80 }
   validates :custom_auth_endpoint, presence: true, if: proc { |p| p.custom_name == 'Custom' }

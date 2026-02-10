@@ -5,7 +5,8 @@ Changelog for Redmine OAuth
 -------------------
 
     Multiple Authorization providers
-    Redmine as an authorization provider
+
+* New #82 - Ability of multiple authentication sources (multi-tenant)
 
 3.0.9 *2026-01-23*
 ------------------
