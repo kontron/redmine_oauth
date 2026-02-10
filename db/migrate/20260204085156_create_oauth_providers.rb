@@ -58,6 +58,8 @@ class CreateOauthProviders < ActiveRecord::Migration[7.2]
   private
 
   def settings_to_table
+    return if Setting.plugin_redmine_oauth['oauth_name'].blank?
+
     oauth_provider = OauthProvider.new
     oauth_provider.oauth_name = Setting.plugin_redmine_oauth['oauth_name']
     oauth_provider.site = Setting.plugin_redmine_oauth['site']
@@ -86,6 +88,8 @@ class CreateOauthProviders < ActiveRecord::Migration[7.2]
 
   def table_to_settings
     oauth_provider = OauthProvider.first
+    return unless oauth_provider
+    
     Setting.plugin_redmine_oauth['oauth_name'] = oauth_provider.oauth_name
     Setting.plugin_redmine_oauth['site'] = oauth_provider.site
     Setting.plugin_redmine_oauth['client_id'] = oauth_provider.client_id
