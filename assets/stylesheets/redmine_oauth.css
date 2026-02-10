@@ -30,6 +30,10 @@ div#oauth-form {
   width: fit-content;
 }
 
+div#oauth-form-buttons {
+  text-align: center;
+}
+
 input#oauth_provider_button_color {
   padding: 0;
 }

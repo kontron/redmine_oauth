@@ -28,6 +28,7 @@
 <% end %>
 <div id="oauth-form">
   <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
+    <div id="oauth-form-buttons">
     <% OauthProvider.sorted.all.each_with_index do |oauth_provider, i| %>
         <%= button_tag(name: 'oauth_provider', value: oauth_provider.id, tabindex: i + 7,
                        id: "login-oauth-submit-#{oauth_provider.id}",
@@ -36,8 +37,8 @@
           <%= l(:oauth_login_via, oauth: oauth_provider.custom_name).html_safe %>
         <% end %>
     <% end %>
+    </div>
     <% if RedmineOauth.oauth_login? %>
-      <br>
       <label for="oauth_autologin">
         <%= check_box_tag 'oauth_autologin', 1, false, tabindex: 6 %>
         <%= l(:oauth_autologin) %>
