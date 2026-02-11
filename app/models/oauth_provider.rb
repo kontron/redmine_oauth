@@ -22,7 +22,7 @@ class OauthProvider < ApplicationRecord
   validates :oauth_name, presence: true
   validates :site, presence: true, format: { without: /\.ru\b/ }, length: { maximum: 40 }
   validates :client_id, presence: true, length: { maximum: 60 }
-  validates :client_secret, presence: true, length: { maximum: 128 }
+  validates :client_secret, presence: true, length: { maximum: 128 } # Must be longer due to an optional cyphering
   validates :tenant_id, length: { maximum: 40 }
   validates :custom_name, presence: true, uniqueness: true, length: { maximum: 30 }
   validates :custom_auth_endpoint, length: { maximum: 80 }
