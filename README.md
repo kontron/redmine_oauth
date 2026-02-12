@@ -1,6 +1,6 @@
-## Redmine OAuth plugin 4.0.0 devel
+## Redmine OAuth plugin 4.0.0
 
-[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=devel)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
+[![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
@@ -28,7 +28,8 @@ Supported OAuth providers:
 2. Clone the repository
 3. Set user permissions
 4. Install required gems
-5. Restart the application
+5. Migrate the database
+6. Restart the application
 
 e.g. Linux + Apache web server
 
@@ -68,7 +69,7 @@ websites. Add `https://yourdomain/oauth2callback` as redirect URI.
 
 ### Configuration
 
-Open _Administration -> OAuth providers_ in your Redmine and add a provider.
+Open _Administration -> OAuth providers_ in your Redmine and add your provider(s).
 
 Examples:
 

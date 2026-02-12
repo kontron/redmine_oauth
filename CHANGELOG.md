@@ -1,7 +1,7 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.0.0 *????-??-??*
+4.0.0 *2026-02-12*
 -------------------
 
     Multiple Authorization providers
