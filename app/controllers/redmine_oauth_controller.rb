@@ -103,7 +103,7 @@ class RedmineOauthController < AccountController
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
-        scope: RedmineOauth.custom_scope,
+        scope: oauth_provider.custom_scope,
         code_challenge: code_challenge,
         code_challenge_method: 'S256'
       )

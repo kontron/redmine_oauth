@@ -86,31 +86,33 @@ class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
 
   def test_create_failed
     post '/login', params: { username: 'admin', password: 'admin' }
-    post '/oauth_providers', params: { oauth_provider: {
-      oauth_name: 'Keycloak',
-      site: 'xxx',
-      client_id: 'xxx',
-      client_secret: 'xxx',
-      tenant_id: 'xxx',
-      custom_name: 'Keycloak',
-      custom_auth_endpoint: '',
-      custom_token_endpoint: '',
-      custom_profile_endpoint: '',
-      custom_scope: '',
-      custom_uid_field: '',
-      custom_email_field: '',
-      button_color: '',
-      button_icon: '',
-      custom_firstname_field: '',
-      custom_lastname_field: '',
-      custom_logout_endpoint: '',
-      validate_user_roles: '',
-      oauth_version: '2.0',
-      identify_user_by: '',
-      imap: false
-    } }
+    assert_difference 'OauthProvider.count', +0 do
+      post '/oauth_providers', params: { oauth_provider: {
+        oauth_name: 'Keycloak',
+        site: 'xxx',
+        client_id: 'xxx',
+        client_secret: 'xxx',
+        tenant_id: 'xxx',
+        custom_name: 'Keycloak',
+        custom_auth_endpoint: '',
+        custom_token_endpoint: '',
+        custom_profile_endpoint: '',
+        custom_scope: '',
+        custom_uid_field: '',
+        custom_email_field: '',
+        button_color: '',
+        button_icon: '',
+        custom_firstname_field: '',
+        custom_lastname_field: '',
+        custom_logout_endpoint: '',
+        validate_user_roles: '',
+        oauth_version: '2.0',
+        identify_user_by: '',
+        imap: false
+      } }
+    end
     assert_response :success
-    assert_equal flash[:error], 'Custom name has already been taken'
+    assert_select '#errorExplanation', { text: 'Custom name has already been taken' }
   end
 end
 
@@ -174,7 +176,7 @@ def test_update_failed
     imap: false
   } }
   assert_response :success
-  assert_equal flash[:error], 'Custom name has already been taken'
+  assert_select '#errorExplanation', { text: 'Custom name has already been taken' }
 end
 
 def test_destroy
