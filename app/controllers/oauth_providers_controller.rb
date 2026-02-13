@@ -47,7 +47,6 @@ class OauthProvidersController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       redirect_to oauth_providers_path
     else
-      flash[:error] = oauth_provider.errors.full_messages.join(', ')
       @oauth_provider = oauth_provider
       render action: 'new'
     end

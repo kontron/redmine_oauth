@@ -71,7 +71,7 @@
       <% else %>
         <p id="oauth_options_site">
       <% end %>
-      <%= f.text_field :site, value: @oauth_provider.site, title: l(:oauth_site_info), required: true, size: 40 %>
+      <%= f.text_field :site, value: @oauth_provider.site, title: l(:oauth_site_info), size: 40 %>
       </p>
       <% if %w(Azure\ AD).include?(@oauth_provider.oauth_name) %>
         <p id="oauth_option_version">
