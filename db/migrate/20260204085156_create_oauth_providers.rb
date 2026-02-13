@@ -83,7 +83,10 @@ class CreateOauthProviders < ActiveRecord::Migration[7.2]
     oauth_provider.identify_user_by = Setting.plugin_redmine_oauth['identify_user_by']
     oauth_provider.imap = true
     oauth_provider.position = 1
-    oauth_provider.save!
+    return if oauth_provider.save
+
+    warn "[WARN] Migration of the existing oauth provider's configuration failed. You will have to set it up
+                manually in the Administration."
   end
 
   def table_to_settings
