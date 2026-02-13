@@ -176,7 +176,7 @@ class RedmineOauthController < AccountController
                                                                                    redirect_uri: oauth_callback_url,
                                                                                    code_verifier: code_verifier)
       userinfo_response = token.get(
-        "/oauth2/#{RedmineOauth.tenant_id}/v1/userinfo",
+        "/oauth2/#{oauth_provider.tenant_id}/v1/userinfo",
         headers: { 'Accept' => 'application/json' }
       )
       user_info = JSON.parse(userinfo_response.body)
@@ -187,17 +187,17 @@ class RedmineOauthController < AccountController
       token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
                                                                                    redirect_uri: oauth_callback_url,
                                                                                    code_verifier: code_verifier)
-      if RedmineOauth.custom_profile_endpoint.empty?
+      if oauth_provider.custom_profile_endpoint.empty?
         user_info = JWT.decode(token.token, nil, false).first
       else
         userinfo_response = token.get(
-          RedmineOauth.custom_profile_endpoint,
+          oauth_provider.custom_profile_endpoint,
           headers: { 'Accept' => 'application/json' }
         )
         user_info = JSON.parse(userinfo_response.body)
       end
-      user_info['login'] = user_info[RedmineOauth.custom_uid_field]
-      email = user_info[RedmineOauth.custom_email_field]
+      user_info['login'] = user_info[oauth_provider.custom_uid_field]
+      email = user_info[oauth_provider.custom_email_field]
     else
       raise StandardError, l(:oauth_invalid_provider)
     end
@@ -229,7 +229,7 @@ class RedmineOauthController < AccountController
 
     # Try to log in
     set_params
-    try_to_login email, user_info, non_default_roles
+    try_to_login email, user_info, non_default_roles, oauth_provider
     session[:oauth_login] = oauth_provider.id
   rescue StandardError => e
     Rails.logger.error e.message
@@ -269,13 +269,13 @@ class RedmineOauthController < AccountController
     session.delete :oauth_autologin
   end
 
-  def try_to_login(email, info, role_names)
+  def try_to_login(email, info, role_names, oauth_provider)
     # Login name
     login = info['login']
     login ||= info['unique_name']
     login ||= info['preferred_username']
     # Find the user
-    user = case RedmineOauth.identify_user_by
+    user = case oauth_provider.identify_user_by
            when 'login'
              User.where('LOWER(login) = ?', login.downcase).first
            else
@@ -302,8 +302,8 @@ class RedmineOauthController < AccountController
       # Create on the fly
       user = User.new
       user.mail = email
-      user.firstname = info[RedmineOauth.custom_firstname_field]
-      user.lastname = info[RedmineOauth.custom_lastname_field]
+      user.firstname = info[oauth_provider.custom_firstname_field]
+      user.lastname = info[oauth_provider.custom_lastname_field]
       first_name, last_name = info['name'].split if info['name'].present?
       user.firstname ||= first_name
       user.lastname ||= last_name
@@ -332,7 +332,7 @@ class RedmineOauthController < AccountController
       raise StandardError, l(:notice_account_invalid_credentials)
     end
 
-    if RedmineOauth.enable_group_roles?
+    if oauth_provider.enable_group_roles?
       desired_groups = Group.where(lastname: role_names)
       user.group_ids = desired_groups.ids
     end
