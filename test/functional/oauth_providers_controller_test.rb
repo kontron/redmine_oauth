@@ -70,6 +70,7 @@ class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
         custom_lastname_field: '',
         custom_logout_endpoint: '',
         validate_user_roles: '',
+        enable_group_roles: false,
         oauth_version: '2.0',
         identify_user_by: '',
         imap: true
@@ -106,6 +107,7 @@ class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
         custom_lastname_field: '',
         custom_logout_endpoint: '',
         validate_user_roles: '',
+        enable_group_roles: false,
         oauth_version: '2.0',
         identify_user_by: '',
         imap: false
@@ -143,6 +145,7 @@ def test_update
     custom_lastname_field: '',
     custom_logout_endpoint: '',
     validate_user_roles: '',
+    enable_group_roles: false,
     oauth_version: '2.0',
     identify_user_by: '',
     imap: false
@@ -171,6 +174,7 @@ def test_update_failed
     custom_lastname_field: '',
     custom_logout_endpoint: '',
     validate_user_roles: '',
+    enable_group_roles: false,
     oauth_version: '2.0',
     identify_user_by: '',
     imap: false
