@@ -89,6 +89,7 @@ class OauthProvidersController < ApplicationController
     provider.custom_lastname_field = params['custom_lastname_field']
     provider.custom_logout_endpoint = params['custom_logout_endpoint']
     provider.validate_user_roles = params['validate_user_roles']
+    provider.enable_group_roles = params['enable_group_roles']
     provider.oauth_version = params['oauth_version']
     provider.identify_user_by = params['identify_user_by']
     provider.imap = params['imap']

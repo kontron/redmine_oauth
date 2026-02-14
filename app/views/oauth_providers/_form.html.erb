@@ -116,6 +116,10 @@
         <em class="info"><%= l(:oauth_validate_user_roles_info) %></em>
       </p>
       <p>
+        <%= f.check_box :enable_group_roles, label: l(:oauth_enable_group_roles) %>
+        <em class="info"><%= l(:oauth_enable_group_roles_info) %></em>
+      </p>
+      <p>
         <%= f.select :identify_user_by,
                      options_for_select([%w(email email), %w(login login)],
                                         @oauth_provider.identify_user_by.presence || 'email'),
