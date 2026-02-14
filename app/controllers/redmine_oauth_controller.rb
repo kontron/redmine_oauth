@@ -205,7 +205,7 @@ class RedmineOauthController < AccountController
 
     # Roles
     non_default_roles = []
-    keys = oauth_provider.validate_user_roles.split('.')
+    keys = oauth_provider.validate_user_roles&.split('.')
     if keys&.size&.positive?
       roles = user_info
       while keys.size.positive?
