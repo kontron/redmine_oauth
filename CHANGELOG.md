@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.0.1 *????-??-??*
+4.0.1 *2026-02-15*
 -------------------
+
+    Bugs fixing
+
+* Bug: #105 - Validation failed: Site cannot be blank
 
 4.0.0 *2026-02-12*
 -------------------
