@@ -88,3 +88,8 @@ de:
   label_new_oauth_provider: Neu OAuth-Anbieter
   oauth_imap: IMAP
   oauth_imap_info: Aktivieren diesen Anbieter für IMAP
+  oauth_hd: Gehostete Domain
+  oauth_hd_info: Nur Nutzer dieser Domain können sich anmelden
+  oauth_access_type_info: "Wenn ein Zugriffstoken angefordert wird, erhält der Client kein Aktualisierungstoken, es sei 
+    denn, es wird ein Wert 'offline' angegeben."
+  error_invalid_hosted_domain: Die gehostete Domain ist nicht erlaubt.

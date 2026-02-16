@@ -89,3 +89,8 @@ ko:
   label_new_oauth_provider: New OAuth provider
   oauth_imap: IMAP
   oauth_imap_info: Enable this provider for IMAP
+  oauth_hd: Hosted domain
+  oauth_hd_info: Only users from that domain can log in
+  oauth_access_type_info: "If an access token is being requested, the client does not receive a refresh token unless 
+      a value of 'offline' is specified."
+  error_invalid_hosted_domain: Hosted domain is not allowed.

@@ -68,21 +68,27 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'GitLab'
-      redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
+      args = {
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'read_user',
         code_challenge: code_challenge,
         code_challenge_method: 'S256'
-      )
+      }
+      args[hd: oauth_provider.hd] if oauth_provider.hd.present?
+      args[access_type: oauth_provider.access_type] if oauth_provider.access_type.present?
+      redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(args)
     when 'Google'
-      redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
+      url = RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'profile email',
         code_challenge: code_challenge,
-        code_challenge_method: 'S256'
+        code_challenge_method: 'S256',
+        hd: 'lbcfree.net',
+        access_type: 'offline'
       )
+      redirect_to url
     when 'Keycloak'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
@@ -162,6 +168,10 @@ class RedmineOauthController < AccountController
                                     headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['email']
+      if user_info['hd'].present? && (user_info['hd'] != '*') && user_info['hd'] != oauth_provider.hd
+        raise StandardError, l(:error_invalid_hosted_domain)
+      end
+
       email = user_info['email']
     when 'Keycloak'
       token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
@@ -253,11 +263,11 @@ class RedmineOauthController < AccountController
   private
 
   def generate_code_verifier
-    SecureRandom.urlsafe_base64(32)
+    SecureRandom.urlsafe_base64 32
   end
 
   def generate_code_challenge(code_verifier)
-    Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete('=')
+    Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete '='
   end
 
   def set_params

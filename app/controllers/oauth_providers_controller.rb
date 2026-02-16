@@ -41,7 +41,7 @@ class OauthProvidersController < ApplicationController
 
   def create
     oauth_provider = OauthProvider.new
-    update_from_parameters oauth_provider, params[:oauth_provider]
+    oauth_provider.update_from_parameters params[:oauth_provider]
     oauth_provider.position = OauthProvider.all.size + 1 if oauth_provider
     if request.post? && oauth_provider.save
       flash[:notice] = l(:notice_successful_create)
@@ -53,7 +53,7 @@ class OauthProvidersController < ApplicationController
   end
 
   def update
-    update_from_parameters @oauth_provider, params[:oauth_provider]
+    @oauth_provider.update_from_parameters params[:oauth_provider]
     if request.patch? && @oauth_provider.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to oauth_providers_path
@@ -66,34 +66,5 @@ class OauthProvidersController < ApplicationController
     @oauth_provider.destroy
     flash[:notice] = l(:notice_successful_delete)
     redirect_to oauth_providers_path
-  end
-
-  private
-
-  def update_from_parameters(provider, params)
-    provider.oauth_name = params['oauth_name']
-    provider.site = params['site']
-    provider.client_id = params['client_id']
-    provider.client_secret = Redmine::Ciphering.encrypt_text(params['client_secret'])
-    provider.tenant_id = params['tenant_id']
-    provider.custom_name = params['custom_name']
-    provider.custom_auth_endpoint = params['custom_auth_endpoint']
-    provider.custom_token_endpoint = params['custom_token_endpoint']
-    provider.custom_profile_endpoint = params['custom_profile_endpoint']
-    provider.custom_scope = params['custom_scope']
-    provider.custom_uid_field = params['custom_uid_field']
-    provider.custom_email_field = params['custom_email_field']
-    provider.button_color = params['button_color']
-    provider.button_icon = params['button_icon']
-    provider.custom_firstname_field = params['custom_firstname_field']
-    provider.custom_lastname_field = params['custom_lastname_field']
-    provider.custom_logout_endpoint = params['custom_logout_endpoint']
-    provider.validate_user_roles = params['validate_user_roles']
-    provider.enable_group_roles = params['enable_group_roles']
-    provider.oauth_version = params['oauth_version']
-    provider.identify_user_by = params['identify_user_by']
-    provider.imap = params['imap']
-    # Reset IMAP by other providers
-    OauthProvider.where.not(id: provider.id).where(imap: true).update(imap: false) if provider.imap
   end
 end

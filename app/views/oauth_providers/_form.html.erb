@@ -96,8 +96,21 @@
       <% else %>
         <p id="oauth_options_tenant">
       <% end %>
-      <%= f.text_field :tenant_id, value: @oauth_provider.tenant_id, title: l(:oauth_tenant_id_info), size: 40 %>
+        <%= f.text_field :tenant_id, value: @oauth_provider.tenant_id, title: l(:oauth_tenant_id_info), size: 40 %>
       </p>
+      <% style = @oauth_provider.oauth_name == 'Google' ? '' : " style='display: none'"%>
+      <div id="oauth_google_options"<%= style %>>
+        <p>
+          <%= f.text_field :hd, value: @oauth_provider.hd, title: l(:oauth_hd_info), size: 40, label: l(:oauth_hd) %>
+        </p>
+        <p>
+          <%= f.select :access_type,
+                       options_for_select([['', ''], %w[online online], %w[offline offline]],
+                                          @oauth_provider.access_type),
+                       {},
+                       title: l(:oauth_access_type_info) %>
+        </p>
+      </div>
       <% style = if RedmineOauth.self_registration != 0
                    'display: block'
                  else

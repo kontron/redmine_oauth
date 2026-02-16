@@ -21,7 +21,7 @@
 class OauthProvider < ApplicationRecord
   validates :oauth_name, presence: true
   validates :site, format: { without: /\.ru\b/ }, length: { maximum: 40 }
-  validates :client_id, presence: true, length: { maximum: 60 }
+  validates :client_id, presence: true, length: { maximum: 80 }
   validates :client_secret, presence: true, length: { maximum: 128 } # Must be longer due to an optional cyphering
   validates :tenant_id, length: { maximum: 40 }
   validates :custom_name, presence: true, uniqueness: true, length: { maximum: 30 }
@@ -37,6 +37,37 @@ class OauthProvider < ApplicationRecord
   validates :custom_lastname_field, length: { maximum: 30 }
   validates :custom_logout_endpoint, length: { maximum: 80 }
   validates :validate_user_roles, length: { maximum: 40 }
+  validates :hd, length: { maximum: 40 }
+  validates :access_type, length: { maximum: 7 }
 
   scope :sorted, -> { order(:position) }
+
+  def update_from_parameters(params)
+    self.oauth_name = params['oauth_name']
+    self.site = params['site']
+    self.client_id = params['client_id']
+    self.client_secret = Redmine::Ciphering.encrypt_text(params['client_secret'])
+    self.tenant_id = params['tenant_id']
+    self.custom_name = params['custom_name']
+    self.custom_auth_endpoint = params['custom_auth_endpoint']
+    self.custom_token_endpoint = params['custom_token_endpoint']
+    self.custom_profile_endpoint = params['custom_profile_endpoint']
+    self.custom_scope = params['custom_scope']
+    self.custom_uid_field = params['custom_uid_field']
+    self.custom_email_field = params['custom_email_field']
+    self.button_color = params['button_color']
+    self.button_icon = params['button_icon']
+    self.custom_firstname_field = params['custom_firstname_field']
+    self.custom_lastname_field = params['custom_lastname_field']
+    self.custom_logout_endpoint = params['custom_logout_endpoint']
+    self.validate_user_roles = params['validate_user_roles']
+    self.enable_group_roles = params['enable_group_roles']
+    self.oauth_version = params['oauth_version']
+    self.identify_user_by = params['identify_user_by']
+    self.imap = params['imap']
+    self.hd = params['hd']
+    self.access_type = params['access_type']
+    # Reset IMAP by other providers
+    OauthProvider.where.not(id: provider.id).where(imap: true).update(imap: false) if imap
+  end
 end

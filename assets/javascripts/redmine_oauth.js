@@ -19,7 +19,7 @@
 
 function oauth_set_color()
 {
-    let color = $("input#button_color").val();
+    let color = $("input#oauth_provider_button_color").val();
     $("#login-oauth-button").css({ backgroundColor: color });
 }
 
@@ -73,6 +73,7 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_tenant').show();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').show();
+            div_oauth_options.find('#oauth_google_options').hide();
             tenant_id.val("");
             site.val("https://login.microsoftonline.com");
             break;
@@ -82,6 +83,7 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_tenant').hide();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').hide();
+            div_oauth_options.find('#oauth_google_options').hide();
             site.val("https://github.com");
             break;
         case 'GitLab':
@@ -90,10 +92,12 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_tenant').hide();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').hide();
+            div_oauth_options.find('#oauth_google_options').hide();
             break;
         case 'Google':
             div_oauth_options.show();
             div_oauth_options.find('#oauth_options_site').show();
+            div_oauth_options.find('#oauth_google_options').show();
             div_oauth_options.find('#oauth_options_tenant').hide();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').hide();
@@ -105,6 +109,7 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_tenant').show();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').hide();
+            div_oauth_options.find('#oauth_google_options').hide();
             tenant_id.val("");
             break;
         case 'Okta':
@@ -113,15 +118,17 @@ function oauth_settings_visibility()
             div_oauth_options.find('#oauth_options_tenant').show();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').hide();
+            div_oauth_options.find('#oauth_google_options').hide();
             tenant_id.val("default");
             break;
         case 'Custom':
             div_oauth_options.show();
+            div_oauth_options.find('#oauth_options_custom').show();
             div_oauth_options.find('#oauth_options_site').hide();
             div_oauth_options.find('#oauth_options_tenant').hide();
-            tenant_id.val("");
             div_oauth_options.find('#oauth_option_version').hide();
-            div_oauth_options.find('#oauth_options_custom').show();
+            div_oauth_options.find('#oauth_google_options').hide();
+            tenant_id.val("");
             $("input#oauth_provider_custom_auth_endpoint").val("");
             $("input#oauth_provider_custom_token_endpoint").val("");
             $("input#oauth_provider_custom_profile_endpoint").val("");

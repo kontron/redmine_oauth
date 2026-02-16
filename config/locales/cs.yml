@@ -88,3 +88,8 @@ cs:
   label_new_oauth_provider: Nový poskytovatel OAuth
   oauth_imap: IMAP
   oauth_imap_info: Povolit tohot poskytovatele pro IMAP
+  oauth_hd: Hostovaná doména
+  oauth_hd_info: Pouze uživatelé z této domény se mohou přihlásit
+  oauth_access_type_info: "Když je požadován přístupový token, klient nedostane obnovený token pokud je hodnota nastavena 
+    na 'offline'."
+  error_invalid_hosted_domain: Hostovaná doména není povolena.
