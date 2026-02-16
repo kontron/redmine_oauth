@@ -68,6 +68,6 @@ class OauthProvider < ApplicationRecord
     self.hd = params['hd']
     self.access_type = params['access_type']
     # Reset IMAP by other providers
-    OauthProvider.where.not(id: provider.id).where(imap: true).update(imap: false) if imap
+    OauthProvider.where.not(id: id).where(imap: true).update(imap: false) if imap
   end
 end
