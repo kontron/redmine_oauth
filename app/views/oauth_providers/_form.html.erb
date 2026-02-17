@@ -98,8 +98,8 @@
         <%= f.text_field :tenant_id, value: @oauth_provider.tenant_id, label: l(:field_tenant_id),
                          title: l(:oauth_tenant_id_info), size: 40 %>
       </p>
-      <% style = @oauth_provider.oauth_name == 'Google' ? '' : " style='display: none'"%>
-      <div id="oauth_google_options"<%= style %>>
+      <% style = @oauth_provider.oauth_name == 'Google' ? '' : 'display: none' %>
+      <div id="oauth_google_options" style="<%= style %>">
         <p>
           <%= f.text_field :url_parameters, value: @oauth_provider.url_parameters, title: l(:oauth_url_parameters_info),
                            size: 128 %>
