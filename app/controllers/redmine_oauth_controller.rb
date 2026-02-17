@@ -84,10 +84,9 @@ class RedmineOauthController < AccountController
         state: oauth_csrf_token,
         scope: 'profile email',
         code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        hd: 'lbcfree.net',
-        access_type: 'offline'
+        code_challenge_method: 'S256'
       )
+      url << "&#{oauth_provider.url_parameters}" if oauth_provider.url_parameters.present?
       redirect_to url
     when 'Keycloak'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
@@ -168,8 +167,11 @@ class RedmineOauthController < AccountController
                                     headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['email']
-      if user_info['hd'].present? && (user_info['hd'] != '*') && user_info['hd'] != oauth_provider.hd
-        raise StandardError, l(:error_invalid_hosted_domain)
+      if oauth_provider.url_parameters =~ /hd=([^&]*)/
+        hd = Regexp.last_match(1)
+        if user_info['hd'].present? && (hd != '*') && user_info['hd'] != hd
+          raise StandardError, l(:error_invalid_hosted_domain)
+        end
       end
 
       email = user_info['email']

@@ -37,8 +37,7 @@ class OauthProvider < ApplicationRecord
   validates :custom_lastname_field, length: { maximum: 30 }
   validates :custom_logout_endpoint, length: { maximum: 80 }
   validates :validate_user_roles, length: { maximum: 40 }
-  validates :hd, length: { maximum: 40 }
-  validates :access_type, length: { maximum: 7 }
+  validates :url_parameters, length: { maximum: 128 }
 
   scope :sorted, -> { order(:position) }
 
@@ -65,8 +64,7 @@ class OauthProvider < ApplicationRecord
     self.oauth_version = params['oauth_version']
     self.identify_user_by = params['identify_user_by']
     self.imap = params['imap']
-    self.hd = params['hd']
-    self.access_type = params['access_type']
+    self.url_parameters = params['url_parameters']
     # Reset IMAP by other providers
     OauthProvider.where.not(id: id).where(imap: true).update(imap: false) if imap
   end

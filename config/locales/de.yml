@@ -23,52 +23,33 @@ de:
   oauth_no_verified_email: Keine verifizierte E-Mail zur Verfügung gestellt. Überprüfen Sie Ihre OAuth-Anbieter-Einstellung.
   oauth_invalid_provider: Ungültiger OAuth-Anbieter
   oauth_none: Keiner
-  oauth_provider: Anbieter
   oauth_provider_info: OAuth-Anbieter.
-  oauth_site: Seite
   oauth_site_info: URI des OAuth-Anbieter.
-  oauth_client_id: Client-ID
   oauth_client_id_info: Anwendungs-ID (Client).
-  oauth_client_secret: Geheime Zeichenfolge
   oauth_client_secret_info: Anwendungskennwort.
-  oauth_tenant_id: Mandant-ID
   oauth_tenant_id_info: Verzeichnis-ID (Mandant).
   oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons (Leer für keinen Button).
-  oauth_login_button: Anmeldebutton
-  oauth_custom_name: Name des Anbieters
   oauth_custom_name_info: Titel auf dem OAuth-Login-Button.
-  oauth_custom_auth_endpoint: Auth endpoint
-  oauth_custom_auth_endpoint_info: Application Auth endpoint.
-  oauth_custom_token_endpoint: Token endpoint
-  oauth_custom_token_endpoint_info: Application Token endpoint.
-  oauth_custom_profile_endpoint: Profile endpoint
-  oauth_custom_profile_endpoint_info: Application Profile endpoint.
-  oauth_custom_scope: OAuth scope
+  oauth_custom_auth_endpoint_info: Auth-Endpunkt der Applikation.
+  oauth_custom_token_endpoint_info: Token-Endpunkt der Applikation.
+  oauth_custom_profile_endpoint_info: Profilendpunkt der Applikation.
   oauth_custom_scope_info: "OAuth scope (Standard: 'openid profile email')."
-  oauth_custom_uid_field: UID-Feld
-  oauth_custom_uid_field_info: "UID-Feld (Stadard: preferred_username)."
-  oauth_custom_email_field: E-Mail-Feld
+  oauth_custom_uid_field_info: "UID-Feld (Standard: preferred_username)."
   oauth_custom_email_field_info: "E-Mail-Feld (Standard: email)."
   oauth_hide_login_form: Login-Formular ausblenden
-  oauth_custom_firstname_field: Vorname-Feld des Anbieters
-  oauth_custom_lastname_field: Nachname-Feld des Anbieters
   oauth_update_login: Login aktualizieren
   oauth_update_login_info: Aktualizieren Login des Benutzers nach einer erfolgreichen Anmeldung.
   oauth_logout: OAuth-Abmeldung
   oauth_logout_info: Abmelden auch vom OAuth-Anbieter nach der Redmine-Abmeldung.
-  oauth_login: OAuth login
+  oauth_login: OAuth-Anmeldung
   oauth_login_info: Ermöglicht der Benutzer automatisches Anmelden über den OAuth-Anbieter ohne des Anmeldeformulars.
-  oauth_custom_logout_endpoint: Abmeldung-Endpoint
-  oauth_custom_logout_endpoint_info: Abmeldung-Endpoint für Abmeldung vom OAuth-Anbieter.
-  oauth_validate_user_roles: Benutzerrollen überprüfen
+  oauth_custom_logout_endpoint_info: Abmeldung-Endpunkt für Abmeldung vom OAuth-Anbieter.
   oauth_validate_user_roles_info: "Ein Schlüssel, bei dem Benutzerrollen im Token vorhanden sind. Wenn gesetzt, 
     die Rolle 'user' gewährt Zugriff, 'admin' gewährt Admin-Rechte. Wenn die Rolle 'user' nicht vorhanden ist, 
     wird der Zugriff verweigert. Wenn die Rolle 'admin' fehlt, werden die Admin-Rechte widerrufen. z.B.: Geben Sie 
     'resource_access.redmine.roles' ein, wenn Sie den Token als 'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } } eingestellt."
   oauth_autologin: Automatische Anmeldung mit OAuth
-  oauth_version: Version
-  oauth_version_info: Endpoint-Version
-  oauth_enable_group_roles: Gruppenrollen aktivieren
+  oauth_version_info: Endpunkt-Version
   oauth_enable_group_roles_info: |    
     Wenn diese Option aktiviert ist, werden alle zusätzlichen Rollen außerhalb der Standardrollen (admin, user) einer 
     Gruppe mit demselben Namen zugeordnet. Das heißt, wenn Sie eine Gruppe mit dem Namen 'developer' erstellen und Ihr 
@@ -80,16 +61,32 @@ de:
   oauth_only_login: Nur OAuth-Anmeldung
   oauth_only_login_info: |
     Wenn diese Option aktiviert ist, werden Benutzer direkt zum OAuth-Anbieter weitergeleitet, wodurch die Standard-Anmeldeseite vollständig übersprungen wird.
-  identify_user_by: Identifizieren des Benutzers bei
   identify_user_by_info: Anbieter-Feld zur Identifikation des Benutzers im Redmine
 
   label_oauth_provider: OAuth-Anbieter
   label_oauth_providers: OAuth-Anbieter
   label_new_oauth_provider: Neu OAuth-Anbieter
-  oauth_imap: IMAP
   oauth_imap_info: Aktivieren diesen Anbieter für IMAP
-  oauth_hd: Gehostete Domain
-  oauth_hd_info: Nur Nutzer dieser Domain können sich anmelden
-  oauth_access_type_info: "Wenn ein Zugriffstoken angefordert wird, erhält der Client kein Aktualisierungstoken, es sei 
-    denn, es wird ein Wert 'offline' angegeben."
+  oauth_url_parameters_info: "Zusätzliche Parameter für die Autorisierungs-URL, 
+    z.B.: 'hd=kontron.com&access_type=offline'"
   error_invalid_hosted_domain: Die gehostete Domain ist nicht erlaubt.
+  field_url_parameters: URL-Parameter
+  field_oauth_name: Anbieter
+  field_button_color: Anmeldebutton
+  field_site: Seite
+  field_client_id: Client-ID
+  field_client_secret: Geheime Zeichenfolge
+  field_tenant_id: Mandant-ID
+  field_custom_firstname_field: Vorname-Feld
+  field_custom_lastname_field: Nachname-Feld
+  field_validate_user_roles: Benutzerrollen überprüfen
+  field_enable_group_roles: Gruppenrollen aktivieren
+  field_identify_user_by: Identifizieren des Benutzers bei
+  field_imap: IMAP
+  field_custom_auth_endpoint: OAuth-Endpunkt
+  field_custom_token_endpoint: Token-Endpunkt
+  field_custom_profile_endpoint: Profilendpunkt
+  field_custom_logout_endpoint: Abmeldung-Endpunkt
+  field_custom_scope: Scope
+  field_custom_uid_field: UID-Feld
+  field_custom_email_field: E-Mail-Feld

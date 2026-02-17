@@ -23,52 +23,33 @@ es:
   oauth_no_verified_email: No se proporcionó ningún correo electrónico, verifique su configuración en el sitio del proveedor OAuth.
   oauth_invalid_provider: Proveedor OAuth no válido
   oauth_none: Ninguno
-  oauth_provider: Proveedor
   oauth_provider_info: Proveedor OAuth
-  oauth_site: Sitio web
   oauth_site_info: URL de autenticación del proveedor OAuth
-  oauth_client_id: ID del cliente
   oauth_client_id_info: ID de la aplicación (client)
-  oauth_client_secret: Secreto del cliente
   oauth_client_secret_info: Contraseña de la aplicación
-  oauth_tenant_id: Tenant ID / Realm
   oauth_tenant_id_info: Directorio (tenant) ID
   oauth_button_info: Color e icono (Awesome font class) del botón de login OAuth (Vacío para que no haya botón)
-  oauth_login_button: Botón de login
-  oauth_custom_name: Nombre del proveedor
   oauth_custom_name_info: Título que se mostrará en el botón de inicio de sesión de OAuth
-  oauth_custom_auth_endpoint: Auth endpoint
   oauth_custom_auth_endpoint_info: Application Auth endpoint
-  oauth_custom_token_endpoint: Token endpoint
   oauth_custom_token_endpoint_info: Application Token endpoint
-  oauth_custom_profile_endpoint: Profile endpoint
   oauth_custom_profile_endpoint_info: Application Profile endpoint
-  oauth_custom_scope: OAuth scope
   oauth_custom_scope_info: "OAuth scope (default: 'openid profile email')"
-  oauth_custom_uid_field: UID field
   oauth_custom_uid_field_info: "UID field (default: preferred_username)"
-  oauth_custom_email_field: Email field
   oauth_custom_email_field_info: "Email field (default: email)"
   oauth_hide_login_form: Ocultar formulario de login
-  oauth_custom_firstname_field: Nombre del campo firstname del Provider
-  oauth_custom_lastname_field: Nombre del campo lastname del Provider
   oauth_update_login: Actualizar login
   oauth_update_login_info: Actualizar la información de login del usuario después de una autenticación correcta
   oauth_logout: OAuth logout
   oauth_logout_info: Cerrar la sesión en el proveedor OAuth después de cerrar la sesión de Redmine
   oauth_login: OAuth login
   oauth_login_info: Permitir a los usuarios autenticarse automáticamente a través del proveedor OAuth sin utilizar el formulario de login
-  oauth_custom_logout_endpoint: Logout endpoint
   oauth_custom_logout_endpoint_info: Application Logout endpoint.
-  oauth_validate_user_roles: Validar roles de usuario
   oauth_validate_user_roles_info: "Identificador del campo del token donde se encuentran los roles de usuario. Si se configura, el rol 'user' otorga acceso, 
     el rol 'admin' otorga acceso de administrador. Si el rol 'user' no está presente, se deniega el acceso. Si el rol 'admin' no está presente, no habrá permisos de
     administrador. Ejemplo.: Introduce 'resource_access.redmine.roles', si tu token sigue el siguiente formato:
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
   oauth_autologin: Autologin mediante OAuth
-  oauth_version: Versión
   oauth_version_info: Endpoint versión
-  oauth_enable_group_roles: Enable group roles
   oauth_enable_group_roles_info: |
     When enabled, any additional roles outside the default ones (admin, user) are mapped to a group of the same name.
     Meaning, if you create a group called 'developer' and your user has a role called 'developer', the user will be
@@ -80,16 +61,31 @@ es:
   oauth_only_login: OAuth-only login
   oauth_only_login_info: |
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
-  identify_user_by: Identify user by
   identify_user_by_info: Provider's field to identify the user in Redmine
 
   label_oauth_provider: OAuth provider
   label_oauth_providers: OAuth providers
   label_new_oauth_provider: New OAuth provider
-  oauth_imap: IMAP
   oauth_imap_info: Enable this provider for IMAP
-  oauth_hd: Hosted domain
-  oauth_hd_info: Only users from that domain can log in
-  oauth_access_type_info: "If an access token is being requested, the client does not receive a refresh token unless 
-      a value of 'offline' is specified."
+  oauth_url_parameters_info: "Additional parameters for authorization URL, e.g.: 'hd=kontron.com&access_type=offline'"
   error_invalid_hosted_domain: Hosted domain is not allowed.
+  field_url_parameters: URL parameters
+  field_oauth_name: Proveedor
+  field_button_color: Botón de login
+  field_site: Sitio web
+  field_client_id: ID del cliente
+  field_client_secret: Secreto del cliente
+  field_tenant_id: Tenant ID / Realm
+  field_custom_firstname_field: Nombre del campo first name del Provider
+  field_custom_lasttname_field: Nombre del campo first name del Provider
+  field_validate_user_roles: Validar roles de usuario
+  field_enable_group_roles: Enable group roles
+  field_identify_user_by: Identify user by
+  field_imap: IMAP
+  field_custom_auth_endpoint: OAuth endpoint
+  field_custom_token_endpoint: Token endpoint
+  field_custom_profile_endpoint: Profile endpoint
+  field_custom_logout_endpoint: Logout endpoint
+  field_custom_scope: Custom scope
+  field_custom_uid_field: UID field
+  field_custom_email_field: Email field
