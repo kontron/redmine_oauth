@@ -28,7 +28,7 @@ cs:
   oauth_client_id_info: ID aplikace (klienta).
   oauth_client_secret_info: Heslo aplikace.
   oauth_tenant_id_info: ID adresáře (tenanta).
-  oauth_button_info: Barva a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth.
+  oauth_button_info: Barva, text a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth.
   oauth_custom_name_info: Titulek zobrazený na přihlašovacím tlačítku OAuth.
   oauth_custom_auth_endpoint_info: Autorizační endpoint aplikace.
   oauth_custom_token_endpoint_info: Endpoint tokenu aplikace.

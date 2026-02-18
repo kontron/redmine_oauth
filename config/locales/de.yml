@@ -28,7 +28,7 @@ de:
   oauth_client_id_info: Anwendungs-ID (Client).
   oauth_client_secret_info: Anwendungskennwort.
   oauth_tenant_id_info: Verzeichnis-ID (Mandant).
-  oauth_button_info: Farbe und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons.
+  oauth_button_info: Farbe, Text und Symbol (Awesome-Schriftklasse) des OAuth-Anmeldebuttons.
   oauth_custom_name_info: Titel auf dem OAuth-Login-Button.
   oauth_custom_auth_endpoint_info: Auth-Endpunkt der Applikation.
   oauth_custom_token_endpoint_info: Token-Endpunkt der Applikation.
