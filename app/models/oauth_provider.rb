@@ -38,6 +38,7 @@ class OauthProvider < ApplicationRecord
   validates :custom_logout_endpoint, length: { maximum: 80 }
   validates :validate_user_roles, length: { maximum: 40 }
   validates :url_parameters, length: { maximum: 128 }
+  validates :button_text, length: { maximum: 24 }
 
   scope :sorted, -> { order(:position) }
 
@@ -65,6 +66,7 @@ class OauthProvider < ApplicationRecord
     self.identify_user_by = params['identify_user_by']
     self.imap = params['imap']
     self.url_parameters = params['url_parameters']
+    self.button_text = params['button_text']
     # Reset IMAP by other providers
     OauthProvider.where.not(id: id).where(imap: true).update(imap: false) if imap
   end

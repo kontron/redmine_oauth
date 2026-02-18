@@ -28,7 +28,7 @@ ko:
   oauth_client_id_info: 애플리케이션(클라이언트) ID.
   oauth_client_secret_info: 애플리케이션 비밀번호.
   oauth_tenant_id_info: 디렉터리(테넌트) ID.
-  oauth_button_info: OAuth 로그인 버튼의 색상 및 아이콘(Font Awesome 클래스) (버튼이 없으려면 비워 두세요).
+  oauth_button_info: OAuth 로그인 버튼의 색상 및 아이콘(Font Awesome 클래스).
   oauth_custom_name: 제공자 이름
   oauth_custom_name_info: OAuth 로그인 버튼에 표시될 제목.
   oauth_custom_auth_endpoint_info: 애플리케이션 인증 엔드포인트.
@@ -91,3 +91,6 @@ ko:
   field_custom_scope: OAuth 범위(Scope)
   field_custom_uid_field: UID 필드
   field_custom_email_field: 이메일 필드
+  oauth_button_text_info: Alternative text for the button (HTML formatting)
+  oauth_button_color_info: Button's colour
+  oauth_button_icon_info: Button's icon

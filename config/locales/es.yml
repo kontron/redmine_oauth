@@ -28,7 +28,7 @@ es:
   oauth_client_id_info: ID de la aplicación (client)
   oauth_client_secret_info: Contraseña de la aplicación
   oauth_tenant_id_info: Directorio (tenant) ID
-  oauth_button_info: Color e icono (Awesome font class) del botón de login OAuth (Vacío para que no haya botón)
+  oauth_button_info: Color e icono (Awesome font class) del botón de login OAuth
   oauth_custom_name_info: Título que se mostrará en el botón de inicio de sesión de OAuth
   oauth_custom_auth_endpoint_info: Application Auth endpoint
   oauth_custom_token_endpoint_info: Application Token endpoint
@@ -89,3 +89,6 @@ es:
   field_custom_scope: Custom scope
   field_custom_uid_field: UID field
   field_custom_email_field: Email field
+  oauth_button_text_info: Alternative text for the button (HTML formatting)
+  oauth_button_color_info: Button's colour
+  oauth_button_icon_info: Button's icon

@@ -28,7 +28,7 @@ fr:
   oauth_client_id_info: ID d'application.
   oauth_client_secret_info: Mot de passe d'application.
   oauth_tenant_id_info: ID de répertoire (tenant).
-  oauth_button_info: Couleur et icône (classe Font Awesome) du bouton de connexion via OAuth (Laissez vite pour masquer le bouton).
+  oauth_button_info: Couleur et icône (classe Font Awesome) du bouton de connexion via OAuth.
   oauth_custom_name_info: Title to be shown on the OAuth login button.
   oauth_custom_auth_endpoint_info: Application Auth endpoint.
   oauth_custom_token_endpoint_info: Application Token endpoint.
@@ -90,3 +90,6 @@ fr:
   field_custom_scope: Custom scope
   field_custom_uid_field: UID field
   field_custom_email_field: Email field
+  oauth_button_text_info: Alternative text for the button (HTML formatting)
+  oauth_button_color_info: Button's colour
+  oauth_button_icon_info: Button's icon

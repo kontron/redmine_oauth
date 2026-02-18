@@ -26,37 +26,42 @@ function oauth_set_color()
 function oauth_set_icon()
 {
     let icon_class = $("select#oauth_provider_button_icon option:selected").val();
-    let login_button = $("#login-oauth-button");
-    if(icon_class == 'none'){
-        login_button.hide();
-        return;
-    }
-    else{
-        login_button.show();
-    }
     let icon = $("i#button_icon");
     icon.removeClass();
     icon.addClass(icon_class);
 }
 
-function oauth_set_btn_title()
+function oauth_set_button_text()
 {
+    let alternative_text = $("input#oauth_provider_button_text");
+    if(alternative_text.val().trim()) {
+        // We have an alternative text => Do not set anything
+        return;
+    }
     let oauth_name = $("input#oauth_provider_custom_name").val().trim() ? $("input#oauth_provider_custom_name").val().trim() : $("#oauth_provider_oauth_name option:selected").val();
     let button = $("button#login-oauth-button");
     let html = button.html();
-    html = html.replace(/<b>.*<\/b>/, "<b>" + oauth_name + "</b>");
+    html = html.replace(/<\/i>\s.*$/, "</i>\n<b>" + oauth_name + "</b>");
     button.html(html);
 }
 
-function oauth_settings_visibility()
-{
+function oauth_set_alternative_button_text(val) {
+    if(!val.trim()) {
+        val = $("input#oauth_provider_custom_name").val().trim() ? $("input#oauth_provider_custom_name").val().trim() : $("#oauth_provider_oauth_name option:selected").val();
+    }
+    let button = $("button#login-oauth-button");
+    let icon = $("select#oauth_provider_button_icon option:selected");
+    button.html("<i id=\"button_icon\" class=\"" + icon.text() + "\"></i>\n" + val);
+}
+
+function oauth_settings_visibility() {
     let div_oauth_options = $("div#oauth_options");
     let tenant_id = $("input#oauth_provider_tenant_id");
     let oauth_name = $("#oauth_provider_oauth_name option:selected").val();
     let site = $("input#oauth_provider_site");
 
     $("input#oauth_provider_custom_name").val(oauth_name);
-    oauth_set_btn_title();
+    oauth_set_button_text();
     
     site.val("");
     $("input#oauth_provider_client_id").val("");
