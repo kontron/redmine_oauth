@@ -38,7 +38,7 @@ class OauthProvider < ApplicationRecord
   validates :custom_logout_endpoint, length: { maximum: 80 }
   validates :validate_user_roles, length: { maximum: 40 }
   validates :url_parameters, length: { maximum: 128 }
-  validates :button_text, length: { maximum: 24 }
+  validates :button_text, length: { maximum: 40 }
 
   scope :sorted, -> { order(:position) }
 

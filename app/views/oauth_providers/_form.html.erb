@@ -66,7 +66,7 @@
         </span>
         <br>
         <%= f.text_field :button_text, value: @oauth_provider.button_text, title: l(:oauth_button_text_info),
-                         placeholder: @oauth_provider.oauth_name, size:24, label: '',
+                         placeholder: @oauth_provider.oauth_name, size: 40, label: '',
                          oninput: 'oauth_set_alternative_button_text(this.value)' %>
         <em class="info"><%= l(:oauth_button_info) %></em>
       </p>

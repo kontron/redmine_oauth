@@ -20,6 +20,6 @@
 # OauthProviders DB migration
 class ButtonText < ActiveRecord::Migration[7.2]
   def change
-    add_column :oauth_providers, :button_text, :string, null: true, limit: 24
+    add_column :oauth_providers, :button_text, :string, null: true, limit: 40
   end
 end
