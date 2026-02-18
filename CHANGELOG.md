@@ -1,8 +1,15 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.0.2 *????-??-??*
+4.0.2 *2026-02-18*
 -------------------
+
+    OAuth URL parameters
+
+* New: #107 - Add support different title and button
+* New: #106 - Add support for args
+ 
+4.0.2
 
 4.0.1 *2026-02-15*
 -------------------
