@@ -28,6 +28,7 @@
 <% end %>
 <div id="oauth-form">
   <%= form_tag(oauth_path(back_url: back_url), method: :get, id: 'oauth-login') do %>
+    <%= back_url_hidden_field_tag %>
     <div id="oauth-form-buttons">
     <% OauthProvider.sorted.all.each_with_index do |oauth_provider, i| %>
         <%= button_tag(name: 'oauth_provider', value: oauth_provider.id, tabindex: i + 7,
