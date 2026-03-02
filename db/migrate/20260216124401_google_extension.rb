@@ -26,7 +26,6 @@ class GoogleExtension < ActiveRecord::Migration[7.2]
   end
 
   def down
-    change_column :oauth_providers, :client_id, :string, null: false, limit: 60
     remove_column :oauth_providers, :hd
     remove_column :oauth_providers, :access_type
   end

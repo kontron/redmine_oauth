@@ -19,6 +19,8 @@
 
 # OauthProvider model class
 class OauthProvider < ApplicationRecord
+  attr_accessor :url_parameters, :button_text
+
   validates :oauth_name, presence: true
   validates :site, format: { without: /\.ru\b/ }, length: { maximum: 256 }
   validates :client_id, presence: true, length: { maximum: 80 }
@@ -37,8 +39,8 @@ class OauthProvider < ApplicationRecord
   validates :custom_lastname_field, length: { maximum: 30 }
   validates :custom_logout_endpoint, length: { maximum: 80 }
   validates :validate_user_roles, length: { maximum: 40 }
-  validates :url_parameters, length: { maximum: 128 }, if: respond_to?(:url_parameters)
-  validates :button_text, length: { maximum: 40 }, if: respond_to?(:button_text)
+  validates :url_parameters, length: { maximum: 128 }
+  validates :button_text, length: { maximum: 40 }
 
   scope :sorted, -> { order(:position) }
 
