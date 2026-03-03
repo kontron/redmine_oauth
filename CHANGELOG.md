@@ -1,15 +1,20 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.0.4 *????-??-??*
+4.0.4 *2026-03-03*
 ------------------
+
+    Bugs fixing
+
+* New: #110 - oauth_providers table "site" column length is too short (40 chars)
+* Bug: #111 - Undefined method 'url_parameters' for an instance of OauthProvider
 
 4.0.3 *2026-02-24*
 ------------------
 
     Bugs fixing
 
-* Big: #109 - Redirect after login doesn't work
+* Bug: #109 - Redirect after login doesn't work
 
 4.0.2 *2026-02-18*
 ------------------
