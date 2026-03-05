@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
 # <https://www.gnu.org/licenses/>.
 
+# Provides utility methods to transform nested hashes into flat structures.
 module DataFlattener
   # Shared logic to avoid code repetition between Hash and Array refinements.
   module SharedMethods
@@ -37,7 +38,7 @@ module DataFlattener
     #
     # @raise [ArgumentError] If the separator is not a String.
     # @return [Hash] A single-level Hash of joined key-paths to values.
-    def flatten_data(separator: ".", parent_key: [], result: {})
+    def flatten_data(separator: '.', parent_key: [], result: {})
       DataFlattener.flatten_recursive(self, separator: separator, parent_key: parent_key, result: result)
     end
   end
@@ -45,7 +46,7 @@ module DataFlattener
   # The recursive engine. We use a class method to ensure recursion works
   # inside the refinement scope without a NoMethodError.
   def self.flatten_recursive(data, separator:, parent_key:, result:)
-    raise ArgumentError, "separator must be a String" unless separator.is_a?(String)
+    raise ArgumentError, 'separator must be a String' unless separator.is_a?(String)
 
     data ||= {}
     data.each_with_index.each do |(k, v), i|
