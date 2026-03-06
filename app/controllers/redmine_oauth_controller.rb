@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
 # <https://www.gnu.org/licenses/>.
 
+using DataFlattener
 require 'account_controller'
 require 'jwt'
 require 'securerandom'
@@ -206,7 +207,9 @@ class RedmineOauthController < AccountController
           oauth_provider.custom_profile_endpoint,
           headers: { 'Accept' => 'application/json' }
         )
-        user_info = JSON.parse(userinfo_response.body)
+        # flatten_data converts a complex hash into a flat one
+        # if the hash is already flat it does nothing.
+        user_info = JSON.parse(userinfo_response.body).flatten_data
       end
       user_info['login'] = user_info[oauth_provider.custom_uid_field]
       email = user_info[oauth_provider.custom_email_field]
