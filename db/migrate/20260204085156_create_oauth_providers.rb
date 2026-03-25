@@ -22,8 +22,8 @@ class CreateOauthProviders < ActiveRecord::Migration[7.2]
   def up
     create_table :oauth_providers do |t|
       t.string :oauth_name, null: false, default: 'none', limit: 30
-      t.string :site, null: false, limit: 40
-      t.string :client_id, null: false, limit: 60
+      t.string :site, null: false, limit: 256
+      t.string :client_id, null: false, limit: 255
       t.string :client_secret, null: false, limit: 128
       t.string :tenant_id, null: false, limit: 40
       t.string :custom_name, null: false, limit: 30
