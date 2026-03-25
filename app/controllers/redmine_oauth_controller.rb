@@ -333,6 +333,16 @@ class RedmineOauthController < AccountController
         register_automatically(user) do
           onthefly_creation_failed user
         end
+      when 4
+        if RedmineOauth.self_registration_domain_auto_activate?(email)
+          register_automatically(user) do
+            onthefly_creation_failed user
+          end
+        else
+          register_manually_by_administrator(user) do
+            onthefly_creation_failed user
+          end
+        end
       else
         register_manually_by_administrator(user) do
           onthefly_creation_failed user
