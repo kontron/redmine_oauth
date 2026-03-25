@@ -33,6 +33,7 @@ module RedmineOauth
         end
 
         return super if request.post? || cookies[:oauth_autologin].blank?
+
         redirect_to oauth_path(back_url: params[:back_url], oauth_provider: cookies[:oauth_autologin])
       end
 
