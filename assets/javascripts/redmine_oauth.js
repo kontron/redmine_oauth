@@ -153,3 +153,23 @@ function oauth_toggle_fieldset(el)
     fieldset.classList.toggle('oauth_collapsed');
     $('div#login-form').toggle();
 }
+
+function oauth_self_registration_changed() {
+    let sel = $("select[name='settings[self_registration]']");
+    if (!sel.length) {
+        return;
+    }
+    let domainsBlock = $("div#oauth_self_registration_domains_setting");
+    if (!domainsBlock.length) {
+        return;
+    }
+    if (sel.val() === '4') {
+        domainsBlock.show();
+    } else {
+        domainsBlock.hide();
+    }
+}
+
+$(function () {
+    oauth_self_registration_changed();
+});

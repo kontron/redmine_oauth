@@ -27,10 +27,21 @@
       [l(:label_disabled), '0'],
       [l(:label_registration_activation_by_email), '1'],
       [l(:label_registration_manual_activation), '2'],
-      [l(:label_registration_automatic_activation), '3']
+      [l(:label_registration_automatic_activation), '3'],
+      [l(:oauth_self_registration_by_domain), '4']
     ], RedmineOauth.self_registration), onchange: 'oauth_self_registration_changed();' %>
   <em class="info"><%= l(:label_default)%>: <%= l(:label_disabled) %></em>
 </p>
+<% domains_visible = RedmineOauth.self_registration == 4 %>
+<div id="oauth_self_registration_domains_setting" style="<%= domains_visible ? '' : 'display: none;' %>">
+  <p>
+    <label><%= l(:oauth_self_registration_domains) %></label>
+    <%= text_area_tag 'settings[self_registration_domains]',
+                      Setting.plugin_redmine_oauth['self_registration_domains'],
+                      rows: 3, cols: 60 %>
+    <em class="info"><%= l(:oauth_self_registration_domains_info) %></em>
+  </p>
+</div>
 <p>
   <label><%= l(:oauth_hide_login_form) %></label>
   <%= check_box_tag 'settings[hide_login_form]', '1', RedmineOauth.hide_login_form? %>
