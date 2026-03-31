@@ -36,6 +36,11 @@ de:
   oauth_custom_scope_info: "OAuth scope (Standard: 'openid profile email')."
   oauth_custom_uid_field_info: "UID-Feld (Standard: preferred_username)."
   oauth_custom_email_field_info: "E-Mail-Feld (Standard: email)."
+  oauth_self_registration_by_domain: Automatische Aktivierung nur für gelistete E-Mail-Domains
+  oauth_self_registration_domains: Erlaubte Domänen (komma-getrennt)
+  oauth_self_registration_domains_info: |
+    Benutzer, deren E-Mail-Adresse bei einer dieser Domains (oder einer Subdomain) liegt, werden automatisch aktiviert.
+    Alle anderen neuen Benutzer werden unter Genehmigung des Administrators erstellt. Beispiel: example.com, partner.org
   oauth_hide_login_form: Login-Formular ausblenden
   oauth_update_login: Login aktualizieren
   oauth_update_login_info: Aktualizieren Login des Benutzers nach einer erfolgreichen Anmeldung.

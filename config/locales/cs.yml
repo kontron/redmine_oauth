@@ -36,6 +36,11 @@ cs:
   oauth_custom_scope_info: "OAuth scope (výchozí: 'openid profile email')."
   oauth_custom_uid_field_info: "Pole UID (výchozí: preferred_username)."
   oauth_custom_email_field_info: "Pole e-mail (výchozí: email)."
+  oauth_self_registration_by_domain: Automatická aktivace pro vybrané domény
+  oauth_self_registration_domains: Povolené domény (oddělené čárkami)
+  oauth_self_registration_domains_info: |
+    Uživatélé s e-mailovou adresou z povolených domén jsou automaticky aktivováni.
+    Ostatní registrovaní uživatelé čekají na schválení administrátorem. Např.: example.com, partner.org
   oauth_hide_login_form: Skrýt přihlašovací formulář
   oauth_update_login: Aktualizovat přihlašovací jméno
   oauth_update_login_info: Aktualizovat přihlašovací jméno uživatele po úspěšném přihlášení.

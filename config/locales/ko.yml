@@ -36,6 +36,11 @@ ko:
   oauth_custom_profile_endpoint_info: 애플리케이션 프로필 엔드포인트.
   oauth_custom_scope_info: "OAuth 범위(기본값: 'openid profile email')."
   oauth_custom_uid_field_info: "UID 필드(기본값: preferred_username)."
+  oauth_self_registration_by_domain: Automatic activation for listed email domains only
+  oauth_self_registration_domains: Allowed domains (comma-separated)
+  oauth_self_registration_domains_info: |
+    Users whose email address is at one of these domains (or a subdomain) are activated automatically.
+    All other new users are created pending administrator approval. Example: example.com, partner.org
   oauth_custom_email_field_info: "이메일 필드(기본값: email)."
   oauth_hide_login_form: 로그인 폼 숨기기(접기)
   oauth_update_login: 로그인 갱신
