@@ -19,8 +19,6 @@
 
 # OauthProvider model class
 class OauthProvider < ApplicationRecord
-  attr_accessor :url_parameters, :button_text # For migration's sake (20260204085156_create_oauth_providers.rb)
-
   validates :oauth_name, presence: true
   validates :site, format: { without: /\.ru\b/ }, length: { maximum: 256 }
   validates :client_id, presence: true, length: { maximum: 256 }
