@@ -1,8 +1,15 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.0.5 *????-??-??*
+4.0.5 *2026-04-02*
 ------------------
+
+    Domain based self-registration
+
+* New: #112 - Add DataFlattener for nested data
+* Bug: #115 - Fix redirect loop when OAuth-only login is enabled
+* New: #116 - Add domain-based OAuth self-registration (auto-activate allowlist)
+* Bug: #118 - Cannot save "Alterative name" and "URL parameters"
 
 4.0.4 *2026-03-03*
 ------------------
