@@ -33,7 +33,7 @@ module RedmineOauth
     # Comma-separated domains for self_registration mode 4 (auto-activate if email domain matches).
     def self_registration_domains_list
       raw = Setting.plugin_redmine_oauth['self_registration_domains'].to_s
-      raw.split(',').map { |s| s.strip.downcase.delete_prefix('@') }.reject(&:blank?)
+      raw.split(',').map { |s| s.strip.downcase.delete_prefix('@') }.compact_blank
     end
 
     # True when email's domain exactly matches or is a subdomain of a listed domain.
