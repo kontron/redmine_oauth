@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.0.6 *????-??-??*
+4.0.6 *2026-04-08*
 ------------------
+
+    Bugs fixing
+
+* Bug: #120 - Undefined method 'url_parameters' for an instance of OauthProvider
 
 4.0.5 *2026-04-02*
 ------------------
