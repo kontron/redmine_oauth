@@ -20,9 +20,9 @@
 name: "GitHub CI"
 on:
   push:
-    branches: ["main"]
+    branches: ["devel"]
   pull_request:
-    branches: ["main"]
+    branches: ["devel"]
 jobs:
   plugin_tests:
     runs-on: ubuntu-latest
