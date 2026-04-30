@@ -69,16 +69,15 @@ class RedmineOauthController < AccountController
         code_challenge_method: 'S256'
       )
     when 'GitLab'
-      args = {
+      url = RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
         state: oauth_csrf_token,
         scope: 'read_user',
         code_challenge: code_challenge,
         code_challenge_method: 'S256'
-      }
-      args[hd: oauth_provider.hd] if oauth_provider.hd.present?
-      args[access_type: oauth_provider.access_type] if oauth_provider.access_type.present?
-      redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(args)
+      )
+      url << "&#{oauth_provider.url_parameters}" if oauth_provider.url_parameters.present?
+      redirect_to url
     when 'Google'
       url = RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
         redirect_uri: oauth_callback_url,
@@ -159,6 +158,13 @@ class RedmineOauthController < AccountController
       userinfo_response = token.get('/api/v4/user', headers: { 'Accept' => 'application/json' })
       user_info = JSON.parse(userinfo_response.body)
       user_info['login'] = user_info['username']
+      if oauth_provider.url_parameters =~ /hd=([^&]*)/
+        hd = Regexp.last_match(1)
+        if user_info['hd'].present? && (hd != '*') && user_info['hd'] != hd
+          raise StandardError, l(:error_invalid_hosted_domain)
+        end
+      end
+
       email = user_info['email']
     when 'Google'
       token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],

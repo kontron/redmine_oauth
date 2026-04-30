@@ -97,7 +97,7 @@ function oauth_settings_visibility() {
             div_oauth_options.find('#oauth_options_tenant').hide();
             div_oauth_options.find('#oauth_options_custom').hide();
             div_oauth_options.find('#oauth_option_version').hide();
-            div_oauth_options.find('#oauth_google_options').hide();
+            div_oauth_options.find('#oauth_google_options').show();
             break;
         case 'Google':
             div_oauth_options.show();
