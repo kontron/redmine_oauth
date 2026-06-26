@@ -48,75 +48,89 @@ class RedmineOauthController < AccountController
     case oauth_provider.oauth_name
     when 'Azure AD'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
-        redirect_uri: oauth_callback_url,
-        state: oauth_csrf_token,
-        scope: case oauth_provider.oauth_version
-               when 'v2.0'
-                 'openid profile email'
-               else
-                 'user:email'
-               end,
-        code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        max_age: params[:reauth] ? 0 : nil
+        {
+          redirect_uri: oauth_callback_url,
+          state: oauth_csrf_token,
+          scope: case oauth_provider.oauth_version
+                 when 'v2.0'
+                   'openid profile email'
+                 else
+                   'user:email'
+                 end,
+          code_challenge: code_challenge,
+          code_challenge_method: 'S256',
+          max_age: params[:reauth] ? 0 : nil
+        }.compact
       )
     when 'GitHub'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
-        redirect_uri: oauth_callback_url,
-        state: oauth_csrf_token,
-        scope: 'user:email',
-        code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        max_age: params[:reauth] ? 0 : nil
+        {
+          redirect_uri: oauth_callback_url,
+          state: oauth_csrf_token,
+          scope: 'user:email',
+          code_challenge: code_challenge,
+          code_challenge_method: 'S256',
+          max_age: params[:reauth] ? 0 : nil
+        }.compact
       )
     when 'GitLab'
       url = RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
-        redirect_uri: oauth_callback_url,
-        state: oauth_csrf_token,
-        scope: 'read_user',
-        code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        max_age: params[:reauth] ? 0 : nil
+        {
+          redirect_uri: oauth_callback_url,
+          state: oauth_csrf_token,
+          scope: 'read_user',
+          code_challenge: code_challenge,
+          code_challenge_method: 'S256',
+          max_age: params[:reauth] ? 0 : nil
+        }.compact
       )
       url << "&#{oauth_provider.url_parameters}" if oauth_provider.url_parameters.present?
       redirect_to url
     when 'Google'
       url = RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
-        redirect_uri: oauth_callback_url,
-        state: oauth_csrf_token,
-        scope: 'profile email',
-        code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        max_age: params[:reauth] ? 0 : nil
+        {
+          redirect_uri: oauth_callback_url,
+          state: oauth_csrf_token,
+          scope: 'profile email',
+          code_challenge: code_challenge,
+          code_challenge_method: 'S256',
+          max_age: params[:reauth] ? 0 : nil
+        }.compact
       )
       url << "&#{oauth_provider.url_parameters}" if oauth_provider.url_parameters.present?
       redirect_to url
     when 'Keycloak'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
-        redirect_uri: oauth_callback_url,
-        state: oauth_csrf_token,
-        scope: 'openid email',
-        code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        max_age: params[:reauth] ? 0 : nil
+        {
+          redirect_uri: oauth_callback_url,
+          state: oauth_csrf_token,
+          scope: 'openid email',
+          code_challenge: code_challenge,
+          code_challenge_method: 'S256',
+          max_age: params[:reauth] ? 0 : nil
+        }.compact
       )
     when 'Okta'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
-        redirect_uri: oauth_callback_url,
-        state: oauth_csrf_token,
-        scope: 'openid profile email',
-        code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        max_age: params[:reauth] ? 0 : nil
+        {
+          redirect_uri: oauth_callback_url,
+          state: oauth_csrf_token,
+          scope: 'openid profile email',
+          code_challenge: code_challenge,
+          code_challenge_method: 'S256',
+          max_age: params[:reauth] ? 0 : nil
+        }.compact
       )
     when 'Custom'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
-        redirect_uri: oauth_callback_url,
-        state: oauth_csrf_token,
-        scope: oauth_provider.custom_scope,
-        code_challenge: code_challenge,
-        code_challenge_method: 'S256',
-        max_age: params[:reauth] ? 0 : nil
+        {
+          redirect_uri: oauth_callback_url,
+          state: oauth_csrf_token,
+          scope: oauth_provider.custom_scope,
+          code_challenge: code_challenge,
+          code_challenge_method: 'S256',
+          max_age: params[:reauth] ? 0 : nil
+        }.compact
       )
     else
       flash['error'] = l(:oauth_invalid_provider)
