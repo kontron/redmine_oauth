@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.1.0 *????-??-??*
+4.1.0 *2026-06-26*
 ------------------
+
+    Bug fixing
+
+* Bug: #132 - Avoid max_age empty parameter on authorize_url
 
 4.0.9 *2026-06-23*
 ------------------
