@@ -21,7 +21,7 @@
 class OauthProvidersController < ApplicationController
   layout 'admin'
 
-  model_object OauthProvider
+  self.model_object = OauthProvider
   menu_item :oauth_provides
   self.main_menu = false
 
