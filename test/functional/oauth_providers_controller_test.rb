@@ -22,6 +22,7 @@ require File.expand_path('../../integration_test', __FILE__)
 # OauthProvidersController class test
 class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
   include Redmine::I18n
+
   def setup
     super
     @keylock_provider = OauthProvider.find(1)
