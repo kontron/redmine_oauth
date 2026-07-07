@@ -1,8 +1,14 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.1.1 *????-??-??*
+4.2.0 *2026-07-07*
 ------------------
+
+    Redmine 7.0 compatibility
+
+* New: #135 - Support for Redmine 7
+* New: #134 - Fix boot crash on Redmine 7.0 / Rails 8: assign model_object instead of using removed DSL
+* New: #133 - OauthProvidersController crashes app on boot with Redmine 7.0 / Rails 8 (removed model_object DSL)
 
 4.1.0 *2026-06-26*
 ------------------
