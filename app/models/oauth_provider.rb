@@ -30,7 +30,7 @@ class OauthProvider < ApplicationRecord
   validates :custom_token_endpoint, length: { maximum: 256 }
   validates :custom_token_endpoint, presence: true, if: proc { |p| p.custom_name == 'Custom' }
   validates :custom_profile_endpoint, length: { maximum: 256 }
-  validates :custom_scope, length: { maximum: 40 }
+  validates :custom_scope, length: { maximum: 256 }
   validates :custom_uid_field, length: { maximum: 40 }
   validates :custom_email_field, length: { maximum: 40 }
   validates :custom_firstname_field, length: { maximum: 30 }
