@@ -25,6 +25,8 @@ module RedmineOauth
       # Overridden methods
 
       def login
+        return super if request.get? && params.include?(:nosaml)
+
         # If cookie is blank and we are in "OAuth Only" mode,
         # force the first provider instead of falling through to the standard login box
         if cookies[:oauth_autologin].blank? && RedmineOauth.oauth_only_login?

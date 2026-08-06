@@ -26,6 +26,11 @@ class AccountControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_redirected_to oauth_path(oauth_provider: 1)
   end
 
+  def test_login_oauth_nosaml
+    get '/login?nosaml', headers: { 'HTTP_COOKIE' => 'oauth_autologin=1;' }
+    assert_response :success
+  end
+
   def test_login
     get '/login'
     assert_response :success

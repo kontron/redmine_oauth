@@ -67,6 +67,7 @@ ko:
   oauth_only_login: OAuth 전용 로그인
   oauth_only_login_info: |
     활성화되면, 사용자는 표준 로그인 페이지를 완전히 건너뛰고 바로 OAuth 제공자로 리디렉션됩니다.
+    Though, you can force the standard login page by adding 'nosaml' parameter into the login URL, e.g. '/login?nosaml'.
   identify_user_by_info: Redmine에서 사용자를 식별하기 위한 제공자의 필드
 
   label_oauth_provider: OAuth provider

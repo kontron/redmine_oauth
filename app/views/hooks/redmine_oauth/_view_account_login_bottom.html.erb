@@ -75,7 +75,7 @@
     login_form.toggle();
   <% end %>
 
-  <% if RedmineOauth.oauth_only_login? %>
+  <% if RedmineOauth.oauth_only_login? && params.exclude?(:nosaml)%>
     document.getElementById('oauth-login').submit();
   <% end %>
 <% end %>
