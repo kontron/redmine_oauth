@@ -66,7 +66,7 @@ cs:
   oauth_only_login_info: |
     Pokud je tato volba zapnuta, uživatelé jsou automaticky přesměrováni na přihlášení pomocí OAuth bez možnosti 
     přihlášení standardním přihlašovacím formulářem. Přesto lze vynutit zobrazení standardní přihlašovací stránky 
-    přídáním parametru 'nosaml' přihlašovací URL, např. '/login?nosaml'.
+    přídáním parametru 'nosso' přihlašovací URL, např. '/login?nosso'.
   identify_user_by_info: Pole poskytovatele k identifikaci uživatele v Redminu
 
   label_oauth_provider: Poskytovatel OAuth

@@ -65,7 +65,7 @@ es:
   oauth_only_login: OAuth-only login
   oauth_only_login_info: |
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
-    Though, you can force the standard login page by adding 'nosaml' parameter into the login URL, e.g. '/login?nosaml'.
+    Though, you can force the standard login page by adding 'nosso' parameter into the login URL, e.g. '/login?nosso'.
   identify_user_by_info: Provider's field to identify the user in Redmine
 
   label_oauth_provider: OAuth provider
