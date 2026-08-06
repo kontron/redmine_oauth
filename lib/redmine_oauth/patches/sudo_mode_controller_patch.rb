@@ -19,9 +19,12 @@
 
 module RedmineOauth
   module Patches
-    # AccountController patch
+    # SudoModeController patch
     module SudoModeControllerPatch
       def require_sudo_mode(*param_names)
+        # Skip the sudo mode during an AJAX call
+        return true if request.xhr?
+
         return true if Redmine::SudoMode.active?
 
         if session.delete(:oauth_sudo_mode_ok)
