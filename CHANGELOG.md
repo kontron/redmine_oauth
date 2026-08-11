@@ -1,8 +1,17 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.2.1 *????-??-??*
+4.2.1 *2026-08-11*
 ------------------
+
+    Hiden access to the login page
+    French localisation update
+
+* New: #140 - Update french locale
+* New: #139 - Hidden access to login page
+* New: #138 - Increase size of custom provider Scope to 256 characters
+* New: #137 - Increase scope length for Custom provider
+* Bug: #95 - OAuth users cannot confirm password for sensitive actions (Administration, settings, etc.)
 
 4.2.0 *2026-07-07*
 ------------------
