@@ -7,8 +7,8 @@ Changelog for Redmine OAuth
 4.2.1 *2026-08-11*
 ------------------
 
-    Hiden access to the login page
-    French localisation update
+    Hidden access to the login page
+    French localization update
 
 * New: #140 - Update french locale
 * New: #139 - Hidden access to login page
