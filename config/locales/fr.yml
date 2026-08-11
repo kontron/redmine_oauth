@@ -29,72 +29,72 @@ fr:
   oauth_client_secret_info: Mot de passe d'application.
   oauth_tenant_id_info: ID de répertoire (tenant).
   oauth_button_info: Couleur, texte et icône (classe Font Awesome) du bouton de connexion via OAuth.
-  oauth_custom_name_info: Title to be shown on the OAuth login button.
+  oauth_custom_name_info: Intitulé à faire figurer sur le bouton de connexion OAuth.
   oauth_custom_auth_endpoint_info: Application Auth endpoint.
   oauth_custom_token_endpoint_info: Application Token endpoint.
   oauth_custom_profile_endpoint_info: Application Profile endpoint.
-  oauth_custom_scope_info: OAuth scope (default - 'openid profile email').
-  oauth_custom_uid_field_info: UID field (default - preferred_username).
-  oauth_custom_email_field_info: Email field (default - email).
-  oauth_self_registration_by_domain: Automatic activation for listed email domains only
-  oauth_self_registration_domains: Allowed domains (comma-separated)
+  oauth_custom_scope_info: OAuth scope (par défaut - 'openid profile email').
+  oauth_custom_uid_field_info: Champ UID (par défaut - preferred_username).
+  oauth_custom_email_field_info: Champ Email (default - email).
+  oauth_self_registration_by_domain: Activation automatique pour les domaines email listés uniquement.
+  oauth_self_registration_domains: Domaines autorisés (séparés par des virgules)
   oauth_self_registration_domains_info: |
-    Users whose email address is at one of these domains (or a subdomain) are activated automatically.
-    All other new users are created pending administrator approval. Example: example.com, partner.org
-  oauth_hide_login_form: Hide login form
-  oauth_update_login_info: Update the user's profile after a successful login.
-  oauth_logout: OAuth logout
-  oauth_logout_info: Log out from the OAuth provider too after Redmine logout.
-  oauth_login: OAuth login
-  oauth_login_info: Allow users to log in automatically via OAuth provider skipping the login form.
+    Les utilisateur·trices dont l'email provient de l'un de ces (sous-)domaines sont activés automatiquement.
+    Tous les autres nouveaux·elles utilisateur·trices sont créés en attente d'approbation par un·e administrateur·trice. Exemple: exemple.com, partenaire.org
+  oauth_hide_login_form: Masquer le formulaire de connexion
+  oauth_update_login_info: Mettre à jour le profil de l'utilisateur·trice après une connexion réussie.
+  oauth_logout: Déconnexion OAuth
+  oauth_logout_info: Déconnecter le compte auprès du fournisseur OAuth après une déconnexion de Redmine.
+  oauth_login: Connexion OAuth
+  oauth_login_info: Autoriser les utilisateur·trices à se connecter automatiquement via le fournisseur Oauth, esquivant le formulaire de connexion.
   oauth_custom_logout_endpoint_info: Application Logout endpoint.
-  oauth_validate_user_roles_info: "A key, where user roles are present in the token. If set, 'user' role grants access, 
-    'admin' grants admin rights. If 'user' role is not present, access is denied. If 'admin' role is missing, admin 
-    rights are revoked. E.g.: Enter 'resource_access.redmine.roles', if you have your token set as follows:
+  oauth_validate_user_roles_info: "Une clé du jeton qui stocke les rôles utilisateur·trice. Si présent, le rôle 'user' attribue le droit d'accès, 
+    le rôle 'admin' attribue les droits d'admin. Si le rôle 'user' n'est pas présent, l'accès est refusé. Si le rôle 'admin' est manquant, les droits 
+    d'administration sont révoqués. Ex.: Renseigner 'resource_access.redmine.roles', si votre jeton contient la structure suivante :
     'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
-  oauth_autologin: Autologin with OAuth
+  oauth_autologin: Connexion automatique avec OAuth
   oauth_version_info: Endpoint version
   oauth_enable_group_roles_info: |
-    When enabled, any additional roles outside the default ones (admin, user) are mapped to a group of the same name.
-    Meaning, if you create a group called 'developer' and your user has a role called 'developer', the user will be
-    added to that group.
+    Lorsqu'activé, tout rôle additionnel aux rôles par défaut (admin, user) sera traduit en un groupe du même nom.
+    Ainsi, si vous créez un groupe nommé 'developer' et que votre utilisateur·trice possède un rôle nommé 'developer',
+    iel sera ajouté·e à ce groupe.
 
-    Users will be removed from any group that is not part of their roles if this option is enabled, meaning if you
-    manually add a user to the 'developer' group but they don't have the role in your identity provider, the user
-    will be removed from that group.
-  oauth_only_login: OAuth-only login
+    Les utilisateur·trices seront retirés de tout groupe qui ne fait pas partie de leurs rôles si cette option est activée.
+    Ainsi, si vous avez manuellement ajouté un·e utilisateur·trice au groupe 'developer' mais qu'iel ne possède pas ce rôle
+    dans le fournisseur d'identité, alors iel sera retiré·e de ce groupe.
+  oauth_only_login: Connexion avec OAuth uniquement
   oauth_only_login_info: |
-    When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
-    Though, you can force the standard login page by adding 'nosso' parameter into the login URL, e.g. '/login?nosso'.
-  identify_user_by: Identify user by
-  identify_user_by_info: Provider's field to identify the user in Redmine
+    Si activé, les utilisateur·trices seront redirigé immédiatement vers le fournisseur OAuth, esquivant complètement la page de connexion habituelle.
+    Cependant, vous pouvez forcer l'accès à la page de connexion usuelle en ajoutant le paramètre `nosso` dans l'URL, ex. '/login?nosso'.
+  identify_user_by: Identifier l'utilisateur·trice par
+  identify_user_by_info: Le champ du fournisseur à utiliser pour identifier l'utilisateur·trice dans Redmine
 
-  label_oauth_provider: OAuth provider
-  label_oauth_providers: OAuth providers
-  label_new_oauth_provider: New OAuth provider
-  oauth_imap_info: Enable this provider for IMAP
-  oauth_url_parameters_info: "Additional parameters for authorization URL, e.g.: 'hd=kontron.com&access_type=offline'"
-  error_invalid_hosted_domain: Hosted domain is not allowed.
-  field_url_parameters: URL parameters
+  label_oauth_provider: Fournisseur OAuth
+  label_oauth_providers: Fournisseurs OAuth
+  label_new_oauth_provider: Nouveau fournisseur OAuth
+  oauth_imap_info: Activer ce fournisseur pour IMAP
+  oauth_url_parameters_info: "Paramètres additionnels pour l'URL d'autorisation, ex.: 'hd=kontron.com&access_type=offline'"
+  error_invalid_hosted_domain: Domaine hébergé non autorisé.
+  field_url_parameters: Paramètres d'URL
   field_oauth_name: Fournisseur
   field_button_color: Bouton de connexion
   field_site: Site
   field_client_id: ID client
   field_client_secret: Secret client
   field_tenant_id: ID de Tenant / Realm
-  field_custom_firstname_field: First name field
-  field_custom_lasttname_field: Last name field
-  field_validate_user_roles: Validate user roles
-  field_enable_group_roles: Enable group roles
-  field_identify_user_by: Identify user by
+  field_custom_firstname_field: Champ pour le prénom
+  field_custom_lasttname_field: Champ pour le nom
+  field_validate_user_roles: Valider les rôles utilisateur·trice
+  field_enable_group_roles: Activer les groupes à partir des rôles
+  field_identify_user_by: Identifier l'utilisateur·trice par
   field_imap: IMAP
   field_custom_auth_endpoint: OAuth endpoint
   field_custom_token_endpoint: Token endpoint
   field_custom_profile_endpoint: Profile endpoint
   field_custom_logout_endpoint: Logout endpoint
-  field_custom_scope: Custom scope
-  field_custom_uid_field: UID field
-  field_custom_email_field: Email field
-  oauth_button_text_info: Alternative text for the button (HTML formatting)
-  oauth_button_color_info: Button's colour
-  oauth_button_icon_info: Button's icon
+  field_custom_scope: Scope personnalisé
+  field_custom_uid_field: Champ UID
+  field_custom_email_field: Champ email
+  oauth_button_text_info: Texte alternatif pour le bouton (format HTML)
+  oauth_button_color_info: Couleur du bouton
+  oauth_button_icon_info: Icône du bouton
