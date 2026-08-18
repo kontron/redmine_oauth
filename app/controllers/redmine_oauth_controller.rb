@@ -406,14 +406,14 @@ class RedmineOauthController < AccountController
   # Get the first name from for OAuth data
   def self.get_firstname(info, oauth_provider)
     firstname = info[oauth_provider.custom_firstname_field]
-    firstname, = info['name'].split if info['name'].present? && firstname.blank?
+    firstname, = info['name'].split(' ', 2) if info['name'].present? && firstname.blank?
     firstname
   end
 
   # Get the last name from for OAuth data
   def self.get_lastname(info, oauth_provider)
     lastname = info[oauth_provider.custom_lastname_field]
-    _, lastname = info['name'].split if info['name'].present? && lastname.blank?
+    _, lastname = info['name'].split(' ', 2) if info['name'].present? && lastname.blank?
     lastname ||= ''
     lastname
   end

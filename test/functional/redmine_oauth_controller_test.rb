@@ -96,6 +96,10 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
       'name' => 'John Smith'
     }
     assert_equal 'John', RedmineOauthController.get_firstname(info, @oauth_provider)
+    info = {
+      'name' => 'Jan de Jong'
+    }
+    assert_equal 'Jan', RedmineOauthController.get_firstname(info, @oauth_provider)
   end
 
   def test_get_lastname
@@ -103,5 +107,9 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
       'name' => 'John Smith'
     }
     assert_equal 'Smith', RedmineOauthController.get_lastname(info, @oauth_provider)
+    info = {
+      'name' => 'Jan de Jong'
+    }
+    assert_equal 'de Jong', RedmineOauthController.get_lastname(info, @oauth_provider)
   end
 end
