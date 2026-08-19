@@ -1,8 +1,12 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.2.2 *????-??-??*
+4.2.2 *2026-08-19*
 ------------------
+
+    Bug fixing
+
+* Bug: #141 - Azure AD truncates last_name field
 
 4.2.1 *2026-08-11*
 ------------------
