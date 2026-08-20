@@ -274,6 +274,7 @@ class RedmineOauthController < AccountController
     session[:oauth_login] = oauth_provider.id
   rescue StandardError => e
     Rails.logger.error e.message
+    Rails.logger.error("Locked account of #{email}") if email.present?
     flash['error'] = e.message
     cookies.delete :oauth_autologin
     redirect_to signin_path
