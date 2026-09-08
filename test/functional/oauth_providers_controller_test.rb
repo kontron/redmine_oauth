@@ -184,6 +184,36 @@ def test_update_failed
   assert_select '#errorExplanation', { text: 'Custom name has already been taken' }
 end
 
+def test_update_disabling_button_color
+  post '/login', params: { username: 'admin', password: 'admin' }
+  patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: {
+    oauth_name: 'Keycloak',
+    site: 'https://example.com/sso',
+    client_id: 'example-client',
+    client_secret: 'florp-burp-durk',
+    tenant_id: 'redmine',
+    custom_name: 'Keycloak',
+    custom_auth_endpoint: '',
+    custom_token_endpoint: '',
+    custom_profile_endpoint: '',
+    custom_scope: '',
+    custom_uid_field: '',
+    custom_email_field: '',
+    button_color: '#ffbe6f',
+    button_color_enabled: '0',
+    button_icon: 'far fa-address-card',
+    custom_firstname_field: '',
+    custom_lastname_field: '',
+    custom_logout_endpoint: '',
+    validate_user_roles: '',
+    enable_group_roles: false,
+    oauth_version: '2.0',
+    identify_user_by: '',
+    imap: false
+  } }
+  assert_equal '', @keylock_provider.reload.button_color
+end
+
 def test_destroy
   post '/login', params: { username: 'admin', password: 'admin' }
   assert_difference 'OauthProvider.count', -1 do

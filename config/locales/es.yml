@@ -29,6 +29,8 @@ es:
   oauth_client_secret_info: Contraseña de la aplicación
   oauth_tenant_id_info: Directorio (tenant) ID
   oauth_button_info: Color, texto e icono (Awesome font class) del botón de login OAuth
+  oauth_button_color_enabled: Color personalizado
+  oauth_button_color_enabled_info: Permitir la personalización del color del botón.
   oauth_custom_name_info: Título que se mostrará en el botón de inicio de sesión de OAuth
   oauth_custom_auth_endpoint_info: Application Auth endpoint
   oauth_custom_token_endpoint_info: Application Token endpoint

@@ -41,6 +41,10 @@
     </p>
     <div id="oauth_options" class="<%= (@oauth_provider.oauth_name == 'none') ? 'oauth_hidden' : '' %>">
       <p>
+        <%= f.check_box :button_color_enabled, onchange: 'oauth_set_color_enabled()', label: l(:oauth_button_color_enabled),
+            title: l(:oauth_button_color_enabled_info) %>
+      </p>
+      <p>
         <span>
           <%= f.color_field :button_color, value: @oauth_provider.button_color, title: l(:oauth_button_color_info),
                             onchange: 'oauth_set_color()' %>
@@ -53,9 +57,8 @@
           %>
           <%= f.select :button_icon, options_for_select(icons, @oauth_provider.button_icon), { label: '' },
                        title: l(:oauth_button_icon_info), onchange: 'oauth_set_icon()' %>
-          <% style = "background: #{@oauth_provider.button_color};" %>
-          <%= button_tag(name: 'login-oauth', id: 'login-oauth-button', title: l(:oauth_login_with), style: style,
-                         disabled: true) do %>
+          <% style = "background-color: #{@oauth_provider.button_color};" %>
+          <%= button_tag(name: 'login-oauth', id: 'login-oauth-button', title: l(:oauth_login_with), style: style, type: "button") do %>
             <i id="button_icon" class="<%= @oauth_provider.button_icon %>"></i>
             <% if @oauth_provider.button_text.present? %>
               <%= raw(@oauth_provider.button_text) %>

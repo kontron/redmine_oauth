@@ -19,6 +19,10 @@
 
 # OauthProvider model class
 class OauthProvider < ApplicationRecord
+  include ActiveModel::Attributes
+
+  attribute :button_color_enabled, :boolean
+
   validates :oauth_name, presence: true
   validates :site, format: { without: /\.ru\b/ }, length: { maximum: 256 }
   validates :client_id, presence: true, length: { maximum: 256 }
@@ -42,6 +46,11 @@ class OauthProvider < ApplicationRecord
 
   scope :sorted, -> { order(:position) }
 
+  def button_color_enabled
+    self[:button_color_enabled] = button_color.present? if self[:button_color_enabled].nil?
+    self[:button_color_enabled]
+  end
+
   def update_from_parameters(params)
     self.oauth_name = params['oauth_name']
     self.site = params['site']
@@ -55,7 +64,8 @@ class OauthProvider < ApplicationRecord
     self.custom_scope = params['custom_scope']
     self.custom_uid_field = params['custom_uid_field']
     self.custom_email_field = params['custom_email_field']
-    self.button_color = params['button_color']
+    self.button_color_enabled = params['button_color_enabled']
+    self.button_color = button_color_enabled ? params['button_color'] : ''
     self.button_icon = params['button_icon']
     self.custom_firstname_field = params['custom_firstname_field']
     self.custom_lastname_field = params['custom_lastname_field']
