@@ -52,6 +52,15 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert cookies[:redmine_oauth_request_state].present?
   end
 
+  def test_oauth_callback_accepts_state_from_request_cookie
+    get "/oauth?oauth_provider=#{@keylock_provider.id}"
+    state = URI.decode_www_form(URI.parse(response.location).query).to_h.fetch('state')
+
+    get "/oauth2callback?state=#{state}&code=unused"
+
+    assert_response :found
+  end
+
   def test_oauth_callback_csrf
     get '/oauth2callback'
     assert_response :unprocessable_content

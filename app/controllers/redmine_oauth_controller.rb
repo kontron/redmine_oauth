@@ -165,11 +165,11 @@ class RedmineOauthController < AccountController
     end
 
     # Retrieve the PKCE code verifier from the OAuth request state.
-    code_verifier = request_state['code_verifier']
+    code_verifier = request_state[:code_verifier]
     clear_oauth_request_state
 
     # Provider
-    oauth_provider = OauthProvider.find(request_state['oauth_provider'])
+    oauth_provider = OauthProvider.find(request_state[:oauth_provider])
 
     # Login
     case oauth_provider.oauth_name
@@ -309,9 +309,9 @@ class RedmineOauthController < AccountController
   end
 
   def set_params(oauth_request_state)
-    params['back_url'] = oauth_request_state['back_url']
-    params['autologin'] = oauth_request_state['autologin']
-    params['oauth_autologin'] = oauth_request_state['oauth_autologin']
+    params['back_url'] = oauth_request_state[:back_url]
+    params['autologin'] = oauth_request_state[:autologin]
+    params['oauth_autologin'] = oauth_request_state[:oauth_autologin]
   end
 
   def try_to_login(email, info, role_names, oauth_provider)
@@ -394,7 +394,7 @@ class RedmineOauthController < AccountController
   end
 
   def verify_csrf_token
-    if params[:state].blank? || (params[:state] != oauth_request_state['csrf_token'])
+    if params[:state].blank? || (params[:state] != oauth_request_state[:csrf_token])
       clear_oauth_request_state
       render_error status: 422, message: l(:error_invalid_authenticity_token)
     end
