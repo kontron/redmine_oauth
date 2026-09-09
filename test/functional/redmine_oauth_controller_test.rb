@@ -42,6 +42,16 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_redirected_to(%r{^https://example\.com/sso/realms/redmine/protocol/})
   end
 
+  def test_oauth_keeps_transient_state_out_of_session
+    get "/oauth?oauth_provider=#{@keylock_provider.id}&back_url=/my/account"
+
+    assert_nil session[:oauth_provider]
+    assert_nil session[:back_url]
+    assert_nil session[:oauth_csrf_token]
+    assert_nil session[:code_verifier]
+    assert cookies[:redmine_oauth_request_state].present?
+  end
+
   def test_oauth_callback_csrf
     get '/oauth2callback'
     assert_response :unprocessable_content
