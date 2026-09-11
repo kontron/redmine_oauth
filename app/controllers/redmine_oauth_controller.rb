@@ -28,19 +28,23 @@ require 'digest'
 class RedmineOauthController < AccountController
   before_action :verify_csrf_token, only: [:oauth_callback]
 
+  OAUTH_REQUEST_STATE_COOKIE = :redmine_oauth_request_state
+
   def oauth
-    # Session
-    session[:oauth_provider] = params[:oauth_provider]
-    session[:back_url] = params[:back_url]
-    session[:autologin] = params[:autologin]
-    session[:oauth_autologin] = params[:oauth_provider] if params[:oauth_autologin]
     oauth_csrf_token = generate_csrf_token
-    session[:oauth_csrf_token] = oauth_csrf_token
     # params - back_url, _method, commit, oauth_provider, controller, action
     # Generate PKCE code_verifier and code_challenge
     code_verifier = generate_code_verifier
-    session[:code_verifier] = code_verifier
     code_challenge = generate_code_challenge(code_verifier)
+    oauth_request_state = {
+      oauth_provider: params[:oauth_provider],
+      back_url: params[:back_url],
+      autologin: params[:autologin],
+      csrf_token: oauth_csrf_token,
+      code_verifier: code_verifier
+    }
+    oauth_request_state[:oauth_autologin] = params[:oauth_provider] if params[:oauth_autologin]
+    store_oauth_request_state oauth_request_state
     # OAuth provider
     oauth_provider = OauthProvider.find(params[:oauth_provider])
 
@@ -139,28 +143,33 @@ class RedmineOauthController < AccountController
   rescue StandardError => e
     Rails.logger.error e.message
     flash['error'] = e.message
+    clear_oauth_request_state
     cookies.delete :oauth_autologin
     redirect_to signin_path
   end
 
   def oauth_callback
+    request_state = oauth_request_state
+
     if params['error'].present?
       Rails.logger.error params['error_description']
       raise StandardError, l(:notice_account_invalid_credentials)
     end
 
     if session.key?(:oauth_sudo_mode) && User.current.logged?
+      clear_oauth_request_state
       oauth_sudo_mode = session.delete(:oauth_sudo_mode)
       session[:oauth_sudo_mode_ok] = true
       repost oauth_sudo_mode[:back_url], params: oauth_sudo_mode[:params], options: oauth_sudo_mode[:options]
       return
     end
 
-    # Retrieve the PKCE code_verifier from the session
-    code_verifier = session.delete(:code_verifier)
+    # Retrieve the PKCE code verifier from the OAuth request state.
+    code_verifier = request_state[:code_verifier]
+    clear_oauth_request_state
 
     # Provider
-    oauth_provider = OauthProvider.find(session[:oauth_provider])
+    oauth_provider = OauthProvider.find(request_state[:oauth_provider])
 
     # Login
     case oauth_provider.oauth_name
@@ -269,7 +278,7 @@ class RedmineOauthController < AccountController
     end
 
     # Try to log in
-    set_params
+    apply_request_state request_state
     try_to_login email, user_info, non_default_roles, oauth_provider
     session[:oauth_login] = oauth_provider.id
   rescue StandardError => e
@@ -300,13 +309,10 @@ class RedmineOauthController < AccountController
     Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete '='
   end
 
-  def set_params
-    params['back_url'] = session[:back_url]
-    session.delete :back_url
-    params['autologin'] = session[:autologin]
-    session.delete :autologin
-    params['oauth_autologin'] = session[:oauth_autologin]
-    session.delete :oauth_autologin
+  def apply_request_state(oauth_request_state)
+    params['back_url'] = oauth_request_state[:back_url]
+    params['autologin'] = oauth_request_state[:autologin]
+    params['oauth_autologin'] = oauth_request_state[:oauth_autologin]
   end
 
   def try_to_login(email, info, role_names, oauth_provider)
@@ -389,10 +395,29 @@ class RedmineOauthController < AccountController
   end
 
   def verify_csrf_token
-    if params[:state].blank? || (params[:state] != session[:oauth_csrf_token])
-      render_error status: 422, message: l(:error_invalid_authenticity_token)
-    end
-    session.delete(:oauth_csrf_token) unless session.key?(:oauth_sudo_mode)
+    return unless params[:state].blank? || (params[:state] != oauth_request_state[:csrf_token])
+
+    clear_oauth_request_state
+    render_error status: 422, message: l(:error_invalid_authenticity_token)
+  end
+
+  def oauth_request_state
+    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] || {}
+  end
+
+  def store_oauth_request_state(state)
+    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] = {
+      value: state,
+      path: RedmineApp::Application.config.relative_url_root || '/',
+      same_site: :lax,
+      secure: Setting.protocol == 'https',
+      httponly: true
+    }
+  end
+
+  def clear_oauth_request_state
+    cookies.delete OAUTH_REQUEST_STATE_COOKIE,
+                   path: RedmineApp::Application.config.relative_url_root || '/'
   end
 
   # Update user's profile with data from OAuth provider
