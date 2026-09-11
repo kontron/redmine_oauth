@@ -278,7 +278,7 @@ class RedmineOauthController < AccountController
     end
 
     # Try to log in
-    set_params request_state
+    apply_request_state request_state
     try_to_login email, user_info, non_default_roles, oauth_provider
     session[:oauth_login] = oauth_provider.id
   rescue StandardError => e
@@ -308,7 +308,7 @@ class RedmineOauthController < AccountController
     Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete '='
   end
 
-  def set_params(oauth_request_state)
+  def apply_request_state(oauth_request_state)
     params['back_url'] = oauth_request_state[:back_url]
     params['autologin'] = oauth_request_state[:autologin]
     params['oauth_autologin'] = oauth_request_state[:oauth_autologin]
@@ -394,10 +394,10 @@ class RedmineOauthController < AccountController
   end
 
   def verify_csrf_token
-    if params[:state].blank? || (params[:state] != oauth_request_state[:csrf_token])
-      clear_oauth_request_state
-      render_error status: 422, message: l(:error_invalid_authenticity_token)
-    end
+    return unless params[:state].blank? || (params[:state] != oauth_request_state[:csrf_token])
+
+    clear_oauth_request_state
+    render_error status: 422, message: l(:error_invalid_authenticity_token)
   end
 
   def oauth_request_state
