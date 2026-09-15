@@ -55,6 +55,7 @@ class OauthProvider < ApplicationRecord
     self.custom_scope = params['custom_scope']
     self.custom_uid_field = params['custom_uid_field']
     self.custom_email_field = params['custom_email_field']
+    self.button_color_enabled = params['button_color_enabled'] || true
     self.button_color = params['button_color']
     self.button_icon = params['button_icon']
     self.custom_firstname_field = params['custom_firstname_field']

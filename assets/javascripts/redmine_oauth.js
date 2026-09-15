@@ -21,6 +21,18 @@ function oauth_set_color()
 {
     let color = $("input#oauth_provider_button_color").val();
     $("#login-oauth-button").css({ backgroundColor: color });
+    $("input#oauth_provider_button_color_enabled").prop("checked", true);
+}
+
+function oauth_set_color_enabled()
+{
+    let color_enabled = $("input#oauth_provider_button_color_enabled").prop("checked")
+    let color = $("input#oauth_provider_button_color").val();
+    if (!color_enabled) {
+      $("#login-oauth-button").css({ backgroundColor: "" });
+    } else {
+      $("#login-oauth-button").css({ backgroundColor: color });
+    }
 }
 
 function oauth_set_icon()
