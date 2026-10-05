@@ -1,8 +1,13 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.2.3 *????-??-??*
+4.2.3 *2026-10-05*
 ------------------
+    
+    Login button's custom style
+
+* New: #144 - OAuth request state can overflow cookie-backed session
+* New: #143 - Add checkbox to disable custom button color
 
 4.2.2 *2026-08-19*
 ------------------
