@@ -333,6 +333,10 @@ class RedmineOauthController < AccountController
       if user.registered? # Registered
         account_pending user
       elsif user.active? # Active
+        # Keep existing administrator accounts local unless explicitly migrated.
+        if RedmineOauth.disable_local_passwords? && !user.admin?
+          AuthSourceOauth.bind!(user)
+        end
         handle_active_user user
         user.update_last_login_on!
         RedmineOauthController.update_user user, login, email, firstname, lastname
@@ -351,7 +355,11 @@ class RedmineOauthController < AccountController
       user.lastname = lastname
       user.mail = email
       user.login = login
-      user.random_password
+      if RedmineOauth.disable_local_passwords?
+        AuthSourceOauth.bind!(user)
+      else
+        user.random_password
+      end
       user.register
       case RedmineOauth.self_registration
       when 1

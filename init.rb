@@ -31,6 +31,7 @@ Redmine::Plugin.register :redmine_oauth do
   requires_redmine version_or_higher: '6.0.0'
 
   settings default: {
+    disable_local_passwords: '0',
     hide_login_form: '0',
     self_registration: '0',
     self_registration_domains: '',

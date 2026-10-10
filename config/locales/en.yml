@@ -99,3 +99,6 @@ en:
   oauth_button_text_info: Alternative text for the login button (HTML formatting)
   oauth_button_color_info: Button's colour
   oauth_button_icon_info: Button's icon
+
+  oauth_disable_local_passwords: "Disable local passwords for OAuth users"
+  oauth_disable_local_passwords_info: "Converts non-administrator accounts at their next OAuth login and new OAuth accounts to SSO authentication. Existing passwords and recovery/session tokens are removed. Administrators require explicit migration. Disabling this option does not restore migrated accounts."

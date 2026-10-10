@@ -21,6 +21,11 @@
 module RedmineOauth
   # Settings
   class << self
+    def disable_local_passwords?
+      value = Setting.plugin_redmine_oauth['disable_local_passwords']
+      value.to_i.positive? || value == 'true'
+    end
+
     def hide_login_form?
       value = Setting.plugin_redmine_oauth['hide_login_form']
       value.to_i.positive? || value == 'true'
@@ -94,3 +99,5 @@ require File.expand_path('redmine_oauth/hooks/views/login_view_hooks', __dir__)
 require File.expand_path('redmine_oauth/patches/settings_controller_patch', __dir__)
 require File.expand_path('redmine_oauth/patches/account_controller_patch', __dir__)
 require File.expand_path('../lib/redmine_oauth/patches/sudo_mode_controller_patch', __dir__)
+
+require File.expand_path('redmine_oauth/patches/sso_user_patch', __dir__)
