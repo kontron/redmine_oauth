@@ -100,3 +100,6 @@ fr:
   oauth_button_text_info: Texte alternatif pour le bouton (format HTML)
   oauth_button_color_info: Couleur du bouton
   oauth_button_icon_info: Icône du bouton
+
+  oauth_disable_local_passwords: "Interdire les mots de passe locaux aux comptes OAuth"
+  oauth_disable_local_passwords_info: "Convertit les comptes non administrateurs à leur prochaine connexion OAuth, ainsi que les nouveaux comptes OAuth, en authentification SSO. Supprime les mots de passe et les jetons de récupération/session existants. Les administrateurs nécessitent une migration explicite. Désactiver cette option ne restaure pas les comptes convertis."

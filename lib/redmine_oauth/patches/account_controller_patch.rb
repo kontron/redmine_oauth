@@ -39,6 +39,21 @@ module RedmineOauth
         redirect_to oauth_path(back_url: params[:back_url], oauth_provider: cookies[:oauth_autologin])
       end
 
+      # Reject recovery requests for SSO accounts, including previously issued tokens.
+      def lost_password
+        value = params[:token] || session[:password_recovery_token]
+        if value.present?
+          token = Token.find_token('recovery', value.to_s)
+          if token&.user&.auth_source.is_a?(AuthSourceOauth)
+            token.destroy!
+            session.delete(:password_recovery_token)
+            flash[:error] = l(:notice_can_t_change_password)
+            return redirect_to signin_path
+          end
+        end
+        super
+      end
+
       def logout
         cookies.delete :oauth_autologin
         return super if User.current.anonymous? || !request.post? || !RedmineOauth.oauth_logout? ||
