@@ -35,3 +35,5 @@ end
 Rails.application.config.to_prepare do
   User.prepend RedmineOauth::Patches::SsoUserPatch unless User < RedmineOauth::Patches::SsoUserPatch
 end
+
+User.prepend RedmineOauth::Patches::SsoUserPatch unless User < RedmineOauth::Patches::SsoUserPatch
