@@ -2,6 +2,7 @@
 
 module RedmineOauth
   module Patches
+    # Keeps OAuth SSO accounts from retaining local password credentials.
     module SsoUserPatch
       def self.prepended(base)
         base.before_save :clear_oauth_local_credentials
@@ -24,9 +25,7 @@ module RedmineOauth
         return unless auth_source.is_a?(AuthSourceOauth)
 
         Token.where(user_id: id, action: 'recovery').delete_all
-        if saved_change_to_auth_source_id?
-          Token.where(user_id: id, action: %w[autologin session]).delete_all
-        end
+        Token.where(user_id: id, action: %w[autologin session]).delete_all if saved_change_to_auth_source_id?
       end
     end
   end

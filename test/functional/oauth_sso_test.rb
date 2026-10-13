@@ -2,6 +2,7 @@
 
 require File.expand_path('../../integration_test', __FILE__)
 
+# Functional tests for OAuth single sign-on account password handling.
 class OauthSsoTest < RedmineOAuth::Test::IntegrationTest
   def setup
     super
@@ -54,7 +55,8 @@ class OauthSsoTest < RedmineOAuth::Test::IntegrationTest
     token = Token.create!(user: @user, action: 'recovery')
     with_settings lost_password: '1' do
       post '/account/lost_password', params: { token: token.value,
-        new_password: 'changed123!', new_password_confirmation: 'changed123!' }
+                                               new_password: 'changed123!',
+                                               new_password_confirmation: 'changed123!' }
       assert_redirected_to signin_path
     end
     assert_not Token.exists?(token.id)
@@ -67,7 +69,7 @@ class OauthSsoTest < RedmineOAuth::Test::IntegrationTest
       post '/account/lost_password', params: { mail: @user.mail }
       assert_equal I18n.t(:notice_can_t_change_password), flash[:error]
     end
-    assert_not Token.where(user_id: @user.id, action: 'recovery').exists?
+    assert_not Token.exists?(user_id: @user.id, action: 'recovery')
   end
 
   def test_local_administrator_is_untouched

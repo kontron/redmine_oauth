@@ -40,8 +40,7 @@ class AuthSourceOauth < AuthSource
           Token.where(user_id: user.id, action: 'recovery').delete_all
           return user
         end
-        user.update_columns(auth_source_id: source.id, hashed_password: '',
-                            salt: '', must_change_passwd: false)
+        user.update!(auth_source: source, hashed_password: '', salt: '', must_change_passwd: false)
         user.association(:auth_source).reset
         Token.where(user_id: user.id, action: %w[recovery autologin session]).delete_all
       end
