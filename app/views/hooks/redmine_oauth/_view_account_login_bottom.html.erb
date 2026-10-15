@@ -34,7 +34,7 @@
         <%= button_tag(name: 'oauth_provider', value: oauth_provider.id, tabindex: i + 7,
                        id: "login-oauth-submit-#{oauth_provider.id}",
                        title: l(:oauth_login_with),
-                       style: (oauth_provider.button_color_enabled? ? "background-color: #{oauth_provider.button_color}" : nil)) do %>
+                       style: (oauth_provider.button_color_enabled? ? "background-color: #{oauth_provider.button_color}; color: #{oauth_provider.button_font_color}" : nil)) do %>
           <i id="button_icon" class="<%= oauth_provider.button_icon %>"></i>
           <% str = oauth_provider.button_text.presence || l(:oauth_login_via, oauth: oauth_provider.custom_name) %>
           <%= str.html_safe %>
