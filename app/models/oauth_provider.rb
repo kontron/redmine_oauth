@@ -48,7 +48,7 @@ class OauthProvider < ApplicationRecord
     return 'currentColor' unless color.match?(/\A[0-9a-f]{6}\z/i)
 
     red, green, blue = color.scan(/../).map { |component| component.hex / 255.0 }
-    luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+    luminance = (0.2126 * red) + (0.7152 * green) + (0.0722 * blue)
     luminance > 0.5 ? '#000000' : '#FFFFFF'
   end
 
