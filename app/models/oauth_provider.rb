@@ -42,6 +42,16 @@ class OauthProvider < ApplicationRecord
 
   scope :sorted, -> { order(:position) }
 
+  # Preserve readable login text on administrator-configured brand colors.
+  def button_font_color
+    color = button_color.to_s.delete_prefix('#')
+    return 'currentColor' unless color.match?(/\A[0-9a-f]{6}\z/i)
+
+    red, green, blue = color.scan(/../).map { |component| component.hex / 255.0 }
+    luminance = (0.2126 * red) + (0.7152 * green) + (0.0722 * blue)
+    luminance > 0.5 ? '#000000' : '#FFFFFF'
+  end
+
   def update_from_parameters(params)
     self.oauth_name = params['oauth_name']
     self.site = params['site']
