@@ -36,6 +36,28 @@ class AccountControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_response :success
   end
 
+  def test_login_oauth_only_nosso_form_posts_nosso
+    with_settings plugin_redmine_oauth: Setting.plugin_redmine_oauth.merge('oauth_only_login' => '1') do
+      get '/login?nosso'
+      assert_response :success
+      assert_includes response.body, '<input type="hidden" name="nosso" value="1">'
+    end
+  end
+
+  def test_login_oauth_only_nosso_password_post
+    with_settings plugin_redmine_oauth: Setting.plugin_redmine_oauth.merge('oauth_only_login' => '1') do
+      post '/login', params: { username: 'jsmith', password: 'jsmith', nosso: '1' }
+      assert_redirected_to my_page_path
+    end
+  end
+
+  def test_login_oauth_only_password_post_without_nosso
+    with_settings plugin_redmine_oauth: Setting.plugin_redmine_oauth.merge('oauth_only_login' => '1') do
+      post '/login', params: { username: 'jsmith', password: 'jsmith' }
+      assert_redirected_to oauth_path(oauth_provider: OauthProvider.first.id)
+    end
+  end
+
   def test_logout
     post '/login', params: { username: 'jsmith', password: 'jsmith' }
     Setting.plugin_redmine_oauth[:oauth_logout] = nil
