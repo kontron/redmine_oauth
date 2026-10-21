@@ -70,6 +70,10 @@ de:
     Trotzdem können Sie die Standard-Login-Seite erzwingen, indem du den Parameter 'nosso' in die Login-URL einfügst, 
     z.B. '/login?nosso'.
   identify_user_by_info: Anbieter-Feld zur Identifikation des Benutzers im Redmine
+  oauth_identify_user_by_uid_info: "uid: unveränderliche Benutzer-ID des Anbieters (Azure AD: oid; GitHub, GitLab: id; andere: sub). Unabhängig von Änderungen der E-Mail oder des Logins."
+  field_auto_link_user: "Bestehende Benutzer per E-Mail verknüpfen"
+  oauth_auto_link_user_info: "Bei Identifikation per uid wird beim ersten OAuth-Login ein bestehender Benutzer mit derselben E-Mail automatisch verknüpft. Nur aktivieren, wenn der Anbieter E-Mail-Adressen verifiziert."
+  oauth_no_uid: "Der OAuth-Anbieter hat keine Benutzer-ID (uid) geliefert."
 
   label_oauth_provider: OAuth-Anbieter
   label_oauth_providers: OAuth-Anbieter

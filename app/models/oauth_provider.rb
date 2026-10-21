@@ -19,6 +19,8 @@
 
 # OauthProvider model class
 class OauthProvider < ApplicationRecord
+  has_many :oauth_identities, dependent: :delete_all
+
   validates :oauth_name, presence: true
   validates :site, format: { without: /\.ru\b/ }, length: { maximum: 256 }
   validates :client_id, presence: true, length: { maximum: 256 }
@@ -65,6 +67,7 @@ class OauthProvider < ApplicationRecord
     self.enable_group_roles = params['enable_group_roles']
     self.oauth_version = params['oauth_version']
     self.identify_user_by = params['identify_user_by']
+    self.auto_link_user = params['auto_link_user'] if params.key?('auto_link_user')
     self.imap = params['imap']
     self.url_parameters = params['url_parameters']
     self.button_text = params['button_text']

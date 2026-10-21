@@ -135,10 +135,15 @@
       </p>
       <p>
         <%= f.select :identify_user_by,
-                     options_for_select([%w(email email), %w(login login)],
+                     options_for_select([%w(email email), %w(login login), %w(uid uid)],
                                         @oauth_provider.identify_user_by.presence || 'email'),
                      {},
                      title: l(:identify_user_by_info) %>
+        <em class="info"><%= l(:oauth_identify_user_by_uid_info) %></em>
+      </p>
+      <p>
+        <%= f.check_box :auto_link_user %>
+        <em class="info"><%= l(:oauth_auto_link_user_info) %></em>
       </p>
       <p>
         <%= f.check_box :imap, title: l(:oauth_imap_info) %>
