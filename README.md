@@ -84,12 +84,15 @@ Redmine account, see below.
 
 #### Security considerations
 
-* **Email** - The plugin trusts the email returned by the provider and does not check any `email_verified` claim. 
-  Identify users by email (or link them by email) only if the provider lets users use verified addresses only:
+* **Email** - Identifying (or linking) users by email is only as safe as the provider's email verification. 
+  Someone who can set the email of a Redmine user on their provider account gets access to that Redmine account.
+  * Google, Keycloak, Okta, Custom: an email marked as not verified by the provider (`email_verified: false`) is 
+    always rejected. Enable **Require verified email** to reject also the logins without the `email_verified` claim; 
+    the provider must then send it (in Keycloak, the _email_ client scope).
+  * GitHub, GitLab: the email returned is verified by the provider.
   * Azure AD: the `email` claim can be edited by the user and is not verified, especially for multi-tenant 
-    applications (tenant `common` or `organizations`). Use **uid** and a single tenant ID.
-  * Keycloak, Okta, Custom: make sure users cannot register or change their email without a verification, or use 
-    **uid**.
+    applications (tenant `common` or `organizations`), and there is no `email_verified` claim. Use **uid** and a 
+    single tenant ID.
   * The self-registration mode with automatic activation by email domain relies on the email as well.
 * **Login** - Usernames can often be changed by their owners (GitLab `username`, Keycloak/Okta 
   `preferred_username`). A user who renames their account to the login of another Redmine user gets access to 

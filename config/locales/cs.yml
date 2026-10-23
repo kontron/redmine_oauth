@@ -21,6 +21,7 @@ cs:
   oauth_login_via: "Pokračujte s <b>%{oauth}</b>"
   oauth_login_with: Přihlášení pomocí OAuth
   oauth_no_verified_email: "Poskytovatel OAuth nevrátil žádnou e-mailovou adresu. Zkontrolujte, zda má váš účet u poskytovatele e-mailovou adresu, kterou může Redmine číst (např. veřejný e-mail na GitHubu)."
+  oauth_unverified_email: "Poskytovatel OAuth neověřil vaši e-mailovou adresu. Ověřte ji na stránkách poskytovatele a zkuste to znovu."
   oauth_invalid_provider: Neplatný poskytovatel OAuth
   oauth_none: Žádný
   oauth_provider_info: Poskytovatel OAuth.
@@ -72,6 +73,8 @@ cs:
   oauth_identify_user_by_uid_info: "uid: neměnné ID uživatele u poskytovatele (Azure AD: oid; GitHub, GitLab: id; ostatní: sub). Nemění se při změně e-mailu nebo loginu."
   field_auto_link_user: "Propojit existující uživatele podle e-mailu"
   oauth_auto_link_user_info: "Při identifikaci podle uid je při prvním OAuth přihlášení automaticky propojen existující uživatel se stejným e-mailem. Zapněte pouze, pokud poskytovatel ověřuje e-mailové adresy."
+  field_require_verified_email: "Vyžadovat ověřený e-mail"
+  oauth_require_verified_email_info: "Odmítnout přihlášení, pokud poskytovatel nepotvrdí e-mailovou adresu claimem 'email_verified'. E-mail, který poskytovatel označí jako neověřený, je odmítnut vždy."
   oauth_no_uid: "Poskytovatel OAuth nevrátil ID uživatele (uid)."
 
   label_oauth_provider: Poskytovatel OAuth
