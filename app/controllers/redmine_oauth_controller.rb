@@ -46,10 +46,10 @@ class RedmineOauthController < AccountController
     oauth_request_state[:oauth_autologin] = params[:oauth_provider] if params[:oauth_autologin]
     store_oauth_request_state oauth_request_state
     # OAuth provider
-    oauth_provider = OauthProvider.find(params[:oauth_provider])
+    oauth_provider = OauthProvider.find_by(id: params[:oauth_provider])
 
     # Login
-    case oauth_provider.oauth_name
+    case oauth_provider&.oauth_name
     when 'Azure AD'
       redirect_to RedmineOauth::OauthClient.client(oauth_provider).auth_code.authorize_url(
         {
@@ -142,7 +142,7 @@ class RedmineOauthController < AccountController
     end
   rescue StandardError => e
     Rails.logger.error e.message
-    flash['error'] = e.message
+    flash['error'] = ERB::Util.html_escape(e.message)
     clear_oauth_request_state
     cookies.delete :oauth_autologin
     redirect_to signin_path
@@ -156,107 +156,27 @@ class RedmineOauthController < AccountController
       raise StandardError, l(:notice_account_invalid_credentials)
     end
 
-    if session.key?(:oauth_sudo_mode) && User.current.logged?
-      clear_oauth_request_state
-      oauth_sudo_mode = session.delete(:oauth_sudo_mode)
-      session[:oauth_sudo_mode_ok] = true
-      repost oauth_sudo_mode[:back_url], params: oauth_sudo_mode[:params], options: oauth_sudo_mode[:options]
-      return
-    end
-
     # Retrieve the PKCE code verifier from the OAuth request state.
     code_verifier = request_state[:code_verifier]
     clear_oauth_request_state
 
     # Provider
     oauth_provider = OauthProvider.find(request_state[:oauth_provider])
-
-    # Login
-    case oauth_provider.oauth_name
-    when 'Azure AD'
-      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
-                                                                                   redirect_uri: oauth_callback_url,
-                                                                                   code_verifier: code_verifier)
-      id_token = token.params['id_token']
-      user_info = JWT.decode(id_token, nil, false).first.flatten_data
-      email = user_info['email']
-    when 'GitHub'
-      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
-                                                                                   redirect_uri: oauth_callback_url,
-                                                                                   code_verifier: code_verifier)
-      userinfo_response = token.get('https://api.github.com/user', headers: { 'Accept' => 'application/json' })
-      user_info = JSON.parse(userinfo_response.body).flatten_data
-      email = user_info['email']
-    when 'GitLab'
-      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
-                                                                                   redirect_uri: oauth_callback_url,
-                                                                                   code_verifier: code_verifier)
-      userinfo_response = token.get('/api/v4/user', headers: { 'Accept' => 'application/json' })
-      user_info = JSON.parse(userinfo_response.body).flatten_data
-      user_info['login'] = user_info['username']
-      if oauth_provider.url_parameters =~ /hd=([^&]*)/
-        hd = Regexp.last_match(1)
-        if user_info['hd'].present? && (hd != '*') && user_info['hd'] != hd
-          raise StandardError, l(:error_invalid_hosted_domain)
-        end
-      end
-
-      email = user_info['email']
-    when 'Google'
-      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
-                                                                                   redirect_uri: oauth_callback_url,
-                                                                                   code_verifier: code_verifier)
-      userinfo_response = token.get('https://openidconnect.googleapis.com/v1/userinfo',
-                                    headers: { 'Accept' => 'application/json' })
-      user_info = JSON.parse(userinfo_response.body).flatten_data
-      user_info['login'] = user_info['email']
-      if oauth_provider.url_parameters =~ /hd=([^&]*)/
-        hd = Regexp.last_match(1)
-        if user_info['hd'].present? && (hd != '*') && user_info['hd'] != hd
-          raise StandardError, l(:error_invalid_hosted_domain)
-        end
-      end
-
-      email = user_info['email']
-    when 'Keycloak'
-      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
-                                                                                   redirect_uri: oauth_callback_url,
-                                                                                   code_verifier: code_verifier)
-      user_info = JWT.decode(token.token, nil, false).first.flatten_data
-      user_info['login'] = user_info['preferred_username']
-      email = user_info['email']
-      session[:oauth_id_token] = token.params[:id_token]
-    when 'Okta'
-      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
-                                                                                   redirect_uri: oauth_callback_url,
-                                                                                   code_verifier: code_verifier)
-      userinfo_response = token.get(
-        "/oauth2/#{oauth_provider.tenant_id}/v1/userinfo",
-        headers: { 'Accept' => 'application/json' }
-      )
-      user_info = JSON.parse(userinfo_response.body).flatten_data
-      user_info['login'] = user_info['preferred_username']
-      email = user_info['email']
-      session[:oauth_id_token] = token.params[:id_token]
-    when 'Custom'
-      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
-                                                                                   redirect_uri: oauth_callback_url,
-                                                                                   code_verifier: code_verifier)
-      if oauth_provider.custom_profile_endpoint.empty?
-        user_info = JWT.decode(token.token, nil, false).first.flatten_data
-      else
-        userinfo_response = token.get(
-          oauth_provider.custom_profile_endpoint,
-          headers: { 'Accept' => 'application/json' }
-        )
-        user_info = JSON.parse(userinfo_response.body).flatten_data
-      end
-      user_info['login'] = user_info[oauth_provider.custom_uid_field]
-      email = user_info[oauth_provider.custom_email_field]
-    else
-      raise StandardError, l(:oauth_invalid_provider)
-    end
+    email, user_info = fetch_user_info(oauth_provider, code_verifier)
     raise StandardError, l(:oauth_no_verified_email) unless email
+
+    # Re-authentication for the sudo mode, the identity must belong to the current user
+    if session.key?(:oauth_sudo_mode) && User.current.logged?
+      oauth_sudo_mode = session.delete(:oauth_sudo_mode)
+      unless oauth_provider.id == session[:oauth_login] &&
+             RedmineOauthController.user_matches?(User.current, email, user_info, oauth_provider)
+        Rails.logger.error "Sudo mode re-authentication of #{User.current.login} failed"
+        raise StandardError, l(:notice_account_invalid_credentials)
+      end
+      session[:oauth_sudo_mode_ok] = true
+      repost oauth_sudo_mode[:back_url], params: oauth_sudo_mode[:params], options: oauth_sudo_mode[:options]
+      return
+    end
 
     # Roles
     non_default_roles = []
@@ -284,7 +204,7 @@ class RedmineOauthController < AccountController
   rescue StandardError => e
     Rails.logger.error e.message
     Rails.logger.error("Locked account of #{email}") if email.present?
-    flash['error'] = e.message
+    flash['error'] = ERB::Util.html_escape(e.message)
     cookies.delete :oauth_autologin
     redirect_to signin_path
   end
@@ -317,9 +237,7 @@ class RedmineOauthController < AccountController
 
   def try_to_login(email, info, role_names, oauth_provider)
     # Login name
-    login = info['login']
-    login ||= info['unique_name']
-    login ||= info['preferred_username']
+    login = RedmineOauthController.get_login(info)
     firstname = RedmineOauthController.get_firstname(info, oauth_provider)
     lastname = RedmineOauthController.get_lastname(info, oauth_provider)
     uid = RedmineOauthController.get_uid(info, oauth_provider) if oauth_provider.identify_user_by == 'uid'
@@ -478,6 +396,34 @@ class RedmineOauthController < AccountController
     end
   end
 
+  # Get the login name from OAuth data
+  def self.get_login(info)
+    info['login'] || info['unique_name'] || info['preferred_username']
+  end
+
+  # Check whether the OAuth data identify the given user
+  def self.user_matches?(user, email, info, oauth_provider)
+    case oauth_provider.identify_user_by
+    when 'login'
+      user.login.casecmp?(get_login(info).to_s)
+    when 'uid'
+      OauthIdentity.exists?(oauth_provider_id: oauth_provider.id, uid: get_uid(info, oauth_provider), user_id: user.id)
+    else
+      user.email_addresses.exists?(['LOWER(address) = ?', email.downcase])
+    end
+  end
+
+  # Check the hosted domain required by the 'hd' URL parameter (Google). The 'hd' URL parameter is only a hint for the
+  # provider, so the claim must be present and match; personal accounts without the claim are rejected.
+  def self.validate_hosted_domain(info, oauth_provider)
+    return unless oauth_provider.url_parameters =~ /(?:\A|&)hd=([^&]*)/
+
+    hd = Regexp.last_match(1)
+    return if info['hd'].present? && (hd == '*' || info['hd'].casecmp?(hd))
+
+    raise StandardError, ::I18n.t(:error_invalid_hosted_domain)
+  end
+
   # Get the first name from for OAuth data
   def self.get_firstname(info, oauth_provider)
     firstname = info[oauth_provider.custom_firstname_field]
@@ -491,5 +437,84 @@ class RedmineOauthController < AccountController
     _, lastname = info['name'].split(' ', 2) if info['name'].present? && lastname.blank?
     lastname ||= ''
     lastname
+  end
+
+  private
+
+  # Exchange the authorization code for a token and get the user's data from the provider
+  def fetch_user_info(oauth_provider, code_verifier)
+    case oauth_provider.oauth_name
+    when 'Azure AD'
+      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
+                                                                                   redirect_uri: oauth_callback_url,
+                                                                                   code_verifier: code_verifier)
+      id_token = token.params['id_token']
+      user_info = JWT.decode(id_token, nil, false).first.flatten_data
+      email = user_info['email']
+    when 'GitHub'
+      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
+                                                                                   redirect_uri: oauth_callback_url,
+                                                                                   code_verifier: code_verifier)
+      userinfo_response = token.get('https://api.github.com/user', headers: { 'Accept' => 'application/json' })
+      user_info = JSON.parse(userinfo_response.body).flatten_data
+      email = user_info['email']
+    when 'GitLab'
+      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
+                                                                                   redirect_uri: oauth_callback_url,
+                                                                                   code_verifier: code_verifier)
+      userinfo_response = token.get('/api/v4/user', headers: { 'Accept' => 'application/json' })
+      user_info = JSON.parse(userinfo_response.body).flatten_data
+      user_info['login'] = user_info['username']
+      email = user_info['email']
+    when 'Google'
+      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
+                                                                                   redirect_uri: oauth_callback_url,
+                                                                                   code_verifier: code_verifier)
+      userinfo_response = token.get('https://openidconnect.googleapis.com/v1/userinfo',
+                                    headers: { 'Accept' => 'application/json' })
+      user_info = JSON.parse(userinfo_response.body).flatten_data
+      user_info['login'] = user_info['email']
+      RedmineOauthController.validate_hosted_domain user_info, oauth_provider
+
+      email = user_info['email']
+    when 'Keycloak'
+      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
+                                                                                   redirect_uri: oauth_callback_url,
+                                                                                   code_verifier: code_verifier)
+      user_info = JWT.decode(token.token, nil, false).first.flatten_data
+      user_info['login'] = user_info['preferred_username']
+      email = user_info['email']
+      session[:oauth_id_token] = token.params[:id_token]
+    when 'Okta'
+      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
+                                                                                   redirect_uri: oauth_callback_url,
+                                                                                   code_verifier: code_verifier)
+      userinfo_response = token.get(
+        "/oauth2/#{oauth_provider.tenant_id}/v1/userinfo",
+        headers: { 'Accept' => 'application/json' }
+      )
+      user_info = JSON.parse(userinfo_response.body).flatten_data
+      user_info['login'] = user_info['preferred_username']
+      email = user_info['email']
+      session[:oauth_id_token] = token.params[:id_token]
+    when 'Custom'
+      token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
+                                                                                   redirect_uri: oauth_callback_url,
+                                                                                   code_verifier: code_verifier)
+      if oauth_provider.custom_profile_endpoint.empty?
+        user_info = JWT.decode(token.token, nil, false).first.flatten_data
+      else
+        userinfo_response = token.get(
+          oauth_provider.custom_profile_endpoint,
+          headers: { 'Accept' => 'application/json' }
+        )
+        user_info = JSON.parse(userinfo_response.body).flatten_data
+      end
+      user_info['login'] = user_info[oauth_provider.custom_uid_field]
+      email = user_info[oauth_provider.custom_email_field]
+    else
+      raise StandardError, l(:oauth_invalid_provider)
+    end
+    [email, user_info]
   end
 end

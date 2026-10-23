@@ -12,6 +12,10 @@ Changelog for Redmine OAuth
 * New: GitHub CI runs the tests against Redmine 6.1 as well as 7.0
 * New: Identify users by the provider's immutable user ID (uid), e.g. Azure AD oid
 * Bug: IMAP task ignores ssl=false and starttls=false options
+* Security: Reflected XSS in the error message on the login page
+* Security: Sudo mode skipped for AJAX requests
+* Security: Sudo mode re-authentication does not verify the code and the user
+* Security: Google hosted domain (hd) restriction bypassed by accounts without the hd claim
 
 4.2.3 *2026-10-05*
 ------------------

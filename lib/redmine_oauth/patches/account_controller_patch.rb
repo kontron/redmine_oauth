@@ -96,7 +96,7 @@ module RedmineOauth
         end
       rescue StandardError => e
         Rails.logger.error e.message
-        flash['error'] = e.message
+        flash['error'] = ERB::Util.html_escape(e.message)
         redirect_to signin_path
       end
     end

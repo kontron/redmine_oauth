@@ -61,6 +61,25 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_response :found
   end
 
+  def test_oauth_does_not_reflect_provider_id
+    get '/oauth', params: { oauth_provider: '<img src=x onerror=alert(1)>' }
+    assert_redirected_to signin_path
+    assert_equal l(:oauth_invalid_provider), flash[:error]
+  end
+
+  def test_oauth_callback_escapes_error_message
+    get "/oauth?oauth_provider=#{@keylock_provider.id}"
+    state = URI.decode_www_form(URI.parse(response.location).query).to_h.fetch('state')
+    OAuth2::Strategy::AuthCode.any_instance.stubs(:get_token).raises(StandardError, '<img src=x onerror=alert(1)>')
+
+    get "/oauth2callback?state=#{state}&code=unused"
+    assert_redirected_to signin_path
+    follow_redirect!
+
+    assert_select '#flash_error img', 0
+    assert_select '#flash_error', text: /<img src=x onerror=alert\(1\)>/
+  end
+
   def test_oauth_callback_csrf
     get '/oauth2callback'
     assert_response :unprocessable_content
@@ -166,6 +185,34 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_no_difference 'OauthIdentity.count' do
       RedmineOauthController.link_identity @jsmith, nil, @keylock_provider
     end
+  end
+
+  def test_user_matches
+    assert RedmineOauthController.user_matches?(@jsmith, 'JSmith@somenet.foo', {}, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, 'dlopper@somenet.foo', {}, @keylock_provider)
+    @keylock_provider.identify_user_by = 'login'
+    assert RedmineOauthController.user_matches?(@jsmith, nil, { 'login' => 'JSmith' }, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, nil, { 'login' => 'dlopper' }, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, nil, {}, @keylock_provider)
+    @keylock_provider.identify_user_by = 'uid'
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert RedmineOauthController.user_matches?(@jsmith, nil, { 'sub' => 'uid-1' }, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, nil, { 'sub' => 'uid-2' }, @keylock_provider)
+  end
+
+  def test_validate_hosted_domain
+    google = OauthProvider.new(oauth_name: 'Google', url_parameters: 'prompt=select_account&hd=example.com')
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({ 'hd' => 'example.com' }, google) }
+    assert_raises(StandardError) { RedmineOauthController.validate_hosted_domain({ 'hd' => 'evil.com' }, google) }
+    # Personal accounts have no 'hd' claim
+    assert_raises(StandardError) { RedmineOauthController.validate_hosted_domain({}, google) }
+    google.url_parameters = 'hd=*'
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({ 'hd' => 'any.com' }, google) }
+    assert_raises(StandardError) { RedmineOauthController.validate_hosted_domain({}, google) }
+    google.url_parameters = 'xhd=example.com'
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({}, google) }
+    google.url_parameters = nil
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({}, google) }
   end
 
   def test_identities_deleted_with_user
