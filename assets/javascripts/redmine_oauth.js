@@ -52,18 +52,46 @@ function oauth_set_button_text()
     }
     let oauth_name = $("input#oauth_provider_custom_name").val().trim() ? $("input#oauth_provider_custom_name").val().trim() : $("#oauth_provider_oauth_name option:selected").val();
     let button = $("button#login-oauth-button");
-    let html = button.html();
-    html = html.replace(/<\/i>\s.*$/, "</i>\n<b>" + oauth_name + "</b>");
-    button.html(html);
+    button.contents().not("i#button_icon").remove();
+    button.append("\n", $("<b>").text(oauth_name));
 }
 
 function oauth_set_alternative_button_text(val) {
-    if(!val.trim()) {
-        val = $("input#oauth_provider_custom_name").val().trim() ? $("input#oauth_provider_custom_name").val().trim() : $("#oauth_provider_oauth_name option:selected").val();
-    }
     let button = $("button#login-oauth-button");
     let icon = $("select#oauth_provider_button_icon option:selected");
-    button.html("<i id=\"button_icon\" class=\"" + icon.text() + "\"></i>\n" + val);
+    button.empty().append($("<i>", { id: "button_icon", "class": icon.val() }), "\n");
+    if(val.trim()) {
+        button.append(oauth_sanitize_button_text(val));
+    }
+    else {
+        let name = $("input#oauth_provider_custom_name").val().trim() ? $("input#oauth_provider_custom_name").val().trim() : $("#oauth_provider_oauth_name option:selected").val();
+        button.append(document.createTextNode(name));
+    }
+}
+
+// Keep only the HTML formatting allowed on the login page (OauthProvider::BUTTON_TEXT_TAGS)
+function oauth_sanitize_button_text(html)
+{
+    const allowed = ["B", "I", "U", "EM", "STRONG", "SPAN", "BR"];
+    // DOMParser creates an inert document: no scripts are run, no resources are loaded
+    let body = new DOMParser().parseFromString(html, "text/html").body;
+    let clean = function(node) {
+        Array.from(node.children).forEach(function(child) {
+            clean(child);
+            if(allowed.includes(child.tagName)) {
+                Array.from(child.attributes).forEach(function(attr) {
+                    if(attr.name !== "class") {
+                        child.removeAttribute(attr.name);
+                    }
+                });
+            }
+            else {
+                child.replaceWith(...child.childNodes);
+            }
+        });
+    };
+    clean(body);
+    return body.innerHTML;
 }
 
 function oauth_settings_visibility() {

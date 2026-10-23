@@ -60,11 +60,7 @@
           <% style = "background-color: #{@oauth_provider.button_color};" %>
           <%= button_tag(name: 'login-oauth', id: 'login-oauth-button', title: l(:oauth_login_with), style: style, type: "button") do %>
             <i id="button_icon" class="<%= @oauth_provider.button_icon %>"></i>
-            <% if @oauth_provider.button_text.present? %>
-              <%= raw(@oauth_provider.button_text) %>
-            <% else %>
-              <%= raw(l(:oauth_login_via, oauth: @oauth_provider.custom_name.presence || @oauth_provider.oauth_name)) %>
-            <% end %>
+            <%= @oauth_provider.button_label %>
           <% end %>
         </span>
         <br>
@@ -94,8 +90,9 @@
                          title: l(:oauth_client_id_info), required: true, size: 60 %>
       </p>
       <p>
-        <%= f.text_field :client_secret, value: Redmine::Ciphering.decrypt_text(@oauth_provider.client_secret),
-                         title: l(:oauth_client_secret_info), required: true, size: 60 %>
+        <%= f.password_field :client_secret, value: '', title: l(:oauth_client_secret_info),
+                             required: @oauth_provider.new_record?, autocomplete: 'new-password', size: 60,
+                             placeholder: (l(:oauth_client_secret_unchanged) unless @oauth_provider.new_record?) %>
       </p>
       <% if %w(GitHub GitLab Google Custom).include?(@oauth_provider.oauth_name) %>
         <p id="oauth_options_tenant" style="display: none">

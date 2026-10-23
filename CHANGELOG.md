@@ -16,6 +16,15 @@ Changelog for Redmine OAuth
 * Security: Sudo mode skipped for AJAX requests
 * Security: Sudo mode re-authentication does not verify the code and the user
 * Security: Google hosted domain (hd) restriction bypassed by accounts without the hd claim
+* Security: Group roles and administrator rights applied to locked and pending accounts
+* Security: Client secret displayed in the provider's form
+* Security: Login button's text and provider's name rendered as raw HTML on the login page
+* Security: Audience of Azure AD and Keycloak tokens not checked
+* Security: Logout URL parameters not encoded
+* Security: User roles key used as a regular expression
+* Docs: Security considerations
+* New: Clearer message when the provider does not return an email address
+* Bug: Provider controller tests not running
 
 4.2.3 *2026-10-05*
 ------------------

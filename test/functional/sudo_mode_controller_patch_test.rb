@@ -39,7 +39,7 @@ class SudoModeControllerPatchTest < RedmineOAuth::Test::IntegrationTest
     log_user_via_oauth 'jsmith'
     expire_sudo_mode!
     request_reauthentication
-    stub_token 'jsmith'
+    stub_oauth_token 'jsmith'
     get "/oauth2callback?state=#{oauth_state}&code=unused"
     assert_response :success
     assert session[:oauth_sudo_mode_ok]
@@ -61,7 +61,7 @@ class SudoModeControllerPatchTest < RedmineOAuth::Test::IntegrationTest
     log_user_via_oauth 'jsmith'
     expire_sudo_mode!
     request_reauthentication
-    stub_token 'dlopper'
+    stub_oauth_token 'dlopper'
     get "/oauth2callback?state=#{oauth_state}&code=unused"
     assert_redirected_to signin_path
     assert_nil session[:oauth_sudo_mode_ok]
@@ -76,7 +76,7 @@ class SudoModeControllerPatchTest < RedmineOAuth::Test::IntegrationTest
     expire_sudo_mode!
     post '/my/api_key'
     get "/oauth?oauth_provider=#{other_provider.id}&reauth=true"
-    stub_token 'jsmith'
+    stub_oauth_token 'jsmith'
     get "/oauth2callback?state=#{oauth_state}&code=unused"
     assert_redirected_to signin_path
     assert_nil session[:oauth_sudo_mode_ok]
@@ -84,21 +84,8 @@ class SudoModeControllerPatchTest < RedmineOAuth::Test::IntegrationTest
 
   private
 
-  def stub_token(login)
-    user = User.find_by(login: login)
-    claims = { 'sub' => "uid-#{user.id}", 'preferred_username' => login, 'email' => user.mail }
-    token = stub(token: JWT.encode(claims, 'secret', 'HS256'), params: {})
-    OAuth2::Strategy::AuthCode.any_instance.stubs(:get_token).returns(token)
-  end
-
-  def oauth_state
-    URI.decode_www_form(URI.parse(response.location).query).to_h.fetch('state')
-  end
-
   def log_user_via_oauth(login)
-    get "/oauth?oauth_provider=#{@oauth_provider.id}"
-    stub_token login
-    get "/oauth2callback?state=#{oauth_state}&code=unused"
+    oauth_login login
     @user_id = User.find_by(login: login).id
     assert_equal @user_id, session[:user_id]
     assert_equal @oauth_provider.id, session[:oauth_login]

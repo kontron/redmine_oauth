@@ -117,107 +117,166 @@ class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_response :success
     assert_select '#errorExplanation', { text: 'Custom name has already been taken' }
   end
-end
 
-def test_edit
-  post '/login', params: { username: 'admin', password: 'admin' }
-  get "/oauth_providers/#{@keylock_provider.id}/edit"
-  assert_response :success
-end
-
-def test_update
-  post '/login', params: { username: 'admin', password: 'admin' }
-  patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: {
-    oauth_name: 'Keycloak',
-    site: 'https://example.com/sso',
-    client_id: 'example-client',
-    client_secret: 'florp-burp-durk',
-    tenant_id: 'redmine',
-    custom_name: 'Keycloak',
-    custom_auth_endpoint: '',
-    custom_token_endpoint: '',
-    custom_profile_endpoint: '',
-    custom_scope: '',
-    custom_uid_field: '',
-    custom_email_field: '',
-    button_color: '#ffbe6f',
-    button_icon: 'far fa-address-card',
-    custom_firstname_field: '',
-    custom_lastname_field: '',
-    custom_logout_endpoint: '',
-    validate_user_roles: '',
-    enable_group_roles: false,
-    oauth_version: '2.0',
-    identify_user_by: '',
-    imap: false
-  } }
-  assert_redirected_to oauth_providers_path
-end
-
-def test_update_failed
-  post '/login', params: { username: 'admin', password: 'admin' }
-  patch "/oauth_providers/#{@invalid_provider.id}", params: { oauth_provider: {
-    oauth_name: 'Keycloak',
-    site: 'https://example.com/sso',
-    client_id: 'example-client',
-    client_secret: 'florp-burp-durk',
-    tenant_id: 'redmine',
-    custom_name: 'Keycloak',
-    custom_auth_endpoint: '',
-    custom_token_endpoint: '',
-    custom_profile_endpoint: '',
-    custom_scope: '',
-    custom_uid_field: '',
-    custom_email_field: '',
-    button_color: '#ffbe6f',
-    button_icon: 'far fa-address-card',
-    custom_firstname_field: '',
-    custom_lastname_field: '',
-    custom_logout_endpoint: '',
-    validate_user_roles: '',
-    enable_group_roles: false,
-    oauth_version: '2.0',
-    identify_user_by: '',
-    imap: false
-  } }
-  assert_response :success
-  assert_select '#errorExplanation', { text: 'Custom name has already been taken' }
-end
-
-def test_update_disabling_button_color
-  post '/login', params: { username: 'admin', password: 'admin' }
-  patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: {
-    oauth_name: 'Keycloak',
-    site: 'https://example.com/sso',
-    client_id: 'example-client',
-    client_secret: 'florp-burp-durk',
-    tenant_id: 'redmine',
-    custom_name: 'Keycloak',
-    custom_auth_endpoint: '',
-    custom_token_endpoint: '',
-    custom_profile_endpoint: '',
-    custom_scope: '',
-    custom_uid_field: '',
-    custom_email_field: '',
-    button_color: '#ffbe6f',
-    button_color_enabled: '0',
-    button_icon: 'far fa-address-card',
-    custom_firstname_field: '',
-    custom_lastname_field: '',
-    custom_logout_endpoint: '',
-    validate_user_roles: '',
-    enable_group_roles: false,
-    oauth_version: '2.0',
-    identify_user_by: '',
-    imap: false
-  } }
-  assert_equal false, @keylock_provider.reload.button_color_enabled
-end
-
-def test_destroy
-  post '/login', params: { username: 'admin', password: 'admin' }
-  assert_difference 'OauthProvider.count', -1 do
-    delete "/oauth_providers/#{@invalid_provider.id}"
+  def test_edit
+    post '/login', params: { username: 'admin', password: 'admin' }
+    get "/oauth_providers/#{@keylock_provider.id}/edit"
+    assert_response :success
   end
-  assert_response :success
+
+  def test_update
+    post '/login', params: { username: 'admin', password: 'admin' }
+    patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: {
+      oauth_name: 'Keycloak',
+      site: 'https://example.com/sso',
+      client_id: 'example-client',
+      client_secret: 'florp-burp-durk',
+      tenant_id: 'redmine',
+      custom_name: 'Keycloak',
+      custom_auth_endpoint: '',
+      custom_token_endpoint: '',
+      custom_profile_endpoint: '',
+      custom_scope: '',
+      custom_uid_field: '',
+      custom_email_field: '',
+      button_color: '#ffbe6f',
+      button_icon: 'far fa-address-card',
+      custom_firstname_field: '',
+      custom_lastname_field: '',
+      custom_logout_endpoint: '',
+      validate_user_roles: '',
+      enable_group_roles: false,
+      oauth_version: '2.0',
+      identify_user_by: '',
+      imap: false
+    } }
+    assert_redirected_to oauth_providers_path
+  end
+
+  def test_update_failed
+    post '/login', params: { username: 'admin', password: 'admin' }
+    patch "/oauth_providers/#{@invalid_provider.id}", params: { oauth_provider: {
+      oauth_name: 'Keycloak',
+      site: 'https://example.com/sso',
+      client_id: 'example-client',
+      client_secret: 'florp-burp-durk',
+      tenant_id: 'redmine',
+      custom_name: 'Keycloak',
+      custom_auth_endpoint: '',
+      custom_token_endpoint: '',
+      custom_profile_endpoint: '',
+      custom_scope: '',
+      custom_uid_field: '',
+      custom_email_field: '',
+      button_color: '#ffbe6f',
+      button_icon: 'far fa-address-card',
+      custom_firstname_field: '',
+      custom_lastname_field: '',
+      custom_logout_endpoint: '',
+      validate_user_roles: '',
+      enable_group_roles: false,
+      oauth_version: '2.0',
+      identify_user_by: '',
+      imap: false
+    } }
+    assert_response :success
+    assert_select '#errorExplanation', { text: 'Custom name has already been taken' }
+  end
+
+  def test_update_disabling_button_color
+    post '/login', params: { username: 'admin', password: 'admin' }
+    patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: {
+      oauth_name: 'Keycloak',
+      site: 'https://example.com/sso',
+      client_id: 'example-client',
+      client_secret: 'florp-burp-durk',
+      tenant_id: 'redmine',
+      custom_name: 'Keycloak',
+      custom_auth_endpoint: '',
+      custom_token_endpoint: '',
+      custom_profile_endpoint: '',
+      custom_scope: '',
+      custom_uid_field: '',
+      custom_email_field: '',
+      button_color: '#ffbe6f',
+      button_color_enabled: '0',
+      button_icon: 'far fa-address-card',
+      custom_firstname_field: '',
+      custom_lastname_field: '',
+      custom_logout_endpoint: '',
+      validate_user_roles: '',
+      enable_group_roles: false,
+      oauth_version: '2.0',
+      identify_user_by: '',
+      imap: false
+    } }
+    assert_equal false, @keylock_provider.reload.button_color_enabled
+  end
+
+  def test_destroy
+    post '/login', params: { username: 'admin', password: 'admin' }
+    assert_difference 'OauthProvider.count', -1 do
+      delete "/oauth_providers/#{@invalid_provider.id}"
+    end
+    assert_redirected_to oauth_providers_path
+  end
+
+  def test_edit_does_not_show_client_secret
+    post '/login', params: { username: 'admin', password: 'admin' }
+    get "/oauth_providers/#{@keylock_provider.id}/edit"
+    assert_response :success
+    assert_select 'input[type=password][name=?]', 'oauth_provider[client_secret]'
+    assert_not_includes response.body, 'florp-burp-durk'
+  end
+
+  def test_update_with_blank_client_secret
+    post '/login', params: { username: 'admin', password: 'admin' }
+    patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: keycloak_params(client_secret: '') }
+    assert_redirected_to oauth_providers_path
+    assert_equal 'florp-burp-durk', Redmine::Ciphering.decrypt_text(@keylock_provider.reload.client_secret)
+  end
+
+  def test_update_client_secret
+    post '/login', params: { username: 'admin', password: 'admin' }
+    patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: keycloak_params(client_secret: 'new') }
+    assert_redirected_to oauth_providers_path
+    assert_equal 'new', Redmine::Ciphering.decrypt_text(@keylock_provider.reload.client_secret)
+  end
+
+  def test_update_invalid_button_color
+    post '/login', params: { username: 'admin', password: 'admin' }
+    patch "/oauth_providers/#{@keylock_provider.id}",
+          params: { oauth_provider: keycloak_params(button_color: 'red; background-image: url(x)') }
+    assert_response :success
+    assert_select '#errorExplanation'
+  end
+
+  private
+
+  def keycloak_params(params = {})
+    {
+      oauth_name: 'Keycloak',
+      site: 'https://example.com/sso',
+      client_id: 'example-client',
+      client_secret: 'florp-burp-durk',
+      tenant_id: 'redmine',
+      custom_name: 'Keycloak',
+      custom_auth_endpoint: '',
+      custom_token_endpoint: '',
+      custom_profile_endpoint: '',
+      custom_scope: '',
+      custom_uid_field: '',
+      custom_email_field: '',
+      button_color: '#ffbe6f',
+      button_icon: 'far fa-address-card',
+      custom_firstname_field: '',
+      custom_lastname_field: '',
+      custom_logout_endpoint: '',
+      validate_user_roles: '',
+      enable_group_roles: false,
+      oauth_version: '2.0',
+      identify_user_by: '',
+      imap: false
+    }.merge(params)
+  end
 end

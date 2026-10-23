@@ -152,7 +152,7 @@ class RedmineOauthController < AccountController
     request_state = oauth_request_state
 
     if params['error'].present?
-      Rails.logger.error params['error_description']
+      Rails.logger.error "OAuth error: #{params['error']} #{params['error_description']}".squish
       raise StandardError, l(:notice_account_invalid_credentials)
     end
 
@@ -182,7 +182,7 @@ class RedmineOauthController < AccountController
     non_default_roles = []
     key = oauth_provider.validate_user_roles
     if key.present?
-      roles = if (h = user_info.select { |k, _v| k =~ /^#{key}(\.(\d+))?$/ })
+      roles = if (h = user_info.select { |k, _v| k =~ /\A#{Regexp.escape(key)}(\.(\d+))?\z/ })
                 h.values
               else
                 []
@@ -203,151 +203,9 @@ class RedmineOauthController < AccountController
     session[:oauth_login] = oauth_provider.id
   rescue StandardError => e
     Rails.logger.error e.message
-    Rails.logger.error("Locked account of #{email}") if email.present?
     flash['error'] = ERB::Util.html_escape(e.message)
     cookies.delete :oauth_autologin
     redirect_to signin_path
-  end
-
-  def set_oauth_autologin_cookie
-    cookie_options = {
-      value: params[:oauth_autologin],
-      expires: 1.year.from_now,
-      path: RedmineApp::Application.config.relative_url_root || '/',
-      same_site: :lax,
-      secure: Setting.protocol == 'https',
-      httponly: true
-    }
-    cookies[:oauth_autologin] = cookie_options
-  end
-
-  def generate_code_verifier
-    SecureRandom.urlsafe_base64 32
-  end
-
-  def generate_code_challenge(code_verifier)
-    Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete '='
-  end
-
-  def apply_request_state(oauth_request_state)
-    params['back_url'] = oauth_request_state[:back_url]
-    params['autologin'] = oauth_request_state[:autologin]
-    params['oauth_autologin'] = oauth_request_state[:oauth_autologin]
-  end
-
-  def try_to_login(email, info, role_names, oauth_provider)
-    # Login name
-    login = RedmineOauthController.get_login(info)
-    firstname = RedmineOauthController.get_firstname(info, oauth_provider)
-    lastname = RedmineOauthController.get_lastname(info, oauth_provider)
-    uid = RedmineOauthController.get_uid(info, oauth_provider) if oauth_provider.identify_user_by == 'uid'
-    # Find the user
-    user = case oauth_provider.identify_user_by
-           when 'login'
-             User.where('LOWER(login) = ?', login.downcase).first
-           when 'uid'
-             RedmineOauthController.find_user_by_uid uid, email, oauth_provider
-           else
-             User.joins(:email_addresses).where('LOWER(email_addresses.address) = ?', email.downcase).first
-           end
-    RedmineOauthController.link_identity(user, uid, oauth_provider) if user
-    if user # Existing user
-      if user.registered? # Registered
-        account_pending user
-      elsif user.active? # Active
-        # Keep existing administrator accounts local unless explicitly migrated.
-        AuthSourceOauth.bind!(user) if RedmineOauth.disable_local_passwords? && !user.admin?
-        handle_active_user user
-        user.update_last_login_on!
-        RedmineOauthController.update_user user, login, email, firstname, lastname
-        # Disable 2FA initialization request
-        session.delete(:must_activate_twofa)
-        # Disable password change request
-        session.delete(:pwd)
-      else # Locked
-        handle_inactive_user user
-      end
-    elsif RedmineOauth.self_registration.positive?
-      # Create on the fly
-      user = User.new
-      user.mail = email
-      user.firstname = firstname
-      user.lastname = lastname
-      user.mail = email
-      user.login = login
-      if RedmineOauth.disable_local_passwords?
-        AuthSourceOauth.bind!(user)
-      else
-        user.random_password
-      end
-      user.register
-      case RedmineOauth.self_registration
-      when 1
-        register_by_email_activation(user) do
-          onthefly_creation_failed user
-        end
-      when 3
-        register_automatically(user) do
-          onthefly_creation_failed user
-        end
-      when 4
-        if RedmineOauth.self_registration_domain_auto_activate?(email)
-          register_automatically(user) do
-            onthefly_creation_failed user
-          end
-        else
-          register_manually_by_administrator(user) do
-            onthefly_creation_failed user
-          end
-        end
-      else
-        register_manually_by_administrator(user) do
-          onthefly_creation_failed user
-        end
-      end
-      # Link the newly registered user with their OAuth identity
-      RedmineOauthController.link_identity(user, uid, oauth_provider) if user.persisted?
-    else # Invalid credentials
-      params[:username] = email
-      invalid_credentials
-      raise StandardError, l(:notice_account_invalid_credentials)
-    end
-
-    if oauth_provider.enable_group_roles?
-      desired_groups = Group.where(lastname: role_names)
-      user.group_ids = desired_groups.ids
-    end
-
-    return if @admin.nil?
-
-    user = User.find(user.id)
-    Rails.logger.error(user.errors.full_messages.to_sentence) unless user.update(admin: @admin)
-  end
-
-  def verify_csrf_token
-    return unless params[:state].blank? || (params[:state] != oauth_request_state[:csrf_token])
-
-    clear_oauth_request_state
-    render_error status: 422, message: l(:error_invalid_authenticity_token)
-  end
-
-  def oauth_request_state
-    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] || {}
-  end
-
-  def store_oauth_request_state(state)
-    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] = {
-      value: state,
-      path: RedmineApp::Application.config.relative_url_root || '/',
-      same_site: :lax,
-      secure: Setting.protocol == 'https',
-      httponly: true
-    }
-  end
-
-  def clear_oauth_request_state
-    cookies.delete OAUTH_REQUEST_STATE_COOKIE,
-                   path: RedmineApp::Application.config.relative_url_root || '/'
   end
 
   # Update user's profile with data from OAuth provider
@@ -424,6 +282,14 @@ class RedmineOauthController < AccountController
     raise StandardError, ::I18n.t(:error_invalid_hosted_domain)
   end
 
+  # Check that the token was issued for this application; the tokens come directly from the provider's token endpoint
+  # over TLS, so their signature is not verified
+  def self.validate_audience(audience, oauth_provider)
+    return if Array(audience).include?(oauth_provider.client_id)
+
+    raise StandardError, ::I18n.t(:notice_account_invalid_credentials)
+  end
+
   # Get the first name from for OAuth data
   def self.get_firstname(info, oauth_provider)
     firstname = info[oauth_provider.custom_firstname_field]
@@ -441,6 +307,152 @@ class RedmineOauthController < AccountController
 
   private
 
+  def set_oauth_autologin_cookie
+    cookie_options = {
+      value: params[:oauth_autologin],
+      expires: 1.year.from_now,
+      path: RedmineApp::Application.config.relative_url_root || '/',
+      same_site: :lax,
+      secure: Setting.protocol == 'https',
+      httponly: true
+    }
+    cookies[:oauth_autologin] = cookie_options
+  end
+
+  def generate_code_verifier
+    SecureRandom.urlsafe_base64 32
+  end
+
+  def generate_code_challenge(code_verifier)
+    Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).delete '='
+  end
+
+  def apply_request_state(oauth_request_state)
+    params['back_url'] = oauth_request_state[:back_url]
+    params['autologin'] = oauth_request_state[:autologin]
+    params['oauth_autologin'] = oauth_request_state[:oauth_autologin]
+  end
+
+  def try_to_login(email, info, role_names, oauth_provider)
+    # Login name
+    login = RedmineOauthController.get_login(info)
+    firstname = RedmineOauthController.get_firstname(info, oauth_provider)
+    lastname = RedmineOauthController.get_lastname(info, oauth_provider)
+    uid = RedmineOauthController.get_uid(info, oauth_provider) if oauth_provider.identify_user_by == 'uid'
+    # Find the user
+    user = case oauth_provider.identify_user_by
+           when 'login'
+             User.where('LOWER(login) = ?', login.downcase).first
+           when 'uid'
+             RedmineOauthController.find_user_by_uid uid, email, oauth_provider
+           else
+             User.joins(:email_addresses).where('LOWER(email_addresses.address) = ?', email.downcase).first
+           end
+    RedmineOauthController.link_identity(user, uid, oauth_provider) if user
+    if user # Existing user
+      if user.registered? # Registered
+        account_pending user
+        return
+      elsif user.active? # Active
+        # Keep existing administrator accounts local unless explicitly migrated.
+        AuthSourceOauth.bind!(user) if RedmineOauth.disable_local_passwords? && !user.admin?
+        handle_active_user user
+        user.update_last_login_on!
+        RedmineOauthController.update_user user, login, email, firstname, lastname
+        # Disable 2FA initialization request
+        session.delete(:must_activate_twofa)
+        # Disable password change request
+        session.delete(:pwd)
+      else # Locked
+        handle_inactive_user user
+        return
+      end
+    elsif RedmineOauth.self_registration.positive?
+      # Create on the fly
+      user = User.new
+      user.mail = email
+      user.firstname = firstname
+      user.lastname = lastname
+      user.mail = email
+      user.login = login
+      if RedmineOauth.disable_local_passwords?
+        AuthSourceOauth.bind!(user)
+      else
+        user.random_password
+      end
+      user.register
+      case RedmineOauth.self_registration
+      when 1
+        register_by_email_activation(user) do
+          onthefly_creation_failed user
+        end
+      when 3
+        register_automatically(user) do
+          onthefly_creation_failed user
+        end
+      when 4
+        if RedmineOauth.self_registration_domain_auto_activate?(email)
+          register_automatically(user) do
+            onthefly_creation_failed user
+          end
+        else
+          register_manually_by_administrator(user) do
+            onthefly_creation_failed user
+          end
+        end
+      else
+        register_manually_by_administrator(user) do
+          onthefly_creation_failed user
+        end
+      end
+      # Link the newly registered user with their OAuth identity
+      RedmineOauthController.link_identity(user, uid, oauth_provider) if user.persisted?
+    else # Invalid credentials
+      params[:username] = email
+      invalid_credentials
+      raise StandardError, l(:notice_account_invalid_credentials)
+    end
+
+    # Groups and admin rights only for active accounts, not for those waiting for an activation
+    return unless user.persisted? && user.active?
+
+    if oauth_provider.enable_group_roles?
+      desired_groups = Group.where(lastname: role_names)
+      user.group_ids = desired_groups.ids
+    end
+
+    return if @admin.nil?
+
+    user = User.find(user.id)
+    Rails.logger.error(user.errors.full_messages.to_sentence) unless user.update(admin: @admin)
+  end
+
+  def verify_csrf_token
+    return unless params[:state].blank? || (params[:state] != oauth_request_state[:csrf_token])
+
+    clear_oauth_request_state
+    render_error status: 422, message: l(:error_invalid_authenticity_token)
+  end
+
+  def oauth_request_state
+    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] || {}
+  end
+
+  def store_oauth_request_state(state)
+    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] = {
+      value: state,
+      path: RedmineApp::Application.config.relative_url_root || '/',
+      same_site: :lax,
+      secure: Setting.protocol == 'https',
+      httponly: true
+    }
+  end
+
+  def clear_oauth_request_state
+    cookies.delete OAUTH_REQUEST_STATE_COOKIE,
+                   path: RedmineApp::Application.config.relative_url_root || '/'
+  end
+
   # Exchange the authorization code for a token and get the user's data from the provider
   def fetch_user_info(oauth_provider, code_verifier)
     case oauth_provider.oauth_name
@@ -448,8 +460,9 @@ class RedmineOauthController < AccountController
       token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
                                                                                    redirect_uri: oauth_callback_url,
                                                                                    code_verifier: code_verifier)
-      id_token = token.params['id_token']
-      user_info = JWT.decode(id_token, nil, false).first.flatten_data
+      id_token = JWT.decode(token.params['id_token'], nil, false).first
+      RedmineOauthController.validate_audience id_token['aud'], oauth_provider
+      user_info = id_token.flatten_data
       email = user_info['email']
     when 'GitHub'
       token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
@@ -481,7 +494,9 @@ class RedmineOauthController < AccountController
       token = RedmineOauth::OauthClient.client(oauth_provider).auth_code.get_token(params['code'],
                                                                                    redirect_uri: oauth_callback_url,
                                                                                    code_verifier: code_verifier)
-      user_info = JWT.decode(token.token, nil, false).first.flatten_data
+      access_token = JWT.decode(token.token, nil, false).first
+      RedmineOauthController.validate_audience access_token['azp'], oauth_provider
+      user_info = access_token.flatten_data
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
       session[:oauth_id_token] = token.params[:id_token]

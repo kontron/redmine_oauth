@@ -20,13 +20,14 @@
 es:
   oauth_login_via: "Acceder con <b>%{oauth}</b>"
   oauth_login_with: Autenticación con OAuth
-  oauth_no_verified_email: No se proporcionó ningún correo electrónico, verifique su configuración en el sitio del proveedor OAuth.
+  oauth_no_verified_email: "El proveedor OAuth no devolvió ninguna dirección de correo electrónico. Compruebe que su cuenta en el proveedor tenga una dirección de correo que Redmine pueda leer (p. ej. un correo público en GitHub)."
   oauth_invalid_provider: Proveedor OAuth no válido
   oauth_none: Ninguno
   oauth_provider_info: Proveedor OAuth
   oauth_site_info: URL de autenticación del proveedor OAuth
   oauth_client_id_info: ID de la aplicación (client)
   oauth_client_secret_info: Contraseña de la aplicación
+  oauth_client_secret_unchanged: "Déjelo en blanco para mantener el secreto actual"
   oauth_tenant_id_info: Directorio (tenant) ID
   oauth_button_info: Color, texto e icono (Awesome font class) del botón de login OAuth
   oauth_button_color_enabled: Color personalizado

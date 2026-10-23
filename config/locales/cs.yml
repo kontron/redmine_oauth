@@ -20,13 +20,14 @@
 cs:
   oauth_login_via: "Pokračujte s <b>%{oauth}</b>"
   oauth_login_with: Přihlášení pomocí OAuth
-  oauth_no_verified_email:  Není k dispozici žádný ověřený e-mail. Zkontrolujte nastavení u poskytovatele OAuth.
+  oauth_no_verified_email: "Poskytovatel OAuth nevrátil žádnou e-mailovou adresu. Zkontrolujte, zda má váš účet u poskytovatele e-mailovou adresu, kterou může Redmine číst (např. veřejný e-mail na GitHubu)."
   oauth_invalid_provider: Neplatný poskytovatel OAuth
   oauth_none: Žádný
   oauth_provider_info: Poskytovatel OAuth.
   oauth_site_info: Ověřovací URL poskytovatele OAuth.
   oauth_client_id_info: ID aplikace (klienta).
   oauth_client_secret_info: Heslo aplikace.
+  oauth_client_secret_unchanged: "Ponechte prázdné pro zachování současného tajného klíče"
   oauth_tenant_id_info: ID adresáře (tenanta).
   oauth_button_info: Barva, text a ikonka (třída Awesome fontu) přihlašovacího tlačítka OAuth.
   oauth_custom_name_info: Titulek zobrazený na přihlašovacím tlačítku OAuth.

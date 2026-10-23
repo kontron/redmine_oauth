@@ -215,6 +215,58 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_nothing_raised { RedmineOauthController.validate_hosted_domain({}, google) }
   end
 
+  def test_validate_audience
+    assert_nothing_raised { RedmineOauthController.validate_audience 'example-client', @keylock_provider }
+    assert_nothing_raised { RedmineOauthController.validate_audience %w[other example-client], @keylock_provider }
+    assert_raises(StandardError) { RedmineOauthController.validate_audience 'other', @keylock_provider }
+    assert_raises(StandardError) { RedmineOauthController.validate_audience nil, @keylock_provider }
+  end
+
+  def test_oauth_callback_rejects_token_for_another_client
+    oauth_login 'jsmith', 'azp' => 'other-client'
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
+  end
+
+  def test_admin_role
+    @keylock_provider.update! validate_user_roles: 'roles'
+    oauth_login 'jsmith', 'roles' => %w[user admin]
+    assert_equal @jsmith.id, session[:user_id]
+    assert @jsmith.reload.admin?
+  end
+
+  def test_admin_role_key_is_not_a_regexp
+    @keylock_provider.update! validate_user_roles: 'realm_access.roles'
+    oauth_login 'jsmith', 'realm_access' => { 'roles' => ['user'] }, 'realm_accessXroles' => 'admin'
+    assert_equal @jsmith.id, session[:user_id]
+    assert_not @jsmith.reload.admin?
+  end
+
+  def test_locked_user_gets_no_admin_role
+    @keylock_provider.update! validate_user_roles: 'roles'
+    @jsmith.lock!
+    oauth_login 'jsmith', 'roles' => %w[user admin]
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
+    assert_not @jsmith.reload.admin?
+  end
+
+  def test_registered_user_gets_no_admin_role
+    @keylock_provider.update! validate_user_roles: 'roles'
+    @jsmith.register!
+    oauth_login 'jsmith', 'roles' => %w[user admin]
+    assert_nil session[:user_id]
+    assert_not @jsmith.reload.admin?
+  end
+
+  def test_oauth_autologin_cookie
+    with_settings plugin_redmine_oauth: { 'oauth_login' => '1' } do
+      oauth_login 'jsmith', {}, oauth_autologin: '1'
+    end
+    assert_equal @jsmith.id, session[:user_id]
+    assert_equal @keylock_provider.id.to_s, cookies[:oauth_autologin]
+  end
+
   def test_identities_deleted_with_user
     OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
     assert_difference 'OauthIdentity.count', -1 do

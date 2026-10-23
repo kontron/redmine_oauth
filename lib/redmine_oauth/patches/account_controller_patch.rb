@@ -68,7 +68,8 @@ module RedmineOauth
         when 'Azure AD'
           logout_user
           id = oauth_provider.client_id
-          redirect_to "#{site}/#{id}/oauth2/logout?post_logout_redirect_uri=#{url}"
+          query = URI.encode_www_form(post_logout_redirect_uri: url)
+          redirect_to "#{site}/#{ERB::Util.url_encode(id)}/oauth2/logout?#{query}"
         when 'Custom'
           logout_user
           redirect_to oauth_provider.custom_logout_endpoint
@@ -81,16 +82,16 @@ module RedmineOauth
           client_id = oauth_provider.client_id
           id_token = session[:oauth_id_token]
           session.delete :oauth_id_token
-          logout_params = []
-          logout_params << "client_id=#{client_id}"
-          logout_params << "post_logout_redirect_uri=#{url}"
-          logout_params << "id_token_hint=#{id_token}" if id_token.present?
-          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?#{logout_params.join('&')}"
+          query = URI.encode_www_form(
+            { client_id: client_id, post_logout_redirect_uri: url, id_token_hint: id_token.presence }.compact
+          )
+          redirect_to "#{site}/realms/#{ERB::Util.url_encode(tenant_id)}/protocol/openid-connect/logout?#{query}"
         when 'Okta'
           logout_user
           id_token = session[:oauth_id_token]
           session.delete :oauth_id_token
-          redirect_to "#{site}/oauth2/v1/logout?id_token_hint=#{id_token}&post_logout_redirect_uri=#{url}"
+          query = URI.encode_www_form(id_token_hint: id_token, post_logout_redirect_uri: url)
+          redirect_to "#{site}/oauth2/v1/logout?#{query}"
         else
           super
         end

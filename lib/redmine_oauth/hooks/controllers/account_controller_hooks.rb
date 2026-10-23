@@ -23,9 +23,11 @@ module RedmineOauth
       # AccountController hooks
       class AccountControllerHooks < Redmine::Hook::Listener
         def controller_account_success_authentication_after(context = {})
-          return unless RedmineOauth.oauth_login? && context[:controller].params[:oauth_autologin]
+          controller = context[:controller]
+          return unless RedmineOauth.oauth_login? && controller.params[:oauth_autologin]
+          return unless controller.respond_to?(:set_oauth_autologin_cookie, true)
 
-          context[:controller].set_oauth_autologin_cookie
+          controller.send :set_oauth_autologin_cookie
         end
       end
     end

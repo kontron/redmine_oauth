@@ -41,6 +41,10 @@ class OauthProvider < ApplicationRecord
   validates :validate_user_roles, length: { maximum: 40 }
   validates :url_parameters, length: { maximum: 128 }, if: proc { has_attribute?(:url_parameters) }
   validates :button_text, length: { maximum: 40 }, if: proc { has_attribute?(:button_text) }
+  validates :button_color, format: { with: /\A#\h{6}\z/ }, allow_blank: true
+
+  # HTML tags allowed in the login button's text
+  BUTTON_TEXT_TAGS = %w[b i u em strong span br].freeze
 
   scope :sorted, -> { order(:position) }
 
@@ -54,11 +58,21 @@ class OauthProvider < ApplicationRecord
     luminance > 0.5 ? '#000000' : '#FFFFFF'
   end
 
+  # Login button's text, HTML formatting restricted to BUTTON_TEXT_TAGS
+  def button_label
+    text = button_text.presence ||
+           ::I18n.t(:oauth_login_via, oauth: ERB::Util.html_escape(custom_name.presence || oauth_name))
+    ActionController::Base.helpers.sanitize text, tags: BUTTON_TEXT_TAGS, attributes: %w[class]
+  end
+
   def update_from_parameters(params)
     self.oauth_name = params['oauth_name']
     self.site = params['site']
     self.client_id = params['client_id']
-    self.client_secret = Redmine::Ciphering.encrypt_text(params['client_secret'])
+    # The secret is not sent back to the edit form, a blank value keeps the current one
+    if new_record? || params['client_secret'].present?
+      self.client_secret = Redmine::Ciphering.encrypt_text(params['client_secret'])
+    end
     self.tenant_id = params['tenant_id']
     self.custom_name = params['custom_name']
     self.custom_auth_endpoint = params['custom_auth_endpoint']
