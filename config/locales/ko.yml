@@ -69,6 +69,10 @@ ko:
     활성화되면, 사용자는 표준 로그인 페이지를 완전히 건너뛰고 바로 OAuth 제공자로 리디렉션됩니다.
     Though, you can force the standard login page by adding 'nosso' parameter into the login URL, e.g. '/login?nosso'.
   identify_user_by_info: Redmine에서 사용자를 식별하기 위한 제공자의 필드
+  oauth_identify_user_by_uid_info: "uid: 제공자의 변경되지 않는 사용자 ID (Azure AD: oid, GitHub·GitLab: id, 기타: sub). 이메일이나 로그인이 바뀌어도 영향을 받지 않습니다."
+  field_auto_link_user: "기존 사용자를 이메일로 연결"
+  oauth_auto_link_user_info: "uid로 사용자를 식별하는 경우, 첫 OAuth 로그인 시 같은 이메일을 가진 기존 사용자가 자동으로 연결됩니다. 제공자가 이메일 주소를 검증하는 경우에만 사용하세요."
+  oauth_no_uid: "OAuth 제공자가 사용자 ID(uid)를 반환하지 않았습니다."
 
   label_oauth_provider: OAuth provider
   label_oauth_providers: OAuth providers

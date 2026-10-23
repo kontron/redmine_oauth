@@ -322,13 +322,17 @@ class RedmineOauthController < AccountController
     login ||= info['preferred_username']
     firstname = RedmineOauthController.get_firstname(info, oauth_provider)
     lastname = RedmineOauthController.get_lastname(info, oauth_provider)
+    uid = RedmineOauthController.get_uid(info, oauth_provider) if oauth_provider.identify_user_by == 'uid'
     # Find the user
     user = case oauth_provider.identify_user_by
            when 'login'
              User.where('LOWER(login) = ?', login.downcase).first
+           when 'uid'
+             RedmineOauthController.find_user_by_uid uid, email, oauth_provider
            else
              User.joins(:email_addresses).where('LOWER(email_addresses.address) = ?', email.downcase).first
            end
+    RedmineOauthController.link_identity(user, uid, oauth_provider) if user
     if user # Existing user
       if user.registered? # Registered
         account_pending user
@@ -383,6 +387,8 @@ class RedmineOauthController < AccountController
           onthefly_creation_failed user
         end
       end
+      # Link the newly registered user with their OAuth identity
+      RedmineOauthController.link_identity(user, uid, oauth_provider) if user.persisted?
     else # Invalid credentials
       params[:username] = email
       invalid_credentials
@@ -433,6 +439,43 @@ class RedmineOauthController < AccountController
     user.firstname = firstname if RedmineOauth.update_firstname?
     user.lastname = lastname if RedmineOauth.update_lastname?
     Rails.logger.error(user.errors.full_messages.to_sentence) unless user.save
+  end
+
+  # Get the provider's immutable user ID from OAuth data
+  def self.get_uid(info, oauth_provider)
+    uid = case oauth_provider.oauth_name
+          when 'Azure AD'
+            info['oid'] || info['sub']
+          when 'GitHub', 'GitLab'
+            info['id']
+          else
+            info['sub']
+          end
+    raise StandardError, ::I18n.t(:oauth_no_uid) if uid.blank?
+
+    uid.to_s
+  end
+
+  # Find the user by their OAuth identity, optionally linking an existing user with the same email on the first login
+  def self.find_user_by_uid(uid, email, oauth_provider)
+    identity = OauthIdentity.find_by(oauth_provider_id: oauth_provider.id, uid: uid)
+    return identity.user if identity
+    return nil unless oauth_provider.auto_link_user?
+
+    user = User.joins(:email_addresses).where('LOWER(email_addresses.address) = ?', email.downcase).first
+    # The user is already linked with another identity of this provider
+    return nil if user && OauthIdentity.exists?(oauth_provider_id: oauth_provider.id, user_id: user.id)
+
+    user
+  end
+
+  # Store the link between the user and their OAuth identity
+  def self.link_identity(user, uid, oauth_provider)
+    return if uid.blank?
+
+    OauthIdentity.find_or_create_by!(oauth_provider_id: oauth_provider.id, uid: uid) do |identity|
+      identity.user = user
+    end
   end
 
   # Get the first name from for OAuth data

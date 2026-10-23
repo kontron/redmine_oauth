@@ -26,6 +26,11 @@ on:
 jobs:
   plugin_tests:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        redmine: ['6.1-stable', '7.0-stable']
+    name: Redmine ${{ matrix.redmine }}
     env:
       RAILS_ENV: test
       NAME: redmine_oauth
@@ -35,9 +40,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install subversion
       - name: Clone Redmine
-        # Get the latest stable Redmine and fix the conflict in gems
+        # Get the stable Redmine branch and fix the conflict in gems
         run: |
-          svn export https://svn.redmine.org/redmine/branches/7.0-stable/ /opt/redmine
+          svn export https://svn.redmine.org/redmine/branches/${{ matrix.redmine }}/ /opt/redmine
           sed -i "s/gem 'net-imap'/#gem 'net-imap'/" /opt/redmine/Gemfile
       - name: Checkout code
         uses: actions/checkout@v4
@@ -75,7 +80,8 @@ jobs:
           cd /opt/redmine          
           bundle exec rake redmine:plugins:test:functionals                    
       - name: Rubocop
-        # Run the Rubocop tests
+        # Run the Rubocop tests (only once, with the latest Redmine's RuboCop)
+        if: matrix.redmine == '7.0-stable'
         run: |
           cd /opt/redmine                    
           bundle exec rubocop -c plugins/redmine_oauth/.rubocop.yml plugins/redmine_oauth/          

@@ -5,8 +5,8 @@
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
 
-The user is identified by their email or login registered with the OAuth provider. The email or login must match an 
-email or login registered in Redmine. If such an email or login is not found, the user will be offered to register in 
+The user is identified by their email, login or immutable user ID (uid) registered with the OAuth provider. The email 
+or login must match an email or login registered in Redmine. If such an email or login is not found, the user will be offered to register in 
 Redmine, depending on Redmine's setting **Self-registration**. OAuth logout is also supported, if it is set in the 
 options. Access to Redmine can be controlled by roles assigned in your OAuth provider.
 See [#36](https://github.com/kontron/redmine_oauth/issues/36#issuecomment-2348842432) for details; as well as OAuth autologin.
@@ -70,6 +70,14 @@ websites. Add `https://yourdomain/oauth2callback` as redirect URI.
 ### Configuration
 
 Open _Administration -> OAuth providers_ in your Redmine and add your provider(s).
+
+#### Identify user by
+
+* **email** / **login** - The user is matched by their email or login returned by the provider.
+* **uid** - The user is matched by the provider's immutable user ID (Azure AD: `oid`; GitHub, GitLab: `id`; others: 
+  `sub`), stored in Redmine after the first login. The link survives changes of the user's email or login.
+  With **Link existing users by email** (on by default), an existing Redmine user with the same email is linked on 
+  their first OAuth login. Turn it off if the provider does not verify email addresses.
 
 Examples:
 

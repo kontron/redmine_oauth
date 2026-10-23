@@ -4,6 +4,15 @@ Changelog for Redmine OAuth
 4.2.4 *????-??-??*
 ------------------
 
+    Identify users by uid
+    Italian localization
+    Redmine 6.1 in CI
+
+* New: Italian localization
+* New: GitHub CI runs the tests against Redmine 6.1 as well as 7.0
+* New: Identify users by the provider's immutable user ID (uid), e.g. Azure AD oid
+* Bug: IMAP task ignores ssl=false and starttls=false options
+
 4.2.3 *2026-10-05*
 ------------------
     

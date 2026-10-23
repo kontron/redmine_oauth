@@ -68,6 +68,10 @@ cs:
     přihlášení standardním přihlašovacím formulářem. Přesto lze vynutit zobrazení standardní přihlašovací stránky 
     přídáním parametru 'nosso' přihlašovací URL, např. '/login?nosso'.
   identify_user_by_info: Pole poskytovatele k identifikaci uživatele v Redminu
+  oauth_identify_user_by_uid_info: "uid: neměnné ID uživatele u poskytovatele (Azure AD: oid; GitHub, GitLab: id; ostatní: sub). Nemění se při změně e-mailu nebo loginu."
+  field_auto_link_user: "Propojit existující uživatele podle e-mailu"
+  oauth_auto_link_user_info: "Při identifikaci podle uid je při prvním OAuth přihlášení automaticky propojen existující uživatel se stejným e-mailem. Zapněte pouze, pokud poskytovatel ověřuje e-mailové adresy."
+  oauth_no_uid: "Poskytovatel OAuth nevrátil ID uživatele (uid)."
 
   label_oauth_provider: Poskytovatel OAuth
   label_oauth_providers: Poskytovatelé OAuth

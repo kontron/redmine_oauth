@@ -1,0 +1,107 @@
+# frozen_string_literal: true
+
+# Redmine plugin OAuth
+#
+# Karel Pičman <karel.picman@kontron.com>
+#
+# This file is part of Redmine OAuth plugin.
+#
+# Redmine OAuth plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General
+# Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# Redmine OAuth plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+# the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with Redmine OAuth plugin. If not, see
+# <https://www.gnu.org/licenses/>.
+
+it:
+  oauth_login_via: "Continua con <b>%{oauth}</b>"
+  oauth_login_with: Accedi con OAuth
+  oauth_no_verified_email: Nessuna email verificata fornita, controlla le impostazioni sul sito del provider OAuth.
+  oauth_invalid_provider: Provider OAuth non valido
+  oauth_none: Nessuno
+  oauth_provider_info: Provider OAuth.
+  oauth_site_info: URL di autenticazione del provider OAuth.
+  oauth_client_id_info: ID applicazione (client).
+  oauth_client_secret_info: Password dell'applicazione.
+  oauth_tenant_id_info: ID directory (tenant).
+  oauth_button_info: Colore, testo e icona (classe Font Awesome) del pulsante di accesso OAuth.
+  oauth_button_color_enabled: Colore personalizzato
+  oauth_button_color_enabled_info: Consenti di sovrascrivere il colore del pulsante.
+  oauth_custom_name_info: Titolo da mostrare sul pulsante di accesso OAuth.
+  oauth_custom_auth_endpoint_info: Endpoint di autorizzazione dell'applicazione.
+  oauth_custom_token_endpoint_info: Endpoint del token dell'applicazione.
+  oauth_custom_profile_endpoint_info: Endpoint del profilo dell'applicazione.
+  oauth_custom_scope_info: "Scope OAuth (predefinito: 'openid profile email')."
+  oauth_custom_uid_field_info: "Campo UID (predefinito: preferred_username)."
+  oauth_custom_email_field_info: "Campo email (predefinito: email)."
+  oauth_self_registration_by_domain: Attivazione automatica solo per i domini email elencati
+  oauth_self_registration_domains: Domini consentiti (separati da virgola)
+  oauth_self_registration_domains_info: |
+    Gli utenti con indirizzo email in uno di questi domini (o in un sottodominio) vengono attivati automaticamente.
+    Tutti gli altri nuovi utenti restano in attesa dell'approvazione di un amministratore. Esempio: example.com, partner.org
+  oauth_hide_login_form: Nascondi il modulo di accesso
+  oauth_update_login_info: Aggiorna il profilo dell'utente dopo un accesso riuscito.
+  oauth_logout: Logout OAuth
+  oauth_logout_info: Esegui il logout anche dal provider OAuth dopo il logout da Redmine.
+  oauth_login: Login OAuth
+  oauth_login_info: Consenti agli utenti di accedere automaticamente tramite il provider OAuth, saltando il modulo di accesso.
+  oauth_custom_logout_endpoint_info: Endpoint di logout dell'applicazione.
+  oauth_validate_user_roles_info: "Chiave del token in cui sono presenti i ruoli dell'utente. Se impostata, il ruolo 'user'
+    consente l'accesso e il ruolo 'admin' concede i diritti di amministratore. Se il ruolo 'user' non è presente, l'accesso
+    viene negato. Se manca il ruolo 'admin', i diritti di amministratore vengono revocati. Es.: inserisci
+    'resource_access.redmine.roles' se il token è impostato così:
+    'resource_access': { 'redmine': { 'roles': ['user', 'admin'] } }"
+  oauth_autologin: Accesso automatico con il provider OAuth
+  oauth_version_info: Versione dell'endpoint
+  oauth_enable_group_roles_info: |
+    Se abilitato, tutti i ruoli aggiuntivi oltre a quelli predefiniti (admin, user) vengono associati a un gruppo con lo
+    stesso nome. Ad esempio, se crei un gruppo chiamato 'developer' e il tuo utente ha un ruolo chiamato 'developer',
+    l'utente verrà aggiunto a quel gruppo.
+
+    Con questa opzione abilitata, gli utenti vengono rimossi da qualsiasi gruppo che non corrisponda ai loro ruoli: se
+    aggiungi manualmente un utente al gruppo 'developer' ma l'utente non ha quel ruolo nel tuo identity provider,
+    verrà rimosso dal gruppo.
+  oauth_only_login: Accesso solo tramite OAuth
+  oauth_only_login_info: |
+    Se abilitato, gli utenti vengono reindirizzati direttamente al provider OAuth, saltando del tutto la pagina di accesso
+    standard. È comunque possibile forzare la pagina di accesso standard aggiungendo il parametro 'nosso' all'URL di
+    accesso, es. '/login?nosso'.
+  identify_user_by_info: Campo del provider con cui identificare l'utente in Redmine
+  oauth_identify_user_by_uid_info: "uid: ID utente immutabile del provider (Azure AD: oid; GitHub, GitLab: id; altri: sub). Non cambia se cambiano email o login."
+  field_auto_link_user: "Collega gli utenti esistenti tramite email"
+  oauth_auto_link_user_info: "Se gli utenti sono identificati tramite uid, al primo accesso OAuth un utente esistente con la stessa email viene collegato automaticamente. Abilitare solo se il provider verifica gli indirizzi email."
+  oauth_no_uid: "Il provider OAuth non ha restituito l'ID utente (uid)."
+
+  label_oauth_provider: Provider OAuth
+  label_oauth_providers: Provider OAuth
+  label_new_oauth_provider: Nuovo provider OAuth
+  oauth_imap_info: Abilita questo provider per IMAP
+  oauth_url_parameters_info: "Parametri aggiuntivi per l'URL di autorizzazione, es.: 'hd=kontron.com&access_type=offline'"
+  error_invalid_hosted_domain: Il dominio ospitato non è consentito.
+  field_url_parameters: Parametri URL
+  field_oauth_name: Provider
+  field_button_color: Pulsante di accesso
+  field_site: Sito
+  field_client_id: Client ID
+  field_client_secret: Client secret
+  field_tenant_id: Tenant ID / Realm
+  field_custom_firstname_field: Campo nome del provider
+  field_custom_lasttname_field: Campo cognome del provider
+  field_validate_user_roles: Convalida i ruoli utente
+  field_enable_group_roles: Abilita i ruoli di gruppo
+  field_identify_user_by: Identifica l'utente tramite
+  field_imap: IMAP
+  field_custom_auth_endpoint: Endpoint OAuth
+  field_custom_token_endpoint: Endpoint del token
+  field_custom_profile_endpoint: Endpoint del profilo
+  field_custom_logout_endpoint: Endpoint di logout
+  field_custom_scope: Scope
+  field_custom_uid_field: Campo UID
+  field_custom_email_field: Campo email
+  oauth_button_text_info: Testo alternativo per il pulsante di accesso (formattazione HTML)
+  oauth_button_color_info: Colore del pulsante
+  oauth_button_icon_info: Icona del pulsante
