@@ -34,7 +34,7 @@
         <%= button_tag(name: 'oauth_provider', value: oauth_provider.id, tabindex: i + 7,
                        id: "login-oauth-submit-#{oauth_provider.id}",
                        title: l(:oauth_login_with),
-                       style: (oauth_provider.button_color_enabled? ? "background-color: #{oauth_provider.button_color}" : nil)) do %>
+                       style: (oauth_provider.button_color_enabled? ? "background-color: #{oauth_provider.button_color}; color: #{oauth_provider.button_font_color}" : nil)) do %>
           <i id="button_icon" class="<%= oauth_provider.button_icon %>"></i>
           <% str = oauth_provider.button_text.presence || l(:oauth_login_via, oauth: oauth_provider.custom_name) %>
           <%= str.html_safe %>
@@ -78,5 +78,10 @@
 
   <% if RedmineOauth.oauth_only_login? && params.exclude?(:nosso)%>
     document.getElementById('oauth-login').submit();
+  <% end %>
+
+  <%# Keep nosso on the password POST, or "OAuth only" sends it to the provider %>
+  <% if params.include?(:nosso) %>
+    $('div#login-form form').append('<input type="hidden" name="nosso" value="1">');
   <% end %>
 <% end %>

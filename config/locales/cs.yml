@@ -102,3 +102,8 @@ cs:
   oauth_button_text_info: Alternativní text pro přihlašovací tlačítko (HTML formátování)
   oauth_button_color_info: Barva tlačítka
   oauth_button_icon_info: Ikonka tlačítka
+
+  oauth_disable_local_passwords: Zakázat lokální hesla pro uživatele OAuth
+  oauth_disable_local_passwords_info: Převést neadministrátorské účty při jejich příštím přihlášení a nové OAuth účty 
+    na autentikaci SSO. Existující hesla a obnovovací kódy budou smazány. Administrátorské účty vyžadují explicitní 
+    migraci. Odškrtnutí této volby neobnoví již zmigrované účty.

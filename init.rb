@@ -24,13 +24,14 @@ Redmine::Plugin.register :redmine_oauth do
   name 'Redmine OAuth plugin'
   author 'Karel Pičman'
   description 'Redmine OAuth plugin'
-  version '4.2.3'
+  version '4.2.4 devel'
   url 'https://github.com/kontron/redmine_oauth'
   author_url 'https://github.com/kontron/redmine_oauth/graphs/contributors'
 
   requires_redmine version_or_higher: '6.0.0'
 
   settings default: {
+    disable_local_passwords: '0',
     hide_login_form: '0',
     self_registration: '0',
     self_registration_domains: '',

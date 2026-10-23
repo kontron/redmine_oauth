@@ -105,3 +105,8 @@ de:
   oauth_button_text_info: Alternativer Text für den Anmeldebutton (HTML-Formatierung)
   oauth_button_color_info: Buttons Farbe
   oauth_button_icon_info: Button-Symbol
+
+  oauth_disable_local_passwords: Deaktiviere lokale Passworte für OAuth-Nutzer
+  oauth_disable_local_passwords_info: Konvertiert Nicht-Administrator-Konten beim nächsten OAuth-Login und neuen OAuth 
+    Konten zur SSO-Authentifizierung. Bestehende Passworte und Wiederherstellungscodes werden entfernt. Administratoren 
+    verlangen eine explizite Migration. Das Deaktivieren dieser Option stellt die migrierten Konten nicht wieder her.
