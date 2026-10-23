@@ -131,4 +131,47 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     }
     assert_equal 'de Jong', RedmineOauthController.get_lastname(info, @oauth_provider)
   end
+
+  def test_get_uid
+    assert_equal 'abc', RedmineOauthController.get_uid({ 'sub' => 'abc' }, @keylock_provider)
+    @keylock_provider.oauth_name = 'Azure AD'
+    assert_equal 'oid-1', RedmineOauthController.get_uid({ 'oid' => 'oid-1', 'sub' => 'sub-1' }, @keylock_provider)
+    @keylock_provider.oauth_name = 'GitHub'
+    assert_equal '123', RedmineOauthController.get_uid({ 'id' => 123 }, @keylock_provider)
+    assert_raises(StandardError) { RedmineOauthController.get_uid({ 'sub' => 'abc' }, @keylock_provider) }
+  end
+
+  def test_find_user_by_uid_linked_identity
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert_equal @jsmith, RedmineOauthController.find_user_by_uid('uid-1', 'changed@example.com', @keylock_provider)
+  end
+
+  def test_find_user_by_uid_auto_link
+    @keylock_provider.auto_link_user = true
+    assert_equal @jsmith, RedmineOauthController.find_user_by_uid('uid-1', 'JSmith@somenet.foo', @keylock_provider)
+    @keylock_provider.auto_link_user = false
+    assert_nil RedmineOauthController.find_user_by_uid('uid-1', 'jsmith@somenet.foo', @keylock_provider)
+  end
+
+  def test_find_user_by_uid_auto_link_already_linked
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert_nil RedmineOauthController.find_user_by_uid('uid-2', 'jsmith@somenet.foo', @keylock_provider)
+  end
+
+  def test_link_identity
+    assert_difference 'OauthIdentity.count', +1 do
+      RedmineOauthController.link_identity @jsmith, 'uid-1', @keylock_provider
+      RedmineOauthController.link_identity @jsmith, 'uid-1', @keylock_provider
+    end
+    assert_no_difference 'OauthIdentity.count' do
+      RedmineOauthController.link_identity @jsmith, nil, @keylock_provider
+    end
+  end
+
+  def test_identities_deleted_with_user
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert_difference 'OauthIdentity.count', -1 do
+      @jsmith.destroy
+    end
+  end
 end

@@ -69,6 +69,10 @@ es:
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
     Though, you can force the standard login page by adding 'nosso' parameter into the login URL, e.g. '/login?nosso'.
   identify_user_by_info: Provider's field to identify the user in Redmine
+  oauth_identify_user_by_uid_info: "uid: ID de usuario inmutable del proveedor (Azure AD: oid; GitHub, GitLab: id; otros: sub). No le afectan los cambios de correo o de login."
+  field_auto_link_user: "Vincular usuarios existentes por correo"
+  oauth_auto_link_user_info: "Si los usuarios se identifican por uid, en el primer inicio de sesión OAuth un usuario existente con el mismo correo se vincula automáticamente. Actívelo solo si el proveedor verifica las direcciones de correo."
+  oauth_no_uid: "El proveedor OAuth no devolvió el ID de usuario (uid)."
 
   label_oauth_provider: OAuth provider
   label_oauth_providers: OAuth providers
