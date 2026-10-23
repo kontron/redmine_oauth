@@ -21,6 +21,7 @@ en:
   oauth_login_via: "Continue with <b>%{oauth}</b>"
   oauth_login_with: Login with OAuth
   oauth_no_verified_email: "The OAuth provider did not return an email address. Check that your account on the provider has an email address that Redmine is allowed to read (e.g. a public email on GitHub)."
+  oauth_unverified_email: "The OAuth provider has not verified your email address. Verify it on the provider's site and try again."
   oauth_invalid_provider: Invalid OAuth provider
   oauth_none: None
   oauth_provider_info: OAuth provider.
@@ -73,6 +74,8 @@ en:
   oauth_identify_user_by_uid_info: "uid: the provider's immutable user ID (Azure AD: oid; GitHub, GitLab: id; others: sub). Not affected by email or login changes."
   field_auto_link_user: "Link existing users by email"
   oauth_auto_link_user_info: "If identifying users by uid, on the first OAuth login an existing user with the same email is linked automatically. Enable only if the provider verifies email addresses."
+  field_require_verified_email: "Require verified email"
+  oauth_require_verified_email_info: "Reject the login if the provider does not confirm the email address with the 'email_verified' claim. An email marked as not verified by the provider is always rejected."
   oauth_no_uid: "The OAuth provider did not return the user ID (uid)."
 
   label_oauth_provider: OAuth provider

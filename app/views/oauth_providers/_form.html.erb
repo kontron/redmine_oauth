@@ -142,6 +142,11 @@
         <%= f.check_box :auto_link_user %>
         <em class="info"><%= l(:oauth_auto_link_user_info) %></em>
       </p>
+      <% style = OauthProvider::EMAIL_VERIFIED_CLAIM_PROVIDERS.include?(@oauth_provider.oauth_name) ? nil : 'display: none' %>
+      <p id="oauth_option_require_verified_email" style="<%= style %>">
+        <%= f.check_box :require_verified_email %>
+        <em class="info"><%= l(:oauth_require_verified_email_info) %></em>
+      </p>
       <p>
         <%= f.check_box :imap, title: l(:oauth_imap_info) %>
       </p>
