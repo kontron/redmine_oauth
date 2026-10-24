@@ -43,9 +43,6 @@ class OauthProvider < ApplicationRecord
   validates :button_text, length: { maximum: 40 }, if: proc { has_attribute?(:button_text) }
   validates :button_color, format: { with: /\A#\h{6}\z/ }, allow_blank: true
 
-  # Providers sending the OIDC 'email_verified' claim
-  EMAIL_VERIFIED_CLAIM_PROVIDERS = %w[Google Keycloak Okta Custom].freeze
-
   # HTML tags allowed in the login button's text
   BUTTON_TEXT_TAGS = %w[b i u em strong span br].freeze
 
@@ -95,7 +92,6 @@ class OauthProvider < ApplicationRecord
     self.oauth_version = params['oauth_version']
     self.identify_user_by = params['identify_user_by']
     self.auto_link_user = params['auto_link_user'] if params.key?('auto_link_user')
-    self.require_verified_email = params['require_verified_email'] if params.key?('require_verified_email')
     self.imap = params['imap']
     self.url_parameters = params['url_parameters']
     self.button_text = params['button_text']

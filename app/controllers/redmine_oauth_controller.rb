@@ -165,8 +165,6 @@ class RedmineOauthController < AccountController
     email, user_info = fetch_user_info(oauth_provider, code_verifier)
     raise StandardError, l(:oauth_no_verified_email) unless email
 
-    RedmineOauthController.validate_email_verified user_info, oauth_provider
-
     # Re-authentication for the sudo mode, the identity must belong to the current user
     if session.key?(:oauth_sudo_mode) && User.current.logged?
       oauth_sudo_mode = session.delete(:oauth_sudo_mode)
@@ -282,19 +280,6 @@ class RedmineOauthController < AccountController
     return if info['hd'].present? && (hd == '*' || info['hd'].casecmp?(hd))
 
     raise StandardError, ::I18n.t(:error_invalid_hosted_domain)
-  end
-
-  # Reject the email marked as not verified by the provider. If required by the provider's settings, reject also the
-  # email without the 'email_verified' claim.
-  def self.validate_email_verified(info, oauth_provider)
-    return if OauthProvider::EMAIL_VERIFIED_CLAIM_PROVIDERS.exclude?(oauth_provider.oauth_name)
-
-    verified = info['email_verified']
-    # Some providers send the value as a string
-    return if verified.to_s == 'true'
-    return if verified.nil? && !oauth_provider.require_verified_email?
-
-    raise StandardError, ::I18n.t(:oauth_unverified_email)
   end
 
   # Check that the token was issued for this application; the tokens come directly from the provider's token endpoint

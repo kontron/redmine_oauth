@@ -243,15 +243,6 @@ class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_equal 'new', Redmine::Ciphering.decrypt_text(@keylock_provider.reload.client_secret)
   end
 
-  def test_update_require_verified_email
-    post '/login', params: { username: 'admin', password: 'admin' }
-    assert_not @keylock_provider.require_verified_email?
-    patch "/oauth_providers/#{@keylock_provider.id}",
-          params: { oauth_provider: keycloak_params(require_verified_email: '1') }
-    assert_redirected_to oauth_providers_path
-    assert @keylock_provider.reload.require_verified_email?
-  end
-
   def test_update_invalid_button_color
     post '/login', params: { username: 'admin', password: 'admin' }
     patch "/oauth_providers/#{@keylock_provider.id}",

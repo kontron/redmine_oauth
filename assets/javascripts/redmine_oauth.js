@@ -184,9 +184,6 @@ function oauth_settings_visibility() {
         default:
             break;
     }
-    // Only these providers send the 'email_verified' claim (OauthProvider::EMAIL_VERIFIED_CLAIM_PROVIDERS)
-    div_oauth_options.find('#oauth_option_require_verified_email').toggle(
-        ['Google', 'Keycloak', 'Okta', 'Custom'].includes(oauth_name));
 }
 
 function oauth_toggle_fieldset(el)

@@ -215,38 +215,6 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_nothing_raised { RedmineOauthController.validate_hosted_domain({}, google) }
   end
 
-  def test_validate_email_verified
-    check = ->(info) { RedmineOauthController.validate_email_verified info, @keylock_provider }
-    assert_nothing_raised { check.call('email_verified' => true) }
-    assert_nothing_raised { check.call('email_verified' => 'true') }
-    assert_nothing_raised { check.call({}) }
-    assert_raises(StandardError) { check.call('email_verified' => false) }
-    assert_raises(StandardError) { check.call('email_verified' => 'false') }
-    @keylock_provider.require_verified_email = true
-    assert_nothing_raised { check.call('email_verified' => true) }
-    assert_raises(StandardError) { check.call({}) }
-    # GitHub does not send the claim, its public email is always verified
-    @keylock_provider.oauth_name = 'GitHub'
-    assert_nothing_raised { check.call({}) }
-  end
-
-  def test_oauth_callback_rejects_unverified_email
-    oauth_login 'jsmith', 'email_verified' => false
-    assert_redirected_to signin_path
-    assert_equal ERB::Util.html_escape(l(:oauth_unverified_email)), flash[:error]
-    assert_nil session[:user_id]
-  end
-
-  def test_oauth_callback_requires_verified_email
-    @keylock_provider.update! require_verified_email: true
-    oauth_login 'jsmith'
-    assert_redirected_to signin_path
-    assert_nil session[:user_id]
-
-    oauth_login 'jsmith', 'email_verified' => true
-    assert_equal @jsmith.id, session[:user_id]
-  end
-
   def test_validate_audience
     assert_nothing_raised { RedmineOauthController.validate_audience 'example-client', @keylock_provider }
     assert_nothing_raised { RedmineOauthController.validate_audience %w[other example-client], @keylock_provider }

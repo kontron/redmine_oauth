@@ -23,8 +23,6 @@ Changelog for Redmine OAuth
 * Security: Logout URL parameters not encoded
 * Security: User roles key used as a regular expression
 * Docs: Security considerations
-* Security: Email marked as not verified by the provider (email_verified claim) accepted
-* New: Option to require a verified email (email_verified claim)
 * New: Clearer message when the provider does not return an email address
 * Bug: Provider controller tests not running
 
