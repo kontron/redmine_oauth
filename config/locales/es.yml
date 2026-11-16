@@ -20,13 +20,15 @@
 es:
   oauth_login_via: "Acceder con <b>%{oauth}</b>"
   oauth_login_with: Autenticación con OAuth
-  oauth_no_verified_email: No se proporcionó ningún correo electrónico, verifique su configuración en el sitio del proveedor OAuth.
+  oauth_no_verified_email: "El proveedor OAuth no devolvió ninguna dirección de correo electrónico. Compruebe que su cuenta en el proveedor tenga una dirección de correo que Redmine pueda leer (p. ej. un correo público en GitHub)."
+  oauth_unverified_email: "El proveedor OAuth no ha verificado su dirección de correo electrónico. Verifíquela en el sitio del proveedor e inténtelo de nuevo."
   oauth_invalid_provider: Proveedor OAuth no válido
   oauth_none: Ninguno
   oauth_provider_info: Proveedor OAuth
   oauth_site_info: URL de autenticación del proveedor OAuth
   oauth_client_id_info: ID de la aplicación (client)
   oauth_client_secret_info: Contraseña de la aplicación
+  oauth_client_secret_unchanged: "Déjelo en blanco para mantener el secreto actual"
   oauth_tenant_id_info: Directorio (tenant) ID
   oauth_button_info: Color, texto e icono (Awesome font class) del botón de login OAuth
   oauth_button_color_enabled: Color personalizado
@@ -69,6 +71,12 @@ es:
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page.
     Though, you can force the standard login page by adding 'nosso' parameter into the login URL, e.g. '/login?nosso'.
   identify_user_by_info: Provider's field to identify the user in Redmine
+  oauth_identify_user_by_uid_info: "uid: ID de usuario inmutable del proveedor (Azure AD: oid; GitHub, GitLab: id; otros: sub). No le afectan los cambios de correo o de login."
+  field_auto_link_user: "Vincular usuarios existentes por correo"
+  oauth_auto_link_user_info: "Si los usuarios se identifican por uid, en el primer inicio de sesión OAuth un usuario existente con el mismo correo se vincula automáticamente. Actívelo solo si el proveedor verifica las direcciones de correo."
+  field_require_verified_email: "Requerir correo verificado"
+  oauth_require_verified_email_info: "Rechazar el inicio de sesión si el proveedor no confirma la dirección de correo con el claim 'email_verified'. Un correo marcado como no verificado por el proveedor siempre se rechaza."
+  oauth_no_uid: "El proveedor OAuth no devolvió el ID de usuario (uid)."
 
   label_oauth_provider: OAuth provider
   label_oauth_providers: OAuth providers
@@ -99,3 +107,8 @@ es:
   oauth_button_text_info: Alternative text for the button (HTML formatting)
   oauth_button_color_info: Button's colour
   oauth_button_icon_info: Button's icon
+
+  oauth_disable_local_passwords: Disable local passwords for OAuth users
+  oauth_disable_local_passwords_info: Converts non-administrator accounts at their next OAuth login and new OAuth
+    accounts to SSO authentication. Existing passwords and recovery/session tokens are removed. Administrators require
+    explicit migration. Disabling this option does not restore migrated accounts.

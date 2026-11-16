@@ -20,13 +20,15 @@
 en:
   oauth_login_via: "Continue with <b>%{oauth}</b>"
   oauth_login_with: Login with OAuth
-  oauth_no_verified_email: No verified email provided, check your settings on OAuth provider site.
+  oauth_no_verified_email: "The OAuth provider did not return an email address. Check that your account on the provider has an email address that Redmine is allowed to read (e.g. a public email on GitHub)."
+  oauth_unverified_email: "The OAuth provider has not verified your email address. Verify it on the provider's site and try again."
   oauth_invalid_provider: Invalid OAuth provider
   oauth_none: None
   oauth_provider_info: OAuth provider.
   oauth_site_info: OAuth provider's authentication URL.
   oauth_client_id_info: Application (client) ID.
   oauth_client_secret_info: Application password.
+  oauth_client_secret_unchanged: "Leave blank to keep the current secret"
   oauth_tenant_id_info: Directory (tenant) ID.
   oauth_button_info: Colour, text and icon (Awesome font class) of the OAuth login button.
   oauth_button_color_enabled: Custom Color
@@ -69,6 +71,12 @@ en:
     When enabled, users will be redirected straight to the OAuth provider, entirely skipping the standard login page. 
     Though, you can force the standard login page by adding 'nosso' parameter into the login URL, e.g. '/login?nosso'.
   identify_user_by_info: Provider's field to identify the user in Redmine
+  oauth_identify_user_by_uid_info: "uid: the provider's immutable user ID (Azure AD: oid; GitHub, GitLab: id; others: sub). Not affected by email or login changes."
+  field_auto_link_user: "Link existing users by email"
+  oauth_auto_link_user_info: "If identifying users by uid, on the first OAuth login an existing user with the same email is linked automatically. Enable only if the provider verifies email addresses."
+  field_require_verified_email: "Require verified email"
+  oauth_require_verified_email_info: "Reject the login if the provider does not confirm the email address with the 'email_verified' claim. An email marked as not verified by the provider is always rejected."
+  oauth_no_uid: "The OAuth provider did not return the user ID (uid)."
 
   label_oauth_provider: OAuth provider
   label_oauth_providers: OAuth providers
@@ -99,3 +107,8 @@ en:
   oauth_button_text_info: Alternative text for the login button (HTML formatting)
   oauth_button_color_info: Button's colour
   oauth_button_icon_info: Button's icon
+
+  oauth_disable_local_passwords: Disable local passwords for OAuth users
+  oauth_disable_local_passwords_info: Converts non-administrator accounts at their next OAuth login and new OAuth 
+    accounts to SSO authentication. Existing passwords and recovery/session tokens are removed. Administrators require 
+    explicit migration. Disabling this option does not restore migrated accounts.

@@ -20,13 +20,15 @@
 fr:
   oauth_login_via: "Continuer avec <b>%{oauth}</b>"
   oauth_login_with: Se connecter avec OAuth
-  oauth_no_verified_email: Aucun email vérifié n'a été fourni, vérifiez vos réglages sur le site de votre fournisseur Oauth.
+  oauth_no_verified_email: "Le fournisseur OAuth n'a renvoyé aucune adresse email. Vérifiez que votre compte chez le fournisseur possède une adresse email accessible à Redmine (par ex. une adresse publique sur GitHub)."
+  oauth_unverified_email: "Le fournisseur OAuth n'a pas vérifié votre adresse email. Vérifiez-la sur le site du fournisseur et réessayez."
   oauth_invalid_provider: Fournisseur OAuth invalide
   oauth_none: Aucun
   oauth_provider_info: Fournisseur OAuth.
   oauth_site_info: URL d'authentification du fournisseur OAuth.
   oauth_client_id_info: ID d'application.
   oauth_client_secret_info: Mot de passe d'application.
+  oauth_client_secret_unchanged: "Laisser vide pour conserver le secret actuel"
   oauth_tenant_id_info: ID de répertoire (tenant).
   oauth_button_info: Couleur, texte et icône (classe Font Awesome) du bouton de connexion via OAuth.
   oauth_button_color_enabled: Couleur personnalisée
@@ -70,6 +72,12 @@ fr:
     Cependant, vous pouvez forcer l'accès à la page de connexion usuelle en ajoutant le paramètre `nosso` dans l'URL, ex. '/login?nosso'.
   identify_user_by: Identifier l'utilisateur·trice par
   identify_user_by_info: Le champ du fournisseur à utiliser pour identifier l'utilisateur·trice dans Redmine
+  oauth_identify_user_by_uid_info: "uid : identifiant immuable de l'utilisateur·trice chez le fournisseur (Azure AD : oid ; GitHub, GitLab : id ; autres : sub). Insensible aux changements d'e-mail ou d'identifiant."
+  field_auto_link_user: "Lier les utilisateur·trices existant·es par e-mail"
+  oauth_auto_link_user_info: "En identification par uid, lors de la première connexion OAuth, un·e utilisateur·trice existant·e avec le même e-mail est lié·e automatiquement. À activer uniquement si le fournisseur vérifie les adresses e-mail."
+  field_require_verified_email: "Exiger un email vérifié"
+  oauth_require_verified_email_info: "Refuser la connexion si le fournisseur ne confirme pas l'adresse email avec le claim 'email_verified'. Un email signalé comme non vérifié par le fournisseur est toujours refusé."
+  oauth_no_uid: "Le fournisseur OAuth n'a pas renvoyé l'identifiant de l'utilisateur·trice (uid)."
 
   label_oauth_provider: Fournisseur OAuth
   label_oauth_providers: Fournisseurs OAuth
@@ -100,3 +108,9 @@ fr:
   oauth_button_text_info: Texte alternatif pour le bouton (format HTML)
   oauth_button_color_info: Couleur du bouton
   oauth_button_icon_info: Icône du bouton
+
+  oauth_disable_local_passwords: Interdire les mots de passe locaux aux comptes OAuth
+  oauth_disable_local_passwords_info: Convertit les comptes non administrateurs à leur prochaine connexion OAuth, 
+    ainsi que les nouveaux comptes OAuth, en authentification SSO. Supprime les mots de passe et les jetons 
+    de récupération/session existants. Les administrateurs nécessitent une migration explicite. Désactiver cette option 
+    ne restaure pas les comptes convertis.

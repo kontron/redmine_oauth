@@ -20,13 +20,15 @@
 ko:
   oauth_login_via: "<b>%{oauth}</b>(으)로 계속하기"
   oauth_login_with: OAuth로 로그인
-  oauth_no_verified_email: 인증된 이메일이 제공되지 않았습니다. OAuth 제공자 사이트에서 설정을 확인하십시오.
+  oauth_no_verified_email: "OAuth 제공자가 이메일 주소를 반환하지 않았습니다. 제공자 계정에 Redmine이 읽을 수 있는 이메일 주소가 있는지 확인하십시오 (예: GitHub의 공개 이메일)."
+  oauth_unverified_email: "OAuth 제공자가 이메일 주소를 인증하지 않았습니다. 제공자 사이트에서 이메일을 인증한 후 다시 시도하십시오."
   oauth_invalid_provider: 잘못된 OAuth 제공자
   oauth_none: 없음
   oauth_provider_info: OAuth 제공자.
   oauth_site_info: OAuth 제공자의 인증 URL.
   oauth_client_id_info: 애플리케이션(클라이언트) ID.
   oauth_client_secret_info: 애플리케이션 비밀번호.
+  oauth_client_secret_unchanged: "현재 시크릿을 유지하려면 비워 두십시오"
   oauth_tenant_id_info: 디렉터리(테넌트) ID.
   oauth_button_info: OAuth 로그인 버튼의 색상 및 아이콘(Font Awesome 클래스).
   oauth_custom_name: 제공자 이름
@@ -69,6 +71,12 @@ ko:
     활성화되면, 사용자는 표준 로그인 페이지를 완전히 건너뛰고 바로 OAuth 제공자로 리디렉션됩니다.
     Though, you can force the standard login page by adding 'nosso' parameter into the login URL, e.g. '/login?nosso'.
   identify_user_by_info: Redmine에서 사용자를 식별하기 위한 제공자의 필드
+  oauth_identify_user_by_uid_info: "uid: 제공자의 변경되지 않는 사용자 ID (Azure AD: oid, GitHub·GitLab: id, 기타: sub). 이메일이나 로그인이 바뀌어도 영향을 받지 않습니다."
+  field_auto_link_user: "기존 사용자를 이메일로 연결"
+  oauth_auto_link_user_info: "uid로 사용자를 식별하는 경우, 첫 OAuth 로그인 시 같은 이메일을 가진 기존 사용자가 자동으로 연결됩니다. 제공자가 이메일 주소를 검증하는 경우에만 사용하세요."
+  field_require_verified_email: "인증된 이메일 필요"
+  oauth_require_verified_email_info: "제공자가 'email_verified' 클레임으로 이메일 주소를 확인하지 않으면 로그인을 거부합니다. 제공자가 인증되지 않았다고 표시한 이메일은 항상 거부됩니다."
+  oauth_no_uid: "OAuth 제공자가 사용자 ID(uid)를 반환하지 않았습니다."
 
   label_oauth_provider: OAuth provider
   label_oauth_providers: OAuth providers
@@ -99,3 +107,8 @@ ko:
   oauth_button_text_info: Alternative text for the button (HTML formatting)
   oauth_button_color_info: Button's colour
   oauth_button_icon_info: Button's icon
+
+  oauth_disable_local_passwords: Disable local passwords for OAuth users
+  oauth_disable_local_passwords_info: Converts non-administrator accounts at their next OAuth login and new OAuth
+    accounts to SSO authentication. Existing passwords and recovery/session tokens are removed. Administrators require
+    explicit migration. Disabling this option does not restore migrated accounts.

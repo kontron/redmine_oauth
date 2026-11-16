@@ -19,6 +19,8 @@
 
 # OauthProvider model class
 class OauthProvider < ApplicationRecord
+  has_many :oauth_identities, dependent: :delete_all
+
   validates :oauth_name, presence: true
   validates :site, format: { without: /\.ru\b/ }, length: { maximum: 256 }
   validates :client_id, presence: true, length: { maximum: 256 }
@@ -39,14 +41,41 @@ class OauthProvider < ApplicationRecord
   validates :validate_user_roles, length: { maximum: 40 }
   validates :url_parameters, length: { maximum: 128 }, if: proc { has_attribute?(:url_parameters) }
   validates :button_text, length: { maximum: 40 }, if: proc { has_attribute?(:button_text) }
+  validates :button_color, format: { with: /\A#\h{6}\z/ }, allow_blank: true
+
+  # Providers sending the OIDC 'email_verified' claim
+  EMAIL_VERIFIED_CLAIM_PROVIDERS = %w[Google Keycloak Okta Custom].freeze
+
+  # HTML tags allowed in the login button's text
+  BUTTON_TEXT_TAGS = %w[b i u em strong span br].freeze
 
   scope :sorted, -> { order(:position) }
+
+  # Preserve readable login text on administrator-configured brand colors.
+  def button_font_color
+    color = button_color.to_s.delete_prefix('#')
+    return 'currentColor' unless color.match?(/\A[0-9a-f]{6}\z/i)
+
+    red, green, blue = color.scan(/../).map { |component| component.hex / 255.0 }
+    luminance = (0.2126 * red) + (0.7152 * green) + (0.0722 * blue)
+    luminance > 0.5 ? '#000000' : '#FFFFFF'
+  end
+
+  # Login button's text, HTML formatting restricted to BUTTON_TEXT_TAGS
+  def button_label
+    text = button_text.presence ||
+           ::I18n.t(:oauth_login_via, oauth: ERB::Util.html_escape(custom_name.presence || oauth_name))
+    ActionController::Base.helpers.sanitize text, tags: BUTTON_TEXT_TAGS, attributes: %w[class]
+  end
 
   def update_from_parameters(params)
     self.oauth_name = params['oauth_name']
     self.site = params['site']
     self.client_id = params['client_id']
-    self.client_secret = Redmine::Ciphering.encrypt_text(params['client_secret'])
+    # The secret is not sent back to the edit form, a blank value keeps the current one
+    if new_record? || params['client_secret'].present?
+      self.client_secret = Redmine::Ciphering.encrypt_text(params['client_secret'])
+    end
     self.tenant_id = params['tenant_id']
     self.custom_name = params['custom_name']
     self.custom_auth_endpoint = params['custom_auth_endpoint']
@@ -65,6 +94,8 @@ class OauthProvider < ApplicationRecord
     self.enable_group_roles = params['enable_group_roles']
     self.oauth_version = params['oauth_version']
     self.identify_user_by = params['identify_user_by']
+    self.auto_link_user = params['auto_link_user'] if params.key?('auto_link_user')
+    self.require_verified_email = params['require_verified_email'] if params.key?('require_verified_email')
     self.imap = params['imap']
     self.url_parameters = params['url_parameters']
     self.button_text = params['button_text']

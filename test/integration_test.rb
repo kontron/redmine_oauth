@@ -34,6 +34,28 @@ module RedmineOAuth
           ActiveRecord::FixtureSet.create_fixtures dir, fixture
         end
       end
+
+      protected
+
+      # Simulate the token endpoint of the Keycloak provider (fixture) returning the given user
+      def stub_oauth_token(login, claims = {})
+        user = User.find_by(login: login)
+        claims = { 'sub' => "uid-#{user.id}", 'azp' => 'example-client', 'preferred_username' => login,
+                   'email' => user.mail }.merge(claims)
+        token = stub(token: JWT.encode(claims, 'secret', 'HS256'), params: {})
+        OAuth2::Strategy::AuthCode.any_instance.stubs(:get_token).returns(token)
+      end
+
+      # The state parameter of the redirection to the provider
+      def oauth_state
+        URI.decode_www_form(URI.parse(response.location).query).to_h.fetch('state')
+      end
+
+      def oauth_login(login, claims = {}, params = {})
+        get '/oauth', params: { oauth_provider: 1 }.merge(params)
+        stub_oauth_token login, claims
+        get "/oauth2callback?state=#{oauth_state}&code=unused"
+      end
     end
   end
 end

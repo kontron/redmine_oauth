@@ -22,9 +22,6 @@ module RedmineOauth
     # SudoModeController patch
     module SudoModeControllerPatch
       def require_sudo_mode(*param_names)
-        # Skip the sudo mode during an AJAX call
-        return true if request.xhr?
-
         return true if Redmine::SudoMode.active?
 
         if session.delete(:oauth_sudo_mode_ok)
@@ -33,6 +30,9 @@ module RedmineOauth
         end
 
         return true if Redmine::SudoMode.active?
+
+        # The OAuth re-authentication needs a redirection, which is not possible during an AJAX call
+        return super if request.xhr?
 
         param_names = params.keys - %w[id action controller authenticity_token utf8] if param_names.blank?
         back_url = url_for(**params.slice(:controller, :action, :id, :project_id).to_unsafe_hash)

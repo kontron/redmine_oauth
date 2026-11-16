@@ -61,6 +61,25 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_response :found
   end
 
+  def test_oauth_does_not_reflect_provider_id
+    get '/oauth', params: { oauth_provider: '<img src=x onerror=alert(1)>' }
+    assert_redirected_to signin_path
+    assert_equal l(:oauth_invalid_provider), flash[:error]
+  end
+
+  def test_oauth_callback_escapes_error_message
+    get "/oauth?oauth_provider=#{@keylock_provider.id}"
+    state = URI.decode_www_form(URI.parse(response.location).query).to_h.fetch('state')
+    OAuth2::Strategy::AuthCode.any_instance.stubs(:get_token).raises(StandardError, '<img src=x onerror=alert(1)>')
+
+    get "/oauth2callback?state=#{state}&code=unused"
+    assert_redirected_to signin_path
+    follow_redirect!
+
+    assert_select '#flash_error img', 0
+    assert_select '#flash_error', text: /<img src=x onerror=alert\(1\)>/
+  end
+
   def test_oauth_callback_csrf
     get '/oauth2callback'
     assert_response :unprocessable_content
@@ -130,5 +149,160 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
       'name' => 'Jan de Jong'
     }
     assert_equal 'de Jong', RedmineOauthController.get_lastname(info, @oauth_provider)
+  end
+
+  def test_get_uid
+    assert_equal 'abc', RedmineOauthController.get_uid({ 'sub' => 'abc' }, @keylock_provider)
+    @keylock_provider.oauth_name = 'Azure AD'
+    assert_equal 'oid-1', RedmineOauthController.get_uid({ 'oid' => 'oid-1', 'sub' => 'sub-1' }, @keylock_provider)
+    @keylock_provider.oauth_name = 'GitHub'
+    assert_equal '123', RedmineOauthController.get_uid({ 'id' => 123 }, @keylock_provider)
+    assert_raises(StandardError) { RedmineOauthController.get_uid({ 'sub' => 'abc' }, @keylock_provider) }
+  end
+
+  def test_find_user_by_uid_linked_identity
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert_equal @jsmith, RedmineOauthController.find_user_by_uid('uid-1', 'changed@example.com', @keylock_provider)
+  end
+
+  def test_find_user_by_uid_auto_link
+    @keylock_provider.auto_link_user = true
+    assert_equal @jsmith, RedmineOauthController.find_user_by_uid('uid-1', 'JSmith@somenet.foo', @keylock_provider)
+    @keylock_provider.auto_link_user = false
+    assert_nil RedmineOauthController.find_user_by_uid('uid-1', 'jsmith@somenet.foo', @keylock_provider)
+  end
+
+  def test_find_user_by_uid_auto_link_already_linked
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert_nil RedmineOauthController.find_user_by_uid('uid-2', 'jsmith@somenet.foo', @keylock_provider)
+  end
+
+  def test_link_identity
+    assert_difference 'OauthIdentity.count', +1 do
+      RedmineOauthController.link_identity @jsmith, 'uid-1', @keylock_provider
+      RedmineOauthController.link_identity @jsmith, 'uid-1', @keylock_provider
+    end
+    assert_no_difference 'OauthIdentity.count' do
+      RedmineOauthController.link_identity @jsmith, nil, @keylock_provider
+    end
+  end
+
+  def test_user_matches
+    assert RedmineOauthController.user_matches?(@jsmith, 'JSmith@somenet.foo', {}, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, 'dlopper@somenet.foo', {}, @keylock_provider)
+    @keylock_provider.identify_user_by = 'login'
+    assert RedmineOauthController.user_matches?(@jsmith, nil, { 'login' => 'JSmith' }, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, nil, { 'login' => 'dlopper' }, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, nil, {}, @keylock_provider)
+    @keylock_provider.identify_user_by = 'uid'
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert RedmineOauthController.user_matches?(@jsmith, nil, { 'sub' => 'uid-1' }, @keylock_provider)
+    assert_not RedmineOauthController.user_matches?(@jsmith, nil, { 'sub' => 'uid-2' }, @keylock_provider)
+  end
+
+  def test_validate_hosted_domain
+    google = OauthProvider.new(oauth_name: 'Google', url_parameters: 'prompt=select_account&hd=example.com')
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({ 'hd' => 'example.com' }, google) }
+    assert_raises(StandardError) { RedmineOauthController.validate_hosted_domain({ 'hd' => 'evil.com' }, google) }
+    # Personal accounts have no 'hd' claim
+    assert_raises(StandardError) { RedmineOauthController.validate_hosted_domain({}, google) }
+    google.url_parameters = 'hd=*'
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({ 'hd' => 'any.com' }, google) }
+    assert_raises(StandardError) { RedmineOauthController.validate_hosted_domain({}, google) }
+    google.url_parameters = 'xhd=example.com'
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({}, google) }
+    google.url_parameters = nil
+    assert_nothing_raised { RedmineOauthController.validate_hosted_domain({}, google) }
+  end
+
+  def test_validate_email_verified
+    check = ->(info) { RedmineOauthController.validate_email_verified info, @keylock_provider }
+    assert_nothing_raised { check.call('email_verified' => true) }
+    assert_nothing_raised { check.call('email_verified' => 'true') }
+    assert_nothing_raised { check.call({}) }
+    assert_raises(StandardError) { check.call('email_verified' => false) }
+    assert_raises(StandardError) { check.call('email_verified' => 'false') }
+    @keylock_provider.require_verified_email = true
+    assert_nothing_raised { check.call('email_verified' => true) }
+    assert_raises(StandardError) { check.call({}) }
+    # GitHub does not send the claim, its public email is always verified
+    @keylock_provider.oauth_name = 'GitHub'
+    assert_nothing_raised { check.call({}) }
+  end
+
+  def test_oauth_callback_rejects_unverified_email
+    oauth_login 'jsmith', 'email_verified' => false
+    assert_redirected_to signin_path
+    assert_equal ERB::Util.html_escape(l(:oauth_unverified_email)), flash[:error]
+    assert_nil session[:user_id]
+  end
+
+  def test_oauth_callback_requires_verified_email
+    @keylock_provider.update! require_verified_email: true
+    oauth_login 'jsmith'
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
+
+    oauth_login 'jsmith', 'email_verified' => true
+    assert_equal @jsmith.id, session[:user_id]
+  end
+
+  def test_validate_audience
+    assert_nothing_raised { RedmineOauthController.validate_audience 'example-client', @keylock_provider }
+    assert_nothing_raised { RedmineOauthController.validate_audience %w[other example-client], @keylock_provider }
+    assert_raises(StandardError) { RedmineOauthController.validate_audience 'other', @keylock_provider }
+    assert_raises(StandardError) { RedmineOauthController.validate_audience nil, @keylock_provider }
+  end
+
+  def test_oauth_callback_rejects_token_for_another_client
+    oauth_login 'jsmith', 'azp' => 'other-client'
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
+  end
+
+  def test_admin_role
+    @keylock_provider.update! validate_user_roles: 'roles'
+    oauth_login 'jsmith', 'roles' => %w[user admin]
+    assert_equal @jsmith.id, session[:user_id]
+    assert @jsmith.reload.admin?
+  end
+
+  def test_admin_role_key_is_not_a_regexp
+    @keylock_provider.update! validate_user_roles: 'realm_access.roles'
+    oauth_login 'jsmith', 'realm_access' => { 'roles' => ['user'] }, 'realm_accessXroles' => 'admin'
+    assert_equal @jsmith.id, session[:user_id]
+    assert_not @jsmith.reload.admin?
+  end
+
+  def test_locked_user_gets_no_admin_role
+    @keylock_provider.update! validate_user_roles: 'roles'
+    @jsmith.lock!
+    oauth_login 'jsmith', 'roles' => %w[user admin]
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
+    assert_not @jsmith.reload.admin?
+  end
+
+  def test_registered_user_gets_no_admin_role
+    @keylock_provider.update! validate_user_roles: 'roles'
+    @jsmith.register!
+    oauth_login 'jsmith', 'roles' => %w[user admin]
+    assert_nil session[:user_id]
+    assert_not @jsmith.reload.admin?
+  end
+
+  def test_oauth_autologin_cookie
+    with_settings plugin_redmine_oauth: { 'oauth_login' => '1' } do
+      oauth_login 'jsmith', {}, oauth_autologin: '1'
+    end
+    assert_equal @jsmith.id, session[:user_id]
+    assert_equal @keylock_provider.id.to_s, cookies[:oauth_autologin]
+  end
+
+  def test_identities_deleted_with_user
+    OauthIdentity.create! oauth_provider: @keylock_provider, user: @jsmith, uid: 'uid-1'
+    assert_difference 'OauthIdentity.count', -1 do
+      @jsmith.destroy
+    end
   end
 end

@@ -1,6 +1,33 @@
 Changelog for Redmine OAuth
 ==========================
 
+4.2.4 *2025-11-16*
+------------------
+
+    Identify users by uid
+    Italian localization
+    Redmine 6.1 in CI
+
+* New: Italian localization
+* New: GitHub CI runs the tests against Redmine 6.1 as well as 7.0
+* New: Identify users by the provider's immutable user ID (uid), e.g. Azure AD oid
+* Bug: IMAP task ignores ssl=false and starttls=false options
+* Security: Reflected XSS in the error message on the login page
+* Security: Sudo mode skipped for AJAX requests
+* Security: Sudo mode re-authentication does not verify the code and the user
+* Security: Google hosted domain (hd) restriction bypassed by accounts without the hd claim
+* Security: Group roles and administrator rights applied to locked and pending accounts
+* Security: Client secret displayed in the provider's form
+* Security: Login button's text and provider's name rendered as raw HTML on the login page
+* Security: Audience of Azure AD and Keycloak tokens not checked
+* Security: Logout URL parameters not encoded
+* Security: User roles key used as a regular expression
+* Docs: Security considerations
+* Security: Email marked as not verified by the provider (email_verified claim) accepted
+* New: Option to require a verified email (email_verified claim)
+* New: Clearer message when the provider does not return an email address
+* Bug: Provider controller tests not running
+
 4.2.3 *2026-10-05*
 ------------------
     

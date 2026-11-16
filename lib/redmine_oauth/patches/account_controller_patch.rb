@@ -25,7 +25,8 @@ module RedmineOauth
       # Overridden methods
 
       def login
-        return super if request.get? && params.include?(:nosso)
+        # The password form opened with ?nosso posts nosso back, so its POST reaches the password check too
+        return super if params.include?(:nosso)
 
         # If cookie is blank and we are in "OAuth Only" mode,
         # force the first provider instead of falling through to the standard login box
@@ -37,6 +38,21 @@ module RedmineOauth
         return super if request.post? || cookies[:oauth_autologin].blank?
 
         redirect_to oauth_path(back_url: params[:back_url], oauth_provider: cookies[:oauth_autologin])
+      end
+
+      # Reject recovery requests for SSO accounts, including previously issued tokens.
+      def lost_password
+        value = params[:token] || session[:password_recovery_token]
+        if value.present?
+          token = Token.find_token('recovery', value.to_s)
+          if token&.user&.auth_source.is_a?(AuthSourceOauth)
+            token.destroy!
+            session.delete(:password_recovery_token)
+            flash[:error] = l(:notice_can_t_change_password)
+            return redirect_to signin_path
+          end
+        end
+        super
       end
 
       def logout
@@ -52,7 +68,8 @@ module RedmineOauth
         when 'Azure AD'
           logout_user
           id = oauth_provider.client_id
-          redirect_to "#{site}/#{id}/oauth2/logout?post_logout_redirect_uri=#{url}"
+          query = URI.encode_www_form(post_logout_redirect_uri: url)
+          redirect_to "#{site}/#{ERB::Util.url_encode(id)}/oauth2/logout?#{query}"
         when 'Custom'
           logout_user
           redirect_to oauth_provider.custom_logout_endpoint
@@ -65,22 +82,22 @@ module RedmineOauth
           client_id = oauth_provider.client_id
           id_token = session[:oauth_id_token]
           session.delete :oauth_id_token
-          logout_params = []
-          logout_params << "client_id=#{client_id}"
-          logout_params << "post_logout_redirect_uri=#{url}"
-          logout_params << "id_token_hint=#{id_token}" if id_token.present?
-          redirect_to "#{site}/realms/#{tenant_id}/protocol/openid-connect/logout?#{logout_params.join('&')}"
+          query = URI.encode_www_form(
+            { client_id: client_id, post_logout_redirect_uri: url, id_token_hint: id_token.presence }.compact
+          )
+          redirect_to "#{site}/realms/#{ERB::Util.url_encode(tenant_id)}/protocol/openid-connect/logout?#{query}"
         when 'Okta'
           logout_user
           id_token = session[:oauth_id_token]
           session.delete :oauth_id_token
-          redirect_to "#{site}/oauth2/v1/logout?id_token_hint=#{id_token}&post_logout_redirect_uri=#{url}"
+          query = URI.encode_www_form(id_token_hint: id_token, post_logout_redirect_uri: url)
+          redirect_to "#{site}/oauth2/v1/logout?#{query}"
         else
           super
         end
       rescue StandardError => e
         Rails.logger.error e.message
-        flash['error'] = e.message
+        flash['error'] = ERB::Util.html_escape(e.message)
         redirect_to signin_path
       end
     end

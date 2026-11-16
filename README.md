@@ -1,12 +1,12 @@
-## Redmine OAuth plugin 4.2.3
+## Redmine OAuth plugin 4.2.4
 
 [![GitHub CI](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml/badge.svg?branch=main)](https://github.com/kontron/redmine_oauth/actions/workflows/rubyonrails.yml)
 [![Support Ukraine Badge](https://bit.ly/support-ukraine-now)](https://github.com/support-ukraine/support-ukraine)
 
 This plugin is used to authenticate in Redmine through an OAuth provider.
 
-The user is identified by their email or login registered with the OAuth provider. The email or login must match an 
-email or login registered in Redmine. If such an email or login is not found, the user will be offered to register in 
+The user is identified by their email, login or immutable user ID (uid) registered with the OAuth provider. The email 
+or login must match an email or login registered in Redmine. If such an email or login is not found, the user will be offered to register in 
 Redmine, depending on Redmine's setting **Self-registration**. OAuth logout is also supported, if it is set in the 
 options. Access to Redmine can be controlled by roles assigned in your OAuth provider.
 See [#36](https://github.com/kontron/redmine_oauth/issues/36#issuecomment-2348842432) for details; as well as OAuth autologin.
@@ -71,6 +71,46 @@ websites. Add `https://yourdomain/oauth2callback` as redirect URI.
 
 Open _Administration -> OAuth providers_ in your Redmine and add your provider(s).
 
+#### Identify user by
+
+* **email** / **login** - The user is matched by their email or login returned by the provider.
+* **uid** - The user is matched by the provider's immutable user ID (Azure AD: `oid`; GitHub, GitLab: `id`; others: 
+  `sub`), stored in Redmine after the first login. The link survives changes of the user's email or login.
+  With **Link existing users by email** (on by default), an existing Redmine user with the same email is linked on 
+  their first OAuth login. Turn it off if the provider does not verify email addresses.
+
+**uid** is the recommended choice. Whoever controls the matched value on the provider's side gets access to the 
+Redmine account, see below.
+
+#### Security considerations
+
+* **Email** - Identifying (or linking) users by email is only as safe as the provider's email verification. 
+  Someone who can set the email of a Redmine user on their provider account gets access to that Redmine account.
+  * Google, Keycloak, Okta, Custom: an email marked as not verified by the provider (`email_verified: false`) is 
+    always rejected. Enable **Require verified email** to reject also the logins without the `email_verified` claim; 
+    the provider must then send it (in Keycloak, the _email_ client scope).
+  * GitHub, GitLab: the email returned is verified by the provider.
+  * Azure AD: the `email` claim can be edited by the user and is not verified, especially for multi-tenant 
+    applications (tenant `common` or `organizations`), and there is no `email_verified` claim. Use **uid** and a 
+    single tenant ID.
+  * The self-registration mode with automatic activation by email domain relies on the email as well.
+* **Login** - Usernames can often be changed by their owners (GitLab `username`, Keycloak/Okta 
+  `preferred_username`). A user who renames their account to the login of another Redmine user gets access to 
+  that account. Do not identify users by login unless the provider prevents such changes.
+* **Roles** - If _Validate user roles_ is set, the `admin` role in the token makes the user a Redmine administrator 
+  and its absence revokes the administrator rights on the next login. Groups are synchronized with the other roles. 
+  Make sure the key points to a claim managed by the provider's administrators, not by the users. Roles are applied 
+  to active accounts only.
+* **Hosted domain (Google)** - With `hd=example.com` in _URL parameters_, only accounts of that Google Workspace 
+  domain can log in (`hd=*` allows any Workspace domain); personal accounts are rejected.
+* **Sudo mode** - If Redmine's sudo mode is enabled, OAuth users re-authenticate with their provider. The provider 
+  must return the same user. AJAX requests requiring the sudo mode cannot be redirected to the provider and ask for 
+  the Redmine password instead.
+* **Client secret** - The secret is stored encrypted (if Redmine's `database_cipher_key` is set) and is not 
+  displayed in the provider's form; leave the field blank to keep it.
+* **Button text** - Only basic HTML formatting is allowed: `b`, `i`, `u`, `em`, `strong`, `span`, `br` and the 
+  `class` attribute.
+
 Examples:
 
 #### Provider Azure AD
@@ -91,6 +131,7 @@ Examples:
 * Site: https://accounts.google.com
 * Client ID: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 * Client secret: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+* URL parameters (optional): `hd=example.com` to allow only accounts of your Google Workspace domain
 
 #### Provider Keycloak
 

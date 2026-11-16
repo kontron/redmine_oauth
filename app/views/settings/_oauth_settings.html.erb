@@ -22,6 +22,13 @@
 <%= stylesheet_link_tag 'redmine_oauth', plugin: 'redmine_oauth' %>
 
 <p>
+  <label><%= l(:oauth_disable_local_passwords) %></label>
+  <%= hidden_field_tag 'settings[disable_local_passwords]', '0' %>
+  <%= check_box_tag 'settings[disable_local_passwords]', '1', RedmineOauth.disable_local_passwords? %>
+  <em class="info"><%= l(:oauth_disable_local_passwords_info) %></em>
+</p>
+
+<p>
   <label><%= l(:setting_self_registration) %></label>
   <%= select_tag 'settings[self_registration]', options_for_select([
       [l(:label_disabled), '0'],
