@@ -90,17 +90,25 @@ For Google, Keycloak, Okta and Custom OIDC providers:
 | --- | --- | --- | --- |
 | **Require verified email** | Continue | Reject | Reject |
 | **Reject explicitly unverified email** (default) | Continue | Continue | Reject |
-| **Allow unverified email for linked UID accounts** | Continue | Existing UID link only | Existing UID link only |
+| **Allow sign-in without a verified email for existing accounts** | Continue | Restricted sign-in | Restricted sign-in |
 
 The first two options preserve the behavior of the former checked and unchecked **Require verified email** checkbox,
 respectively. In Keycloak, include the *email* client scope so the access token contains the email and its verification claim.
 If the migration is rolled back, providers using the third policy revert to **Require verified email**. Reapplying
 the migration does not restore the opt-in.
 
-The third option requires **Identify user by → uid**. It only accepts an unverified address for an active account
-already linked to the same provider and immutable UID. It does not use that address to match, link, register, or update
-an account. Login name synchronization is also skipped because some providers derive it from the email address.
-The provider must still return an email address, and all other login checks still apply.
+The third option is an explicit opt-in for the selected identification mode:
+
+* **uid**: the active account must already be linked to the same provider and immutable UID. There is no email fallback.
+* **login** (Keycloak only): `preferred_username` must match an existing active Redmine login. Use this only when the
+  realm controls usernames and users cannot choose, change, or claim them, including through federated identity providers.
+  Do not derive usernames from email or reassign them while the previous Redmine account is active. Email-shaped login
+  values are rejected, but Redmine cannot verify how the realm manages usernames. Save a stricter policy before
+  changing the provider's identity namespace and review that namespace before opting in again.
+* **email**: the option is unavailable because the address itself identifies the account.
+
+Restricted sign-in never uses the address to match, link, or register an account. Neither login nor email is synchronized.
+The provider must still return an email address, and all other login checks still apply, including during re-authentication.
 For a provider with existing UID links, create a separate provider to change the site, realm, client or endpoints.
 
 An existing UID link can come from a previous login with a verified address. If the provider cannot verify addresses,

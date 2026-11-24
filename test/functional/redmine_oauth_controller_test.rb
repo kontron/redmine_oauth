@@ -272,6 +272,64 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_equal @jsmith.id, session[:user_id]
   end
 
+  def test_oauth_callback_accepts_unverified_email_for_an_existing_managed_login
+    @keylock_provider.update! identify_user_by: 'login', email_verification_policy: 'allow_managed_login'
+    original_email = @jsmith.mail
+
+    with_settings plugin_redmine_oauth: { 'update_email' => '1', 'update_login' => '1' } do
+      oauth_login 'jsmith', 'email_verified' => false, 'preferred_username' => 'JSmith',
+                            'email' => 'unverified@example.com'
+    end
+
+    assert_equal @jsmith.id, session[:user_id]
+    assert_equal 'jsmith', @jsmith.reload.login
+    assert_equal original_email, @jsmith.mail
+  end
+
+  def test_oauth_callback_accepts_missing_verification_for_an_existing_managed_login
+    @keylock_provider.update! identify_user_by: 'login', email_verification_policy: 'allow_managed_login'
+
+    oauth_login 'jsmith'
+
+    assert_equal @jsmith.id, session[:user_id]
+  end
+
+  def test_oauth_callback_never_uses_email_or_uid_as_fallback_for_managed_login
+    @keylock_provider.update! identify_user_by: 'login', email_verification_policy: 'allow_managed_login',
+                              auto_link_user: true
+    @keylock_provider.oauth_identities.create!(uid: "uid-#{@jsmith.id}", user: @jsmith)
+    User.find_by!(login: 'dlopper').update!(login: @jsmith.mail)
+
+    with_settings plugin_redmine_oauth: { 'self_registration' => '3' } do
+      assert_no_difference ['User.count', 'OauthIdentity.count'] do
+        [nil, 'unknown-login', @jsmith.mail].each do |claim|
+          oauth_login 'jsmith', 'email_verified' => false, 'preferred_username' => claim, 'unique_name' => 'jsmith'
+          assert_redirected_to signin_path
+          assert_nil session[:user_id]
+        end
+      end
+    end
+  end
+
+  def test_oauth_callback_rejects_a_locked_managed_login
+    @keylock_provider.update! identify_user_by: 'login', email_verification_policy: 'allow_managed_login'
+    @jsmith.update!(status: User::STATUS_LOCKED)
+
+    oauth_login 'jsmith', 'email_verified' => 'false'
+
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
+  end
+
+  def test_oauth_callback_rejects_malformed_email_verification_for_a_managed_login
+    @keylock_provider.update! identify_user_by: 'login', email_verification_policy: 'allow_managed_login'
+
+    oauth_login 'jsmith', 'email_verified' => []
+
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
+  end
+
   def test_oauth_callback_accepts_a_missing_email_verification_claim_for_linked_uid
     @keylock_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid'
     @keylock_provider.oauth_identities.create!(uid: "uid-#{@jsmith.id}", user: @jsmith)

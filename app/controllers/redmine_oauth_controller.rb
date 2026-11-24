@@ -165,14 +165,14 @@ class RedmineOauthController < AccountController
     email, user_info = fetch_user_info(oauth_provider, code_verifier)
     raise StandardError, l(:oauth_no_verified_email) unless email
 
-    linked_user = RedmineOauthController.validate_email_verified(user_info, oauth_provider)
+    restricted_user = RedmineOauthController.validate_email_verified(user_info, oauth_provider)
     sudo_reauthentication = session.key?(:oauth_sudo_mode) && User.current.logged?
     oauth_sudo_mode = session.delete(:oauth_sudo_mode) if sudo_reauthentication
 
     # Roles
     non_default_roles = []
     key = oauth_provider.validate_user_roles
-    if key.present? && (!sudo_reauthentication || linked_user)
+    if key.present? && (!sudo_reauthentication || restricted_user)
       roles = if (h = user_info.select { |k, _v| k =~ /\A#{Regexp.escape(key)}(\.(\d+))?\z/ })
                 h.values
               else
@@ -181,7 +181,7 @@ class RedmineOauthController < AccountController
       @admin = roles.include?('admin')
       if roles.blank? || (roles.exclude?('user') && !@admin)
         Rails.logger.info 'Authentication failed due to a missing role in the token'
-        params[:username] = linked_user ? linked_user.login : email
+        params[:username] = restricted_user ? restricted_user.login : email
         invalid_credentials
         raise StandardError, l(:notice_account_invalid_credentials)
       end
@@ -190,12 +190,13 @@ class RedmineOauthController < AccountController
 
     # Re-authentication for the sudo mode, the identity must belong to the current user
     if sudo_reauthentication
-      same_user = if linked_user
-                    linked_user == User.current
+      same_user = if restricted_user
+                    restricted_user == User.current
                   else
                     RedmineOauthController.user_matches?(User.current, email, user_info, oauth_provider)
                   end
-      unless oauth_provider.id == session[:oauth_login] && same_user
+      role_matches = !restricted_user || key.blank? || !User.current.admin? || @admin
+      unless oauth_provider.id == session[:oauth_login] && same_user && role_matches
         Rails.logger.error "Sudo mode re-authentication of #{User.current.login} failed"
         raise StandardError, l(:notice_account_invalid_credentials)
       end
@@ -206,7 +207,7 @@ class RedmineOauthController < AccountController
 
     # Try to log in
     apply_request_state request_state
-    try_to_login email, user_info, non_default_roles, oauth_provider, linked_user: linked_user
+    try_to_login email, user_info, non_default_roles, oauth_provider, restricted_user: restricted_user
     session[:oauth_login] = oauth_provider.id
   rescue StandardError => e
     Rails.logger.error e.message
@@ -296,7 +297,7 @@ class RedmineOauthController < AccountController
     raise StandardError, ::I18n.t(:error_invalid_hosted_domain)
   end
 
-  # Return the existing account when accepting an unverified email under the linked UID policy.
+  # Return the existing account when accepting an unverified email under a restricted policy.
   def self.validate_email_verified(info, oauth_provider)
     return if OauthProvider::EMAIL_VERIFIED_CLAIM_PROVIDERS.exclude?(oauth_provider.oauth_name)
 
@@ -304,21 +305,39 @@ class RedmineOauthController < AccountController
     # Some providers send the value as a string
     return if verified.to_s == 'true'
 
-    case oauth_provider.email_verification_policy
-    when 'reject_unverified'
-      return if verified.nil?
-    when 'allow_linked_uid'
-      unverified = !info.key?('email_verified') || [false, 'false'].include?(verified)
-      if oauth_provider.identify_user_by == 'uid' && unverified
-        uid = get_uid(info, oauth_provider)
-        identity = oauth_provider.oauth_identities.find_by(uid: uid)
-        # Some database collations compare identifiers case-insensitively.
-        return identity.user if identity&.uid == uid && identity.user&.active?
-      end
+    return if verified.nil? && oauth_provider.email_verification_policy == 'reject_unverified'
+
+    if !info.key?('email_verified') || [false, 'false'].include?(verified)
+      user = restricted_email_user(info, oauth_provider)
+      return user if user&.active?
     end
 
     raise StandardError, ::I18n.t(:oauth_unverified_email)
   end
+
+  def self.restricted_email_user(info, oauth_provider)
+    case oauth_provider.email_verification_policy
+    when 'allow_linked_uid'
+      return unless oauth_provider.identify_user_by == 'uid'
+
+      uid = get_uid(info, oauth_provider)
+      identity = oauth_provider.oauth_identities.find_by(uid: uid)
+      # Some database collations compare identifiers case-insensitively.
+      identity.user if identity&.uid == uid
+    when 'allow_managed_login'
+      return unless oauth_provider.identify_user_by == 'login' &&
+                    OauthProvider::MANAGED_LOGIN_PROVIDERS.include?(oauth_provider.oauth_name)
+
+      login = info['preferred_username']
+      # Do not fall back to another claim or accept an email address as a login.
+      return unless login.is_a?(String) && login.present? && login.exclude?('@')
+
+      user = User.find_by('LOWER(login) = ?', login.downcase)
+      # Database collations can also ignore accents or other differences.
+      user if user && user.login.downcase == login.downcase
+    end
+  end
+  private_class_method :restricted_email_user
 
   # Check that the token was issued for this application; the tokens come directly from the provider's token endpoint
   # over TLS, so their signature is not verified
@@ -371,17 +390,17 @@ class RedmineOauthController < AccountController
     params['oauth_autologin'] = oauth_request_state[:oauth_autologin]
   end
 
-  def try_to_login(email, info, role_names, oauth_provider, linked_user: nil)
+  def try_to_login(email, info, role_names, oauth_provider, restricted_user: nil)
     # Login name
     login = RedmineOauthController.get_login(info)
     firstname = RedmineOauthController.get_firstname(info, oauth_provider)
     lastname = RedmineOauthController.get_lastname(info, oauth_provider)
-    if !linked_user && oauth_provider.identify_user_by == 'uid'
+    if !restricted_user && oauth_provider.identify_user_by == 'uid'
       uid = RedmineOauthController.get_uid(info, oauth_provider)
     end
     # Find the user
-    user = linked_user || find_oauth_user(email, login, uid, oauth_provider)
-    RedmineOauthController.link_identity(user, uid, oauth_provider) if user && !linked_user
+    user = restricted_user || find_oauth_user(email, login, uid, oauth_provider)
+    RedmineOauthController.link_identity(user, uid, oauth_provider) if user && !restricted_user
     if user # Existing user
       if user.registered? # Registered
         account_pending user
@@ -392,7 +411,7 @@ class RedmineOauthController < AccountController
         handle_active_user user
         user.update_last_login_on!
         # A provider may also use the unverified address as the login name.
-        RedmineOauthController.update_user user, (linked_user ? nil : login), (linked_user ? nil : email),
+        RedmineOauthController.update_user user, (restricted_user ? nil : login), (restricted_user ? nil : email),
                                            firstname, lastname
         # Disable 2FA initialization request
         session.delete(:must_activate_twofa)
@@ -543,6 +562,10 @@ class RedmineOauthController < AccountController
       access_token = JWT.decode(token.token, nil, false).first
       RedmineOauthController.validate_audience access_token['azp'], oauth_provider
       user_info = access_token.flatten_data
+      # Preserve malformed claims so the managed login policy cannot treat them as missing.
+      if oauth_provider.email_verification_policy == 'allow_managed_login'
+        user_info.merge! access_token.slice('email_verified', 'preferred_username')
+      end
       user_info['login'] = user_info['preferred_username']
       email = user_info['email']
       session[:oauth_id_token] = token.params[:id_token]

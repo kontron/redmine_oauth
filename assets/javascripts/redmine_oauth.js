@@ -189,14 +189,17 @@ function oauth_settings_visibility() {
 }
 
 function oauth_email_verification_policy_changed() {
-    const supported = ['Google', 'Keycloak', 'Okta', 'Custom'].includes($('#oauth_provider_oauth_name').val());
-    const allowLinkedUid = supported && $('#oauth_provider_identify_user_by').val() === 'uid';
+    const provider = $('#oauth_provider_oauth_name').val();
+    const mode = $('#oauth_provider_identify_user_by').val();
     const policy = $('#oauth_provider_email_verification_policy');
-    $('#oauth_option_email_verification_policy').toggle(supported);
-    if (!allowLinkedUid && policy.find('option:selected').val() === 'allow_linked_uid') {
-        policy.val('require_verified');
-    }
-    policy.find('option[value="allow_linked_uid"]').prop('disabled', !allowLinkedUid);
+    $('#oauth_option_email_verification_policy').toggle(['Google', 'Keycloak', 'Okta', 'Custom'].includes(provider));
+    policy.find('option[data-mode]').each(function () {
+        const available = this.dataset.mode === mode && this.dataset.providers.split(' ').includes(provider);
+        if (!available && this.selected) {
+            policy.val('require_verified');
+        }
+        $(this).prop({ disabled: !available, hidden: !available });
+    });
 }
 
 function oauth_toggle_fieldset(el)

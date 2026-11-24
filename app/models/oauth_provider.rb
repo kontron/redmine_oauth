@@ -46,14 +46,15 @@ class OauthProvider < ApplicationRecord
   # Providers sending the OIDC 'email_verified' claim
   EMAIL_VERIFIED_CLAIM_PROVIDERS = %w[Google Keycloak Okta Custom].freeze
 
-  EMAIL_VERIFICATION_POLICIES = %w[require_verified reject_unverified allow_linked_uid].freeze
+  EMAIL_VERIFICATION_POLICIES = %w[require_verified reject_unverified allow_linked_uid allow_managed_login].freeze
+  MANAGED_LOGIN_PROVIDERS = %w[Keycloak].freeze
   UID_NAMESPACE_ATTRIBUTES = %i[oauth_name site tenant_id client_id
                                 custom_auth_endpoint custom_token_endpoint custom_profile_endpoint].freeze
 
   # The historical provider import runs before this column exists.
   validates :email_verification_policy, inclusion: { in: EMAIL_VERIFICATION_POLICIES },
                                         if: :email_verification_policy_column?
-  validate :validate_linked_uid_policy, if: :email_verification_policy_column?
+  validate :validate_restricted_email_policy, if: :email_verification_policy_column?
   validate :validate_uid_namespace, on: :update, if: :email_verification_policy_column?
   after_save :reset_other_imap_providers, if: -> { imap? && email_verification_policy_column? }
 
@@ -122,11 +123,17 @@ class OauthProvider < ApplicationRecord
     has_attribute?(:email_verification_policy)
   end
 
-  def validate_linked_uid_policy
-    return unless email_verification_policy == 'allow_linked_uid'
-    return if identify_user_by == 'uid' && EMAIL_VERIFIED_CLAIM_PROVIDERS.include?(oauth_name)
+  def validate_restricted_email_policy
+    case email_verification_policy
+    when 'allow_linked_uid'
+      return if identify_user_by == 'uid' && EMAIL_VERIFIED_CLAIM_PROVIDERS.include?(oauth_name)
 
-    errors.add(:email_verification_policy, :oauth_linked_uid_policy_requires_uid)
+      errors.add(:email_verification_policy, :oauth_linked_uid_policy_requires_uid)
+    when 'allow_managed_login'
+      return if identify_user_by == 'login' && MANAGED_LOGIN_PROVIDERS.include?(oauth_name)
+
+      errors.add(:email_verification_policy, :oauth_managed_login_policy_requires_login)
+    end
   end
 
   def validate_uid_namespace
@@ -134,9 +141,13 @@ class OauthProvider < ApplicationRecord
       before, after = attribute_change_to_be_saved(attribute)
       before.presence != after.presence
     end
-    return unless changed && oauth_identities.exists?
+    return unless changed
 
-    errors.add(:base, :oauth_uid_namespace_changed)
+    if oauth_identities.exists?
+      errors.add(:base, :oauth_uid_namespace_changed)
+    elsif [email_verification_policy, attribute_in_database(:email_verification_policy)].include?('allow_managed_login')
+      errors.add(:base, :oauth_managed_login_namespace_changed)
+    end
   end
 
   def reset_other_imap_providers

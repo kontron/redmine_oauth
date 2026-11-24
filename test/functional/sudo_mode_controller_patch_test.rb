@@ -118,6 +118,45 @@ class SudoModeControllerPatchTest < RedmineOAuth::Test::IntegrationTest
     assert_nil session[:oauth_sudo_mode_ok]
   end
 
+  def test_reauthentication_with_a_managed_login_requires_the_same_user_and_role
+    @oauth_provider.update! identify_user_by: 'login', email_verification_policy: 'allow_managed_login',
+                            validate_user_roles: 'roles'
+    oauth_login 'jsmith', 'roles' => ['user'], 'email_verified' => false
+    user_id = User.find_by!(login: 'jsmith').id
+    assert_equal user_id, session[:user_id]
+    expire_sudo_mode!
+
+    [['dlopper', ['user']], ['jsmith', []], ['jsmith', ['user']]].each do |login, roles|
+      request_reauthentication
+      stub_oauth_token login, 'email_verified' => false, 'roles' => roles
+      get "/oauth2callback?state=#{oauth_state}&code=unused"
+
+      if login == 'jsmith' && roles.present?
+        assert_response :success
+        assert session[:oauth_sudo_mode_ok]
+      else
+        assert_redirected_to signin_path
+        assert_nil session[:oauth_sudo_mode_ok]
+      end
+      assert_equal user_id, session[:user_id]
+    end
+  end
+
+  def test_reauthentication_of_a_managed_login_rejects_a_removed_admin_role
+    @oauth_provider.update! identify_user_by: 'login', email_verification_policy: 'allow_managed_login',
+                            validate_user_roles: 'roles'
+    oauth_login 'jsmith', 'roles' => ['admin'], 'email_verified' => false
+    assert User.find_by!(login: 'jsmith').admin?
+    expire_sudo_mode!
+    request_reauthentication
+
+    stub_oauth_token 'jsmith', 'email_verified' => false, 'roles' => ['user']
+    get "/oauth2callback?state=#{oauth_state}&code=unused"
+
+    assert_redirected_to signin_path
+    assert_nil session[:oauth_sudo_mode_ok]
+  end
+
   def test_reauthentication_with_another_provider
     other_provider = @oauth_provider.dup
     other_provider.custom_name = 'Other'

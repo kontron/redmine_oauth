@@ -77,12 +77,14 @@ en:
   field_require_verified_email: "Require verified email"
   field_email_verification_policy: "Email verification policy"
   oauth_reject_unverified_email: "Reject explicitly unverified email"
-  oauth_allow_unverified_linked_uid: "Allow unverified email for linked UID accounts"
-  oauth_email_verification_policy_info: "Choose how to handle the provider's 'email_verified' claim. The linked UID option allows sign-in without email confirmation only to an account already linked to this provider's immutable user ID. An unverified address is not used to find, link, register, or update the account."
+  oauth_allow_unverified_existing_account: "Allow sign-in without a verified email for existing accounts"
+  oauth_email_verification_policy_info: "Without a verified email, UID identification needs an existing link. For login identification, enable this only if Keycloak controls usernames and users cannot choose or change them. Do not derive usernames from email or reassign them while the previous Redmine account is active. An unverified address is not used to find, link, register, or update an account."
   activerecord:
     errors:
       messages:
         oauth_linked_uid_policy_requires_uid: "requires UID identification and a provider that supports email verification"
+        oauth_managed_login_policy_requires_login: "requires login identification and a Keycloak provider"
+        oauth_managed_login_namespace_changed: "Save changes to this provider's site, realm, client, or endpoints separately, with the unverified email exception disabled."
         oauth_uid_namespace_changed: "This provider has linked UID accounts. Add a separate provider to change its site, realm, client, or endpoints."
   oauth_no_uid: "The OAuth provider did not return the user ID (uid)."
 
