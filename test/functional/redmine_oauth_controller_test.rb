@@ -187,6 +187,16 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     end
   end
 
+  def test_link_identity_rejects_a_stale_provider_namespace
+    OauthProvider.find(@keylock_provider.id).update!(tenant_id: 'new-realm')
+
+    assert_no_difference 'OauthIdentity.count' do
+      assert_raises(StandardError) do
+        RedmineOauthController.link_identity(@jsmith, 'stale-subject', @keylock_provider)
+      end
+    end
+  end
+
   def test_user_matches
     assert RedmineOauthController.user_matches?(@jsmith, 'JSmith@somenet.foo', {}, @keylock_provider)
     assert_not RedmineOauthController.user_matches?(@jsmith, 'dlopper@somenet.foo', {}, @keylock_provider)
@@ -222,7 +232,7 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_nothing_raised { check.call({}) }
     assert_raises(StandardError) { check.call('email_verified' => false) }
     assert_raises(StandardError) { check.call('email_verified' => 'false') }
-    @keylock_provider.require_verified_email = true
+    @keylock_provider.email_verification_policy = 'require_verified'
     assert_nothing_raised { check.call('email_verified' => true) }
     assert_raises(StandardError) { check.call({}) }
     # GitHub does not send the claim, its public email is always verified
@@ -237,14 +247,68 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_nil session[:user_id]
   end
 
+  def test_oauth_callback_accepts_unverified_email_only_for_the_linked_account
+    @keylock_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid'
+    @keylock_provider.oauth_identities.create!(uid: "uid-#{@jsmith.id}", user: @jsmith)
+    original_email = @jsmith.mail
+
+    with_settings plugin_redmine_oauth: { 'update_email' => '1', 'update_login' => '1' } do
+      oauth_login 'jsmith', 'email_verified' => false, 'email' => 'unverified@example.com',
+                            'preferred_username' => 'unverified@example.com'
+    end
+
+    assert_equal @jsmith.id, session[:user_id]
+    assert_equal original_email, @jsmith.reload.mail
+    assert_equal 'jsmith', @jsmith.login
+  end
+
   def test_oauth_callback_requires_verified_email
-    @keylock_provider.update! require_verified_email: true
+    @keylock_provider.update! email_verification_policy: 'require_verified'
     oauth_login 'jsmith'
     assert_redirected_to signin_path
     assert_nil session[:user_id]
 
     oauth_login 'jsmith', 'email_verified' => true
     assert_equal @jsmith.id, session[:user_id]
+  end
+
+  def test_oauth_callback_accepts_a_missing_email_verification_claim_for_linked_uid
+    @keylock_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid'
+    @keylock_provider.oauth_identities.create!(uid: "uid-#{@jsmith.id}", user: @jsmith)
+
+    oauth_login 'jsmith'
+
+    assert_equal @jsmith.id, session[:user_id]
+  end
+
+  def test_oauth_callback_does_not_link_or_register_with_unverified_email
+    @keylock_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid',
+                              auto_link_user: true
+    @jsmith.oauth_identities.create!(oauth_provider: @invalid_provider, uid: "uid-#{@jsmith.id}")
+
+    with_settings plugin_redmine_oauth: { 'self_registration' => '3' } do
+      assert_no_difference ['User.count', 'OauthIdentity.count'] do
+        oauth_login 'jsmith', 'email_verified' => false
+        assert_redirected_to signin_path
+        assert_nil session[:user_id]
+
+        oauth_login 'jsmith', 'email_verified' => false, 'email' => 'new@example.com',
+                              'preferred_username' => 'new-user'
+        assert_redirected_to signin_path
+        assert_nil session[:user_id]
+      end
+    end
+  end
+
+  def test_oauth_callback_rejects_an_unverified_linked_account_that_is_locked
+    @keylock_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid'
+    @keylock_provider.oauth_identities.create!(uid: "uid-#{@jsmith.id}", user: @jsmith)
+    @jsmith.update!(status: User::STATUS_LOCKED)
+
+    oauth_login 'jsmith', 'email_verified' => false
+
+    assert_redirected_to signin_path
+    assert_nil session[:user_id]
   end
 
   def test_validate_audience

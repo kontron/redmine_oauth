@@ -82,13 +82,42 @@ Open _Administration -> OAuth providers_ in your Redmine and add your provider(s
 **uid** is the recommended choice. Whoever controls the matched value on the provider's side gets access to the 
 Redmine account, see below.
 
+#### Email verification policy
+
+For Google, Keycloak, Okta and Custom OIDC providers:
+
+| Policy | `email_verified: true` | Claim absent | `email_verified: false` |
+| --- | --- | --- | --- |
+| **Require verified email** | Continue | Reject | Reject |
+| **Reject explicitly unverified email** (default) | Continue | Continue | Reject |
+| **Allow unverified email for linked UID accounts** | Continue | Existing UID link only | Existing UID link only |
+
+The first two options preserve the behavior of the former checked and unchecked **Require verified email** checkbox,
+respectively. In Keycloak, include the *email* client scope so the access token contains the email and its verification claim.
+If the migration is rolled back, providers using the third policy revert to **Require verified email**. Reapplying
+the migration does not restore the opt-in.
+
+The third option requires **Identify user by → uid**. It only accepts an unverified address for an active account
+already linked to the same provider and immutable UID. It does not use that address to match, link, register, or update
+an account. Login name synchronization is also skipped because some providers derive it from the email address.
+The provider must still return an email address, and all other login checks still apply.
+For a provider with existing UID links, create a separate provider to change the site, realm, client or endpoints.
+
+An existing UID link can come from a previous login with a verified address. If the provider cannot verify addresses,
+an administrator can provision a link in the Redmine Rails console. Independently verify the Redmine user ID and obtain
+the exact UID from a trusted source for that provider and client (`sub` for Keycloak); do not infer it from the email.
+For example, using placeholder values:
+
+```ruby
+OauthProvider.find(42).oauth_identities.create!(user: User.find(123), uid: 'verified-provider-subject')
+```
+
 #### Security considerations
 
 * **Email** - Identifying (or linking) users by email is only as safe as the provider's email verification. 
   Someone who can set the email of a Redmine user on their provider account gets access to that Redmine account.
-  * Google, Keycloak, Okta, Custom: an email marked as not verified by the provider (`email_verified: false`) is 
-    always rejected. Enable **Require verified email** to reject also the logins without the `email_verified` claim; 
-    the provider must then send it (in Keycloak, the _email_ client scope).
+  * Google, Keycloak, Okta, Custom: use **Require verified email** when the provider can verify addresses and the
+    email is used for matching or linking users.
   * GitHub, GitLab: the email returned is verified by the provider.
   * Azure AD: the `email` claim can be edited by the user and is not verified, especially for multi-tenant 
     applications (tenant `common` or `organizations`), and there is no `email_verified` claim. Use **uid** and a 

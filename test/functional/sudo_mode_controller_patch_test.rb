@@ -68,6 +68,56 @@ class SudoModeControllerPatchTest < RedmineOAuth::Test::IntegrationTest
     assert_equal @user_id, session[:user_id]
   end
 
+  def test_reauthentication_as_another_linked_user_with_unverified_email
+    @oauth_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid'
+    %w[jsmith dlopper].each do |login|
+      user = User.find_by!(login: login)
+      @oauth_provider.oauth_identities.create!(user: user, uid: "uid-#{user.id}")
+    end
+    log_user_via_oauth 'jsmith'
+    expire_sudo_mode!
+    request_reauthentication
+
+    stub_oauth_token 'dlopper', 'email_verified' => false
+    get "/oauth2callback?state=#{oauth_state}&code=unused"
+
+    assert_redirected_to signin_path
+    assert_nil session[:oauth_sudo_mode_ok]
+    assert_equal @user_id, session[:user_id]
+  end
+
+  def test_reauthentication_as_the_same_linked_user_with_unverified_email
+    @oauth_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid'
+    user = User.find_by!(login: 'jsmith')
+    @oauth_provider.oauth_identities.create!(user: user, uid: "uid-#{user.id}")
+    log_user_via_oauth 'jsmith'
+    expire_sudo_mode!
+    request_reauthentication
+
+    stub_oauth_token 'jsmith', 'email_verified' => false
+    get "/oauth2callback?state=#{oauth_state}&code=unused"
+
+    assert_response :success
+    assert session[:oauth_sudo_mode_ok]
+  end
+
+  def test_unverified_linked_user_must_still_have_a_role_to_reauthenticate
+    @oauth_provider.update! identify_user_by: 'uid', email_verification_policy: 'allow_linked_uid',
+                            validate_user_roles: 'roles'
+    user = User.find_by!(login: 'jsmith')
+    @oauth_provider.oauth_identities.create!(user: user, uid: "uid-#{user.id}")
+    oauth_login 'jsmith', 'roles' => ['user'], 'email_verified' => false
+    assert_equal user.id, session[:user_id]
+    expire_sudo_mode!
+    request_reauthentication
+
+    stub_oauth_token 'jsmith', 'email_verified' => false
+    get "/oauth2callback?state=#{oauth_state}&code=unused"
+
+    assert_redirected_to signin_path
+    assert_nil session[:oauth_sudo_mode_ok]
+  end
+
   def test_reauthentication_with_another_provider
     other_provider = @oauth_provider.dup
     other_provider.custom_name = 'Other'

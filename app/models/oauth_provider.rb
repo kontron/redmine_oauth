@@ -46,6 +46,17 @@ class OauthProvider < ApplicationRecord
   # Providers sending the OIDC 'email_verified' claim
   EMAIL_VERIFIED_CLAIM_PROVIDERS = %w[Google Keycloak Okta Custom].freeze
 
+  EMAIL_VERIFICATION_POLICIES = %w[require_verified reject_unverified allow_linked_uid].freeze
+  UID_NAMESPACE_ATTRIBUTES = %i[oauth_name site tenant_id client_id
+                                custom_auth_endpoint custom_token_endpoint custom_profile_endpoint].freeze
+
+  # The historical provider import runs before this column exists.
+  validates :email_verification_policy, inclusion: { in: EMAIL_VERIFICATION_POLICIES },
+                                        if: :email_verification_policy_column?
+  validate :validate_linked_uid_policy, if: :email_verification_policy_column?
+  validate :validate_uid_namespace, on: :update, if: :email_verification_policy_column?
+  after_save :reset_other_imap_providers, if: -> { imap? && email_verification_policy_column? }
+
   # HTML tags allowed in the login button's text
   BUTTON_TEXT_TAGS = %w[b i u em strong span br].freeze
 
@@ -95,11 +106,40 @@ class OauthProvider < ApplicationRecord
     self.oauth_version = params['oauth_version']
     self.identify_user_by = params['identify_user_by']
     self.auto_link_user = params['auto_link_user'] if params.key?('auto_link_user')
-    self.require_verified_email = params['require_verified_email'] if params.key?('require_verified_email')
+    self.email_verification_policy = params['email_verification_policy'] if params.key?('email_verification_policy')
     self.imap = params['imap']
     self.url_parameters = params['url_parameters']
     self.button_text = params['button_text']
-    # Reset IMAP by other providers
-    OauthProvider.where.not(id: id).where(imap: true).update(imap: false) if imap
+  end
+
+  def uid_namespace
+    UID_NAMESPACE_ATTRIBUTES.map { |attribute| self[attribute].presence }
+  end
+
+  private
+
+  def email_verification_policy_column?
+    has_attribute?(:email_verification_policy)
+  end
+
+  def validate_linked_uid_policy
+    return unless email_verification_policy == 'allow_linked_uid'
+    return if identify_user_by == 'uid' && EMAIL_VERIFIED_CLAIM_PROVIDERS.include?(oauth_name)
+
+    errors.add(:email_verification_policy, :oauth_linked_uid_policy_requires_uid)
+  end
+
+  def validate_uid_namespace
+    changed = UID_NAMESPACE_ATTRIBUTES.any? do |attribute|
+      before, after = attribute_change_to_be_saved(attribute)
+      before.presence != after.presence
+    end
+    return unless changed && oauth_identities.exists?
+
+    errors.add(:base, :oauth_uid_namespace_changed)
+  end
+
+  def reset_other_imap_providers
+    OauthProvider.where.not(id: id).where(imap: true).update(imap: false)
   end
 end

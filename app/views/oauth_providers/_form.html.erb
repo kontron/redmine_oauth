@@ -143,9 +143,13 @@
         <em class="info"><%= l(:oauth_auto_link_user_info) %></em>
       </p>
       <% style = OauthProvider::EMAIL_VERIFIED_CLAIM_PROVIDERS.include?(@oauth_provider.oauth_name) ? nil : 'display: none' %>
-      <p id="oauth_option_require_verified_email" style="<%= style %>">
-        <%= f.check_box :require_verified_email %>
-        <em class="info"><%= l(:oauth_require_verified_email_info) %></em>
+      <p id="oauth_option_email_verification_policy" style="<%= style %>">
+        <%= f.select :email_verification_policy,
+                     [[l(:field_require_verified_email), 'require_verified'],
+                      [l(:oauth_reject_unverified_email), 'reject_unverified'],
+                      [l(:oauth_allow_unverified_linked_uid), 'allow_linked_uid']],
+                     { disabled: @oauth_provider.identify_user_by == 'uid' ? nil : 'allow_linked_uid' } %>
+        <em class="info"><%= l(:oauth_email_verification_policy_info) %></em>
       </p>
       <p>
         <%= f.check_box :imap, title: l(:oauth_imap_info) %>

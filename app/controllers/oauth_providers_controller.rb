@@ -53,8 +53,11 @@ class OauthProvidersController < ApplicationController
   end
 
   def update
-    @oauth_provider.update_from_parameters params[:oauth_provider]
-    if request.patch? && @oauth_provider.save
+    saved = @oauth_provider.with_lock do
+      @oauth_provider.update_from_parameters params[:oauth_provider]
+      request.patch? && @oauth_provider.save
+    end
+    if saved
       flash[:notice] = l(:notice_successful_update)
       redirect_to oauth_providers_path
     else

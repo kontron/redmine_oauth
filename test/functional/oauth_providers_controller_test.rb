@@ -243,13 +243,33 @@ class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_equal 'new', Redmine::Ciphering.decrypt_text(@keylock_provider.reload.client_secret)
   end
 
-  def test_update_require_verified_email
+  def test_update_email_verification_policy
     post '/login', params: { username: 'admin', password: 'admin' }
-    assert_not @keylock_provider.require_verified_email?
+    %w[require_verified reject_unverified allow_linked_uid].each do |policy|
+      patch "/oauth_providers/#{@keylock_provider.id}",
+            params: { oauth_provider: keycloak_params(email_verification_policy: policy, identify_user_by: 'uid') }
+      assert_redirected_to oauth_providers_path
+      assert_equal policy, @keylock_provider.reload.email_verification_policy
+    end
+  end
+
+  def test_reject_linked_uid_policy_without_uid_identification
+    post '/login', params: { username: 'admin', password: 'admin' }
+    params = keycloak_params(email_verification_policy: 'allow_linked_uid', identify_user_by: 'login')
+    patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: params }
+    assert_response :success
+    assert_select '#errorExplanation'
+    assert_equal 'reject_unverified', @keylock_provider.reload.email_verification_policy
+  end
+
+  def test_provider_with_uid_links_cannot_be_repointed_to_another_realm
+    post '/login', params: { username: 'admin', password: 'admin' }
+    @keylock_provider.oauth_identities.create!(user: User.find_by!(login: 'jsmith'), uid: 'test-subject')
+
     patch "/oauth_providers/#{@keylock_provider.id}",
-          params: { oauth_provider: keycloak_params(require_verified_email: '1') }
-    assert_redirected_to oauth_providers_path
-    assert @keylock_provider.reload.require_verified_email?
+          params: { oauth_provider: keycloak_params(tenant_id: 'elsewhere') }
+    assert_select '#errorExplanation', /provider has linked UID accounts/
+    assert_equal 'redmine', @keylock_provider.reload.tenant_id
   end
 
   def test_update_invalid_button_color
