@@ -243,13 +243,56 @@ class OauthProvidersControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_equal 'new', Redmine::Ciphering.decrypt_text(@keylock_provider.reload.client_secret)
   end
 
-  def test_update_require_verified_email
+  def test_update_email_verification_policy
     post '/login', params: { username: 'admin', password: 'admin' }
-    assert_not @keylock_provider.require_verified_email?
-    patch "/oauth_providers/#{@keylock_provider.id}",
-          params: { oauth_provider: keycloak_params(require_verified_email: '1') }
+    %w[require_verified reject_unverified allow_linked_uid].each do |policy|
+      patch "/oauth_providers/#{@keylock_provider.id}",
+            params: { oauth_provider: keycloak_params(email_verification_policy: policy, identify_user_by: 'uid') }
+      assert_redirected_to oauth_providers_path
+      assert_equal policy, @keylock_provider.reload.email_verification_policy
+    end
+  end
+
+  def test_reject_linked_uid_policy_without_uid_identification
+    post '/login', params: { username: 'admin', password: 'admin' }
+    params = keycloak_params(email_verification_policy: 'allow_linked_uid', identify_user_by: 'login')
+    patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: params }
+    assert_response :success
+    assert_select '#errorExplanation'
+    assert_equal 'reject_unverified', @keylock_provider.reload.email_verification_policy
+  end
+
+  def test_managed_login_policy_is_only_offered_for_keycloak_login_identification
+    post '/login', params: { username: 'admin', password: 'admin' }
+    @keylock_provider.update! identify_user_by: 'login'
+    get "/oauth_providers/#{@keylock_provider.id}/edit"
+    assert_select 'option[value=allow_managed_login]:not([disabled]):not([hidden])',
+                  text: 'Allow sign-in without a verified email for existing accounts'
+    assert_select 'option[value=allow_linked_uid][disabled][hidden]'
+
+    params = keycloak_params(email_verification_policy: 'allow_managed_login', identify_user_by: 'login')
+    patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: params }
     assert_redirected_to oauth_providers_path
-    assert @keylock_provider.reload.require_verified_email?
+
+    [{ identify_user_by: 'email' }, { identify_user_by: 'uid' }, { oauth_name: 'Google' },
+     { tenant_id: 'other' }].each do |change|
+      patch "/oauth_providers/#{@keylock_provider.id}", params: { oauth_provider: params.merge(change) }
+      assert_select '#errorExplanation'
+      assert_equal 'allow_managed_login', @keylock_provider.reload.email_verification_policy
+      assert_equal 'login', @keylock_provider.identify_user_by
+      assert_equal 'Keycloak', @keylock_provider.oauth_name
+      assert_equal 'redmine', @keylock_provider.tenant_id
+    end
+  end
+
+  def test_provider_with_uid_links_cannot_be_repointed_to_another_realm
+    post '/login', params: { username: 'admin', password: 'admin' }
+    @keylock_provider.oauth_identities.create!(user: User.find_by!(login: 'jsmith'), uid: 'test-subject')
+
+    patch "/oauth_providers/#{@keylock_provider.id}",
+          params: { oauth_provider: keycloak_params(tenant_id: 'elsewhere') }
+    assert_select '#errorExplanation', /provider has linked UID accounts/
+    assert_equal 'redmine', @keylock_provider.reload.tenant_id
   end
 
   def test_update_invalid_button_color
