@@ -143,7 +143,7 @@ class RedmineOauthController < AccountController
   rescue StandardError => e
     Rails.logger.error e.message
     flash['error'] = ERB::Util.html_escape(e.message)
-    clear_oauth_request_state
+    clear_oauth_request_state oauth_csrf_token
     cookies.delete :oauth_autologin
     redirect_to signin_path
   end
@@ -499,13 +499,23 @@ class RedmineOauthController < AccountController
     render_error status: 422, message: l(:error_invalid_authenticity_token)
   end
 
+  # Each OAuth request has its own cookie, named after its state, so that requests started in parallel (e.g. several
+  # tabs restored at once) do not overwrite each other's state
+  def oauth_request_state_cookie(state)
+    "#{OAUTH_REQUEST_STATE_COOKIE}_#{Digest::SHA256.hexdigest(state.to_s)[0, 16]}"
+  end
+
   def oauth_request_state
-    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] || {}
+    return {} if params[:state].blank?
+
+    cookies.encrypted[oauth_request_state_cookie(params[:state])] || {}
   end
 
   def store_oauth_request_state(state)
-    cookies.encrypted[OAUTH_REQUEST_STATE_COOKIE] = {
+    cookies.encrypted[oauth_request_state_cookie(state[:csrf_token])] = {
       value: state,
+      # Abandoned requests expire instead of accumulating
+      expires: 10.minutes.from_now,
       path: RedmineApp::Application.config.relative_url_root || '/',
       same_site: :lax,
       secure: Setting.protocol == 'https',
@@ -513,8 +523,10 @@ class RedmineOauthController < AccountController
     }
   end
 
-  def clear_oauth_request_state
-    cookies.delete OAUTH_REQUEST_STATE_COOKIE,
+  def clear_oauth_request_state(state = params[:state])
+    return if state.blank?
+
+    cookies.delete oauth_request_state_cookie(state),
                    path: RedmineApp::Application.config.relative_url_root || '/'
   end
 
