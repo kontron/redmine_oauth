@@ -49,7 +49,7 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     assert_nil session[:back_url]
     assert_nil session[:oauth_csrf_token]
     assert_nil session[:code_verifier]
-    assert cookies[:redmine_oauth_request_state].present?
+    assert(cookies.to_hash.any? { |name, value| name.start_with?('redmine_oauth_request_state_') && value.present? })
   end
 
   def test_oauth_callback_accepts_state_from_request_cookie
@@ -59,6 +59,21 @@ class RedmineOauthControllerTest < RedmineOAuth::Test::IntegrationTest
     get "/oauth2callback?state=#{state}&code=unused"
 
     assert_response :found
+  end
+
+  def test_oauth_callback_accepts_states_of_parallel_requests
+    # E.g. several tabs restored at once, each redirected to the provider
+    states = Array.new(2) do
+      get "/oauth?oauth_provider=#{@keylock_provider.id}"
+      URI.decode_www_form(URI.parse(response.location).query).to_h.fetch('state')
+    end
+    OAuth2::Strategy::AuthCode.any_instance.stubs(:get_token).raises(StandardError, 'Token requested')
+
+    states.each do |state|
+      get "/oauth2callback?state=#{state}&code=unused"
+      assert_redirected_to signin_path
+      assert_equal 'Token requested', flash[:error]
+    end
   end
 
   def test_oauth_does_not_reflect_provider_id
