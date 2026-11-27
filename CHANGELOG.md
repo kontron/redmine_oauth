@@ -1,7 +1,7 @@
 Changelog for Redmine OAuth
 ==========================
 
-4.2.4 *2025-11-16*
+4.2.4 *2026-11-27*
 ------------------
 
     Identify users by uid
