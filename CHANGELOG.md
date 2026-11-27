@@ -1,7 +1,17 @@
 Changelog for Redmine OAuth
-==========================
+===========================
 
-4.2.4 *2026-11-27*
+4.2.5 *2026-11-27*
+------------------
+
+    Email verification policy
+
+* New: #157  - Fix 422 with parallel OAuth logins
+* New: #156 - Tie email verification policy to the configured user identifier
+* New: #155 - Make email verification a per-provider policy tied to Identify user by
+* New: #153 - Add a per-provider option to allow login when email_verified is false
+
+4.2.4 *2026-11-16*
 ------------------
 
     Identify users by uid
