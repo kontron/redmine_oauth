@@ -185,8 +185,21 @@ function oauth_settings_visibility() {
             break;
     }
     // Only these providers send the 'email_verified' claim (OauthProvider::EMAIL_VERIFIED_CLAIM_PROVIDERS)
-    div_oauth_options.find('#oauth_option_require_verified_email').toggle(
-        ['Google', 'Keycloak', 'Okta', 'Custom'].includes(oauth_name));
+    oauth_email_verification_policy_changed();
+}
+
+function oauth_email_verification_policy_changed() {
+    const provider = $('#oauth_provider_oauth_name').val();
+    const mode = $('#oauth_provider_identify_user_by').val();
+    const policy = $('#oauth_provider_email_verification_policy');
+    $('#oauth_option_email_verification_policy').toggle(['Google', 'Keycloak', 'Okta', 'Custom'].includes(provider));
+    policy.find('option[data-mode]').each(function () {
+        const available = this.dataset.mode === mode && this.dataset.providers.split(' ').includes(provider);
+        if (!available && this.selected) {
+            policy.val('require_verified');
+        }
+        $(this).prop({ disabled: !available, hidden: !available });
+    });
 }
 
 function oauth_toggle_fieldset(el)
@@ -215,4 +228,6 @@ function oauth_self_registration_changed() {
 
 $(function () {
     oauth_self_registration_changed();
+    oauth_email_verification_policy_changed();
+    $('#oauth_provider_identify_user_by').on('change', oauth_email_verification_policy_changed);
 });

@@ -6,9 +6,9 @@
 This plugin is used to authenticate in Redmine through an OAuth provider.
 
 The user is identified by their email, login or immutable user ID (uid) registered with the OAuth provider. The email 
-or login must match an email or login registered in Redmine. If such an email or login is not found, the user will be offered to register in 
-Redmine, depending on Redmine's setting **Self-registration**. OAuth logout is also supported, if it is set in the 
-options. Access to Redmine can be controlled by roles assigned in your OAuth provider.
+or login must match an email or login registered in Redmine. If such an email or login is not found, the user will be 
+offered to register in Redmine, depending on Redmine's setting **Self-registration**. OAuth logout is also supported, 
+if it is set in the options. Access to Redmine can be controlled by roles assigned in your OAuth provider.
 See [#36](https://github.com/kontron/redmine_oauth/issues/36#issuecomment-2348842432) for details; as well as OAuth autologin.
 
 Inspired by Gucin's plugin https://github.com/Gucin/redmine_omniauth_azure.
@@ -82,13 +82,50 @@ Open _Administration -> OAuth providers_ in your Redmine and add your provider(s
 **uid** is the recommended choice. Whoever controls the matched value on the provider's side gets access to the 
 Redmine account, see below.
 
+#### Email verification policy
+
+For Google, Keycloak, Okta and Custom OIDC providers:
+
+| Policy | `email_verified: true` | Claim absent | `email_verified: false` |
+| --- | --- | --- | --- |
+| **Require verified email** | Continue | Reject | Reject |
+| **Reject explicitly unverified email** (default) | Continue | Continue | Reject |
+| **Allow sign-in without a verified email for existing accounts** | Continue | Restricted sign-in | Restricted sign-in |
+
+The first two options preserve the behavior of the former checked and unchecked **Require verified email** checkbox,
+respectively. In Keycloak, include the *email* client scope so the access token contains the email and its verification claim.
+If the migration is rolled back, providers using the third policy revert to **Require verified email**. Reapplying
+the migration does not restore the opt-in.
+
+The third option is an explicit opt-in for the selected identification mode:
+
+* **uid**: the active account must already be linked to the same provider and immutable UID. There is no email fallback.
+* **login** (Keycloak only): `preferred_username` must match an existing active Redmine login. Use this only when the
+  realm controls usernames and users cannot choose, change, or claim them, including through federated identity providers.
+  Do not derive usernames from email or reassign them while the previous Redmine account is active. Email-shaped login
+  values are rejected, but Redmine cannot verify how the realm manages usernames. Save a stricter policy before
+  changing the provider's identity namespace and review that namespace before opting in again.
+* **email**: the option is unavailable because the address itself identifies the account.
+
+Restricted sign-in never uses the address to match, link, or register an account. Neither login nor email is synchronized.
+The provider must still return an email address, and all other login checks still apply, including during re-authentication.
+For a provider with existing UID links, create a separate provider to change the site, realm, client or endpoints.
+
+An existing UID link can come from a previous login with a verified address. If the provider cannot verify addresses,
+an administrator can provision a link in the Redmine Rails console. Independently verify the Redmine user ID and obtain
+the exact UID from a trusted source for that provider and client (`sub` for Keycloak); do not infer it from the email.
+For example, using placeholder values:
+
+```ruby
+OauthProvider.find(42).oauth_identities.create!(user: User.find(123), uid: 'verified-provider-subject')
+```
+
 #### Security considerations
 
 * **Email** - Identifying (or linking) users by email is only as safe as the provider's email verification. 
   Someone who can set the email of a Redmine user on their provider account gets access to that Redmine account.
-  * Google, Keycloak, Okta, Custom: an email marked as not verified by the provider (`email_verified: false`) is 
-    always rejected. Enable **Require verified email** to reject also the logins without the `email_verified` claim; 
-    the provider must then send it (in Keycloak, the _email_ client scope).
+  * Google, Keycloak, Okta, Custom: use **Require verified email** when the provider can verify addresses and the
+    email is used for matching or linking users.
   * GitHub, GitLab: the email returned is verified by the provider.
   * Azure AD: the `email` claim can be edited by the user and is not verified, especially for multi-tenant 
     applications (tenant `common` or `organizations`), and there is no `email_verified` claim. Use **uid** and a 
